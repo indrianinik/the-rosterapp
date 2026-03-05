@@ -1,0 +1,1826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Roster ✦</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=Jost:wght@200;300;400;500;600&family=Italiana&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --night:#0d0910;--plum:#1e1125;--deep-plum:#2a1535;
+  --lilac:#c9a8e0;--petal:#f0c8d8;--blush:#e8a0b8;
+  --gold:#d4a843;--gold-light:#f0cc7a;
+  --white:#fdf8ff;--muted:rgba(201,168,224,0.5);
+  --glass:rgba(255,255,255,0.04);--glass-b:rgba(255,255,255,0.08);
+  --red:#e06070;--green:#7acca0;--amber:#e0b060;
+  --accent:#d4a843;--accent-glow:rgba(212,168,67,.25);--accent-light:#f0cc7a;
+}
+html{scroll-behavior:smooth}
+body{background:var(--night);color:var(--white);font-family:'Jost',sans-serif;font-weight:300;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 15% 0%,rgba(100,30,130,.35) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 85% 100%,rgba(180,80,120,.2) 0%,transparent 55%);pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;inset:0;background-image:radial-gradient(circle 300px at 10% 20%,rgba(212,168,67,.06) 0%,transparent 70%),radial-gradient(circle 200px at 90% 70%,rgba(232,160,184,.08) 0%,transparent 70%);pointer-events:none;z-index:0;animation:drift 20s ease-in-out infinite alternate}
+@keyframes drift{from{transform:translate(0,0)}to{transform:translate(20px,-15px)}}
+.noise{position:fixed;inset:0;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");pointer-events:none;z-index:1}
+.stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:#fff;animation:twinkle var(--d,3s) ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:var(--lo,.1);transform:scale(1)}50%{opacity:var(--hi,.7);transform:scale(1.3)}}
+
+.page{display:none;position:relative;z-index:2}
+.page.active{display:block}
+
+/* ── LOADING SCREEN ── */
+#loadingPage{min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.5rem}
+.loading-logo{font-family:'Italiana',serif;font-size:3rem;letter-spacing:6px;background:linear-gradient(135deg,var(--gold-light),var(--gold),var(--blush));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.loading-dots{display:flex;gap:.5rem}
+.loading-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:dotPulse 1.4s ease-in-out infinite}
+.loading-dot:nth-child(2){animation-delay:.2s}
+.loading-dot:nth-child(3){animation-delay:.4s}
+@keyframes dotPulse{0%,80%,100%{transform:scale(0);opacity:.3}40%{transform:scale(1);opacity:1}}
+.loading-msg{font-size:.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted)}
+
+/* ── AUTH ── */
+#authPage{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem}
+.auth-wrap{width:100%;max-width:440px}
+.auth-logo{text-align:center;margin-bottom:2.5rem}
+.auth-logo-title{font-family:'Italiana',serif;font-size:3rem;letter-spacing:6px;background:linear-gradient(135deg,var(--gold-light) 0%,var(--gold) 40%,var(--blush) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block}
+.auth-logo-sub{font-size:.6rem;letter-spacing:6px;text-transform:uppercase;color:var(--muted);margin-top:.4rem;display:block}
+.auth-tagline{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:rgba(240,200,216,.5);margin-top:.6rem;display:block}
+.auth-card{background:linear-gradient(145deg,rgba(30,17,37,.95),rgba(18,10,26,.98));border:1px solid rgba(201,168,224,.12);border-radius:24px;padding:2.2rem;backdrop-filter:blur(20px);box-shadow:0 30px 80px rgba(0,0,0,.6);animation:cardUp .5s cubic-bezier(.23,1,.32,1)}
+@keyframes cardUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
+.auth-tabs{display:flex;background:rgba(0,0,0,.3);border-radius:12px;padding:.3rem;margin-bottom:2rem;gap:.3rem}
+.auth-tab{flex:1;padding:.65rem;font-family:'Jost',sans-serif;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;border:none;background:transparent;color:var(--muted);border-radius:9px;cursor:pointer;transition:all .25s;font-weight:400}
+.auth-tab.active{background:var(--deep-plum);color:var(--gold-light)}
+.auth-form{display:none}
+.auth-form.active{display:flex;flex-direction:column;gap:1rem}
+.fg{display:flex;flex-direction:column;gap:.4rem}
+.fl{font-size:.6rem;letter-spacing:2.5px;text-transform:uppercase;color:rgba(201,168,224,.6);font-weight:500}
+input[type=text],input[type=password]{font-family:'Jost',sans-serif;font-size:.9rem;font-weight:300;padding:.75rem 1rem;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,224,.15);border-radius:10px;color:var(--white);transition:all .25s;width:100%}
+input::placeholder{color:rgba(201,168,224,.25);font-style:italic}
+input:focus{outline:none;border-color:rgba(212,168,67,.4);background:rgba(212,168,67,.05);box-shadow:0 0 0 3px rgba(212,168,67,.08)}
+.avatar-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:.5rem;margin-top:.2rem}
+.av-opt{width:100%;aspect-ratio:1;border-radius:50%;font-size:1.3rem;display:flex;align-items:center;justify-content:center;cursor:pointer;border:2px solid transparent;background:rgba(255,255,255,.04);transition:all .2s}
+.av-opt:hover{background:rgba(255,255,255,.08);transform:scale(1.08)}
+.av-opt.selected{border-color:var(--gold);box-shadow:0 0 12px rgba(212,168,67,.4);background:rgba(212,168,67,.1)}
+.theme-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:.5rem;margin-top:.2rem}
+.th-opt{width:100%;aspect-ratio:1;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .2s;position:relative}
+.th-opt:hover{transform:scale(1.12)}
+.th-opt.selected::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:white;font-weight:700;text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.th-opt.selected{border-color:white;box-shadow:0 0 15px rgba(255,255,255,.3)}
+.btn-auth{width:100%;padding:.85rem;background:linear-gradient(135deg,var(--gold),#b8903a);border:none;border-radius:50px;color:var(--night);font-family:'Jost',sans-serif;font-weight:600;font-size:.78rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s;box-shadow:0 4px 20px rgba(212,168,67,.3);margin-top:.5rem;display:flex;align-items:center;justify-content:center;gap:.6rem}
+.btn-auth:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(212,168,67,.5)}
+.btn-auth:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.auth-err{font-size:.75rem;color:var(--red);text-align:center;font-style:italic;min-height:1rem}
+.spinner{width:14px;height:14px;border:2px solid rgba(0,0,0,.3);border-top-color:var(--night);border-radius:50%;animation:spin .7s linear infinite;display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── APP ── */
+#appPage{min-height:100vh}
+header{position:sticky;top:0;z-index:50;padding:1.2rem 3rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,9,16,.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-b)}
+.h-left{display:flex;align-items:center;gap:1.2rem}
+.h-logo{font-family:'Italiana',serif;font-size:1.7rem;letter-spacing:4px;background:linear-gradient(135deg,var(--gold-light),var(--gold),var(--blush));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.h-divider{width:1px;height:24px;background:var(--glass-b)}
+.user-chip{display:flex;align-items:center;gap:.6rem;padding:.4rem .9rem .4rem .5rem;background:var(--glass);border:1px solid var(--glass-b);border-radius:50px;cursor:pointer;transition:all .2s}
+.user-chip:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.15)}
+.user-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;background:rgba(0,0,0,.3);border:1px solid var(--accent);box-shadow:0 0 10px var(--accent-glow)}
+.user-name{font-size:.75rem;color:var(--petal);font-weight:400;letter-spacing:.5px}
+.sync-status{font-size:.62rem;color:var(--muted);display:flex;align-items:center;gap:.4rem;padding:.3rem .8rem;border-radius:50px;border:1px solid var(--glass-b)}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:#aaa}
+.sync-dot.synced{background:var(--green);box-shadow:0 0 6px rgba(122,204,160,.5)}
+.sync-dot.syncing{background:var(--amber);animation:pulse .8s ease-in-out infinite}
+.sync-dot.error{background:var(--red)}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+.h-right{display:flex;align-items:center;gap:.8rem}
+.btn-add{display:flex;align-items:center;gap:.5rem;padding:.65rem 1.4rem;background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 70%,black));color:var(--night);font-family:'Jost',sans-serif;font-weight:600;font-size:.72rem;letter-spacing:2px;text-transform:uppercase;border:none;border-radius:50px;cursor:pointer;transition:all .3s;box-shadow:0 0 20px var(--accent-glow)}
+.btn-add:hover{transform:translateY(-2px);box-shadow:0 0 35px var(--accent-glow),0 8px 20px rgba(0,0,0,.4)}
+.btn-logout{padding:.55rem 1rem;background:transparent;border:1px solid rgba(224,96,112,.25);color:rgba(224,96,112,.7);border-radius:50px;font-family:'Jost',sans-serif;font-size:.65rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.btn-logout:hover{background:rgba(224,96,112,.1);color:var(--red);border-color:rgba(224,96,112,.5)}
+main{max-width:1380px;margin:0 auto;padding:2.5rem 3rem 5rem;position:relative;z-index:2}
+.welcome-banner{margin-bottom:2.5rem;padding:1.8rem 2.2rem;border-radius:20px;background:linear-gradient(135deg,rgba(30,17,37,.9),rgba(42,21,53,.7));border:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:1.5rem;position:relative;overflow:hidden}
+.welcome-banner::before{content:'';position:absolute;top:-30px;right:-30px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,var(--accent-glow) 0%,transparent 70%);pointer-events:none}
+.wb-avatar{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.8rem;border:2px solid var(--accent);box-shadow:0 0 25px var(--accent-glow);background:rgba(0,0,0,.3);flex-shrink:0}
+.wb-text h2{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-style:italic;font-weight:400;color:var(--petal);margin-bottom:.2rem}
+.wb-text h2 span{color:var(--accent-light);font-weight:600}
+.wb-text p{font-size:.75rem;color:var(--muted);letter-spacing:.5px}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-bottom:3rem}
+.stat-gem{padding:1.6rem 1.4rem;border-radius:16px;border:1px solid var(--glass-b);background:var(--glass);backdrop-filter:blur(10px);transition:transform .3s;position:relative;overflow:hidden}
+.stat-gem:hover{transform:translateY(-4px)}
+.stat-gem::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top left,var(--gc,transparent) 0%,transparent 60%);opacity:0;transition:opacity .3s}
+.stat-gem:hover::before{opacity:1}
+.stat-gem.st{--gc:rgba(212,168,67,.12)}.stat-gem.sg{--gc:rgba(122,204,160,.12)}.stat-gem.sc{--gc:rgba(224,176,96,.12)}.stat-gem.sd{--gc:rgba(224,96,112,.12)}
+.stat-line{position:absolute;top:0;left:0;right:0;height:2px}
+.stat-gem.st .stat-line{background:linear-gradient(90deg,var(--accent),transparent)}
+.stat-gem.sg .stat-line{background:linear-gradient(90deg,var(--green),transparent)}
+.stat-gem.sc .stat-line{background:linear-gradient(90deg,var(--amber),transparent)}
+.stat-gem.sd .stat-line{background:linear-gradient(90deg,var(--red),transparent)}
+.stat-icon{font-size:1.3rem;margin-bottom:.6rem;display:block}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;line-height:1;margin-bottom:.2rem}
+.stat-gem.st .stat-num{color:var(--accent-light)}.stat-gem.sg .stat-num{color:var(--green)}.stat-gem.sc .stat-num{color:var(--amber)}.stat-gem.sd .stat-num{color:var(--red)}
+.stat-label{font-size:.6rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted)}
+.section-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.8rem}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:300;font-style:italic;color:var(--petal)}
+.section-title span{background:linear-gradient(135deg,var(--accent-light),var(--blush));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-style:normal;font-weight:600}
+.filters{display:flex;gap:.4rem;background:var(--glass);border:1px solid var(--glass-b);padding:.35rem;border-radius:50px}
+.f-btn{font-family:'Jost',sans-serif;font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;padding:.4rem 1rem;border-radius:50px;border:none;background:transparent;color:var(--muted);cursor:pointer;transition:all .22s;font-weight:400}
+.f-btn.active,.f-btn:hover{background:var(--deep-plum);color:var(--accent-light)}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:1.6rem}
+.man-card{border-radius:20px;overflow:hidden;border:1px solid var(--glass-b);background:linear-gradient(145deg,rgba(30,17,37,.9),rgba(42,21,53,.7));backdrop-filter:blur(20px);cursor:pointer;transition:all .4s cubic-bezier(.23,1,.32,1);position:relative;animation:cardIn .5s ease both}
+@keyframes cardIn{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:none}}
+.man-card::before{content:'';position:absolute;inset:0;border-radius:20px;background:radial-gradient(ellipse at 20% 10%,var(--cg,rgba(212,168,67,.08)) 0%,transparent 60%);opacity:0;transition:opacity .4s}
+.man-card:hover::before{opacity:1}
+.man-card:hover{transform:translateY(-6px) scale(1.01);border-color:rgba(212,168,67,.2);box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.man-card.v-proceed{--cg:rgba(122,204,160,.12)}.man-card.v-caution{--cg:rgba(224,176,96,.12)}.man-card.v-drop{--cg:rgba(224,96,112,.12)}
+.card-crown{height:130px;position:relative;display:flex;align-items:flex-end;padding:1.1rem 1.4rem;overflow:hidden}
+.card-crown::before{content:'';position:absolute;inset:0;background:var(--crown-bg,linear-gradient(135deg,#2a1535,#1e1125))}
+.man-card.v-proceed .card-crown::before{background:linear-gradient(135deg,rgba(30,60,45,.9),rgba(20,40,30,.95))}
+.man-card.v-caution .card-crown::before{background:linear-gradient(135deg,rgba(60,45,20,.9),rgba(40,30,15,.95))}
+.man-card.v-drop .card-crown::before{background:linear-gradient(135deg,rgba(60,20,30,.9),rgba(40,15,20,.95))}
+.man-card.v-pending .card-crown::before{background:linear-gradient(135deg,rgba(40,20,55,.9),rgba(25,15,35,.95))}
+.crown-score{position:absolute;top:1rem;right:1.2rem;z-index:1;text-align:right}
+.crown-score-num{font-family:'Cormorant Garamond',serif;font-size:2.6rem;font-weight:300;line-height:1}
+.man-card.v-proceed .crown-score-num{color:var(--green)}.man-card.v-caution .crown-score-num{color:var(--amber)}.man-card.v-drop .crown-score-num{color:var(--red)}.man-card.v-pending .crown-score-num{color:var(--muted)}
+.crown-score-lbl{font-size:.48rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.avatar-ring{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;position:relative;z-index:1;flex-shrink:0;border:2px solid var(--rc,rgba(212,168,67,.4));background:rgba(0,0,0,.3);box-shadow:0 0 18px var(--rg,rgba(212,168,67,.2))}
+.man-card.v-proceed .avatar-ring{--rc:rgba(122,204,160,.5);--rg:rgba(122,204,160,.2)}.man-card.v-caution .avatar-ring{--rc:rgba(224,176,96,.5);--rg:rgba(224,176,96,.2)}.man-card.v-drop .avatar-ring{--rc:rgba(224,96,112,.5);--rg:rgba(224,96,112,.2)}
+.crown-info{position:relative;z-index:1;margin-left:.9rem;flex:1;min-width:0}
+.verdict-pill{display:inline-flex;align-items:center;gap:.3rem;font-size:.56rem;letter-spacing:2px;text-transform:uppercase;padding:.28rem .75rem;border-radius:50px;font-weight:500;margin-bottom:.3rem}
+.verdict-pill.v-proceed{background:rgba(122,204,160,.18);color:#7acca0;border:1px solid rgba(122,204,160,.3)}.verdict-pill.v-caution{background:rgba(224,176,96,.18);color:#e0b060;border:1px solid rgba(224,176,96,.3)}.verdict-pill.v-drop{background:rgba(224,96,112,.18);color:#e06070;border:1px solid rgba(224,96,112,.3)}.verdict-pill.v-pending{background:rgba(201,168,224,.12);color:var(--lilac);border:1px solid rgba(201,168,224,.2)}
+.card-name{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600;color:var(--white);line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-nick{font-size:.7rem;color:var(--muted);font-style:italic}
+.card-body{padding:1.2rem 1.4rem 1.4rem}
+.card-meta{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem}
+.meta-chip{font-size:.62rem;padding:.22rem .65rem;border-radius:50px;background:rgba(255,255,255,.05);border:1px solid var(--glass-b);color:rgba(201,168,224,.65)}
+.mini-scores{display:flex;flex-direction:column;gap:.45rem;margin-bottom:1.1rem}
+.mini-row{display:flex;align-items:center;gap:.6rem}
+.mini-lbl{font-size:.58rem;color:var(--muted);width:76px;flex-shrink:0}
+.mini-track{flex:1;height:3px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden}
+.mini-fill{height:100%;border-radius:2px;transition:width 1s cubic-bezier(.23,1,.32,1)}
+.mini-val{font-size:.62rem;color:var(--muted);width:1.5ch;text-align:right}
+.card-flags{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:1.1rem}
+.f-chip{font-size:.6rem;padding:.18rem .55rem;border-radius:50px}
+.f-chip.red{background:rgba(224,96,112,.12);color:#e06070;border:1px solid rgba(224,96,112,.2)}.f-chip.green{background:rgba(122,204,160,.1);color:#7acca0;border:1px solid rgba(122,204,160,.2)}
+.card-footer{display:flex;gap:.5rem;padding-top:.9rem;border-top:1px solid rgba(255,255,255,.05)}
+.cf-btn{flex:1;padding:.5rem .4rem;font-family:'Jost',sans-serif;font-size:.6rem;letter-spacing:1.5px;text-transform:uppercase;border-radius:8px;cursor:pointer;border:1px solid var(--glass-b);background:transparent;color:var(--muted);transition:all .2s}
+.cf-btn:hover{background:rgba(255,255,255,.06);color:var(--petal)}
+.cf-btn.danger:hover{background:rgba(224,96,112,.1);color:var(--red);border-color:rgba(224,96,112,.3)}
+.empty{grid-column:1/-1;text-align:center;padding:5rem 2rem}
+.empty-icon{font-size:2.8rem;margin-bottom:1rem;opacity:.5}
+.empty-title{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-style:italic;color:var(--blush);margin-bottom:.4rem}
+.empty-sub{font-size:.82rem;color:var(--muted)}
+
+/* ── SETUP BANNER ── */
+.setup-banner{background:linear-gradient(135deg,rgba(212,168,67,.1),rgba(212,168,67,.05));border:1px solid rgba(212,168,67,.3);border-radius:14px;padding:1.2rem 1.5rem;margin-bottom:2rem;display:flex;align-items:center;gap:1rem}
+.setup-icon{font-size:1.5rem;flex-shrink:0}
+.setup-text{flex:1}
+.setup-text strong{color:var(--gold-light);font-size:.82rem;display:block;margin-bottom:.2rem}
+.setup-text p{font-size:.72rem;color:var(--muted);line-height:1.5}
+.setup-text code{background:rgba(212,168,67,.15);padding:.1rem .4rem;border-radius:4px;font-family:monospace;font-size:.75rem;color:var(--gold-light);word-break:break-all}
+.setup-input-row{display:flex;gap:.6rem;margin-top:.7rem}
+.setup-input{font-family:monospace;font-size:.75rem;padding:.5rem .8rem;background:rgba(0,0,0,.3);border:1px solid rgba(212,168,67,.3);border-radius:8px;color:var(--white);flex:1}
+.setup-input:focus{outline:none;border-color:var(--gold)}
+.btn-setup{padding:.5rem 1rem;background:var(--gold);color:var(--night);border:none;border-radius:8px;font-family:'Jost',sans-serif;font-size:.72rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s}
+.btn-setup:hover{background:var(--gold-light)}
+
+/* ── MODAL ── */
+.overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(8,5,10,.88);backdrop-filter:blur(12px);align-items:center;justify-content:center;padding:1.5rem}
+.overlay.open{display:flex}
+.modal{background:linear-gradient(145deg,#1a0d22,#120a1a);border:1px solid rgba(201,168,224,.14);border-radius:24px;width:100%;max-width:660px;max-height:92vh;overflow:hidden;display:flex;flex-direction:column;animation:mPop .4s cubic-bezier(.23,1,.32,1);box-shadow:0 30px 80px rgba(0,0,0,.7)}
+@keyframes mPop{from{opacity:0;transform:translateY(30px) scale(.95)}to{opacity:1;transform:none}}
+.modal-header{padding:1.7rem 2rem 1.3rem;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:linear-gradient(to bottom,rgba(212,168,67,.04),transparent)}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-style:italic;font-weight:400;color:var(--petal)}
+.modal-close{width:34px;height:34px;border-radius:50%;border:1px solid var(--glass-b);background:var(--glass);color:var(--muted);font-size:.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.modal-close:hover{background:rgba(224,96,112,.15);color:var(--red)}
+.modal-scroll{overflow-y:auto;flex:1;padding:1.7rem 2rem 2rem}
+.modal-scroll::-webkit-scrollbar{width:4px}
+.modal-scroll::-webkit-scrollbar-thumb{background:rgba(201,168,224,.2);border-radius:2px}
+.fsec{margin-bottom:1.8rem}
+.fsec-head{display:flex;align-items:center;gap:.7rem;margin-bottom:1.1rem}
+.fsec-num{font-family:'Cormorant Garamond',serif;font-size:.75rem;color:var(--accent);letter-spacing:2px}
+.fsec-title{font-size:.6rem;letter-spacing:3.5px;text-transform:uppercase;color:var(--muted)}
+.fsec-line{flex:1;height:1px;background:var(--glass-b)}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+.fgroup{display:flex;flex-direction:column;gap:.4rem}
+.fgroup.full{grid-column:1/-1}
+.flabel{font-size:.58rem;letter-spacing:2.5px;text-transform:uppercase;color:rgba(201,168,224,.6);font-weight:500}
+input[type=number],input[type=date],textarea,select{font-family:'Jost',sans-serif;font-size:.87rem;font-weight:300;padding:.72rem 1rem;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,224,.15);border-radius:10px;color:var(--white);transition:all .25s;width:100%}
+input[type=date]::-webkit-calendar-picker-indicator{filter:invert(.5)}
+input[type=number]:focus,input[type=date]:focus,textarea:focus,select:focus{outline:none;border-color:rgba(212,168,67,.4);background:rgba(212,168,67,.05);box-shadow:0 0 0 3px rgba(212,168,67,.08)}
+select option{background:#1a0d22}
+textarea{resize:vertical;min-height:85px}
+.sgroup{margin-bottom:.85rem}
+.srow{display:flex;align-items:center;justify-content:space-between;margin-bottom:.35rem}
+.slabel{font-size:.68rem;color:rgba(201,168,224,.7);font-weight:300}
+.sval{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--accent-light);min-width:2ch;text-align:right}
+input[type=range]{-webkit-appearance:none;width:100%;height:3px;border:none;border-radius:2px;padding:0;background:linear-gradient(to right,var(--accent) 0%,var(--accent) var(--pct,44%),rgba(255,255,255,.1) var(--pct,44%),rgba(255,255,255,.1) 100%);cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:radial-gradient(circle,var(--accent-light),var(--accent));border:2px solid rgba(0,0,0,.4);box-shadow:0 0 8px var(--accent-glow);transition:transform .15s}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.25)}
+.live-verdict{border-radius:12px;padding:1.1rem 1.4rem;margin-top:.9rem;border:1px solid rgba(255,255,255,.07);background:rgba(0,0,0,.2);text-align:center;transition:all .4s}
+.lv-label{font-size:.55rem;letter-spacing:3.5px;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem}
+.lv-verdict{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-style:italic;transition:color .4s}
+.lv-reason{font-size:.72rem;color:var(--muted);margin-top:.25rem;font-style:italic}
+.flag-section{margin-bottom:.9rem}
+.flag-sec-lbl{font-size:.58rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:.6rem;display:block}
+.flag-grid{display:flex;flex-wrap:wrap;gap:.4rem}
+.ftog{display:none}
+.ftog-label{font-size:.65rem;padding:.28rem .8rem;border-radius:50px;cursor:pointer;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.35);transition:all .2s;user-select:none;font-weight:300}
+.ftog.rf+.ftog-label:hover,.ftog.rf:checked+.ftog-label{background:rgba(224,96,112,.15);color:#e06070;border-color:rgba(224,96,112,.4)}
+.ftog.gf+.ftog-label:hover,.ftog.gf:checked+.ftog-label{background:rgba(122,204,160,.12);color:#7acca0;border-color:rgba(122,204,160,.35)}
+.mfooter{display:flex;justify-content:flex-end;gap:.7rem;padding-top:1.4rem;border-top:1px solid rgba(255,255,255,.06);margin-top:.5rem}
+.btn-cancel{padding:.65rem 1.3rem;background:transparent;border:1px solid var(--glass-b);color:var(--muted);border-radius:50px;font-family:'Jost',sans-serif;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.btn-cancel:hover{border-color:rgba(255,255,255,.2);color:var(--white)}
+.btn-save{padding:.65rem 1.8rem;background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 70%,black));border:none;border-radius:50px;color:var(--night);font-family:'Jost',sans-serif;font-weight:600;font-size:.72rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s;box-shadow:0 4px 20px var(--accent-glow)}
+.btn-save:hover{transform:translateY(-2px);box-shadow:0 8px 30px var(--accent-glow)}
+.d-hero{display:flex;align-items:center;gap:1.3rem;padding:1.4rem;border-radius:14px;background:rgba(0,0,0,.2);border:1px solid var(--glass-b);margin-bottom:1.4rem}
+.d-avatar{width:65px;height:65px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.9rem;flex-shrink:0;border:2px solid rgba(212,168,67,.4);box-shadow:0 0 25px rgba(212,168,67,.15);background:rgba(0,0,0,.3)}
+.d-name{font-family:'Cormorant Garamond',serif;font-size:1.55rem;font-weight:600;color:var(--white);margin-bottom:.15rem}
+.d-nick{font-size:.75rem;color:var(--muted);font-style:italic;margin-bottom:.5rem}
+.d-big{text-align:center;padding:1.4rem;border-radius:14px;background:rgba(0,0,0,.2);border:1px solid var(--glass-b);margin-bottom:1.4rem}
+.d-big-num{font-family:'Cormorant Garamond',serif;font-size:4.2rem;font-weight:300;line-height:1;margin-bottom:.2rem}
+.d-big-lbl{font-size:.58rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted)}
+.d-big-reason{font-size:.8rem;color:var(--muted);margin-top:.5rem;font-style:italic}
+.d-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:1.4rem}
+.d-box{background:rgba(0,0,0,.15);border:1px solid var(--glass-b);border-radius:12px;padding:.85rem;text-align:center}
+.d-box-val{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:300}
+.d-box-lbl{font-size:.53rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-top:.15rem}
+.d-sec-lbl{font-size:.58rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:.7rem;margin-top:1.1rem}
+.d-notes{background:rgba(212,168,67,.04);border-left:2px solid rgba(212,168,67,.35);padding:.9rem 1.1rem;border-radius:0 10px 10px 0;font-style:italic;font-size:.85rem;color:rgba(255,255,255,.55);line-height:1.7}
+.toast{position:fixed;bottom:2.5rem;right:2.5rem;z-index:999;background:linear-gradient(135deg,#1e1125,#2a1535);border:1px solid rgba(212,168,67,.3);color:var(--petal);padding:.85rem 1.5rem;border-radius:50px;font-size:.76rem;letter-spacing:.5px;box-shadow:0 10px 30px rgba(0,0,0,.5);transform:translateY(80px);opacity:0;transition:all .4s cubic-bezier(.23,1,.32,1)}
+.toast.show{transform:translateY(0);opacity:1}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-thumb{background:rgba(201,168,224,.15);border-radius:3px}
+@media(max-width:768px){header{padding:1rem 1.2rem}main{padding:1.5rem}.stats-row{grid-template-columns:1fr 1fr}.fgrid{grid-template-columns:1fr}.welcome-banner{flex-direction:column;text-align:center}}
+
+/* ══ ASSESSMENT FORM ══ */
+.progress-bar-wrap{position:sticky;top:0;z-index:100;background:rgba(13,9,16,.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--glass-b);padding:.8rem 1.5rem}
+.progress-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem}
+.progress-logo{font-family:'Italiana',serif;font-size:1.2rem;letter-spacing:3px;background:linear-gradient(135deg,var(--gold-light),var(--gold),var(--blush));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.progress-info{display:flex;align-items:center;gap:1rem}
+.progress-section{font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.progress-pct{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--gold-light)}
+.progress-track{height:3px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(to right,var(--gold),var(--blush));border-radius:2px;transition:width .5s cubic-bezier(.23,1,.32,1);width:0%}
+
+/* ── LAYOUT ── */
+.page-wrap{position:relative;z-index:2;max-width:780px;margin:0 auto;padding:2.5rem 1.5rem 6rem}
+
+/* ── SECTION HEADERS ── */
+.sec{margin-bottom:2.8rem}
+.sec-head{display:flex;align-items:center;gap:.8rem;margin-bottom:1.4rem;position:relative}
+.sec-head::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(212,168,67,.2),transparent)}
+.sec-badge{display:flex;align-items:center;gap:.5rem;background:rgba(212,168,67,.08);border:1px solid rgba(212,168,67,.2);border-radius:50px;padding:.35rem .9rem .35rem .6rem;flex-shrink:0}
+.sec-num{font-family:'Cormorant Garamond',serif;font-size:.95rem;font-style:italic;color:rgba(212,168,67,.6);line-height:1}
+.sec-icon{font-size:.9rem}
+.sec-title{font-size:.58rem;letter-spacing:3.5px;text-transform:uppercase;color:var(--muted);font-weight:400}
+
+/* ── GRID ── */
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.fgrid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+.fgroup{display:flex;flex-direction:column;gap:.45rem}
+.fgroup.full{grid-column:1/-1}
+.flabel{font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:rgba(201,168,224,.55);font-weight:500;display:flex;align-items:center;gap:.4rem}
+.flabel .req{color:var(--gold)}
+.flabel .hint{font-size:.55rem;color:rgba(201,168,224,.3);letter-spacing:1px;font-style:italic;text-transform:none;font-weight:300}
+
+input[type=text],input[type=number],input[type=date],textarea,select{
+  font-family:'Jost',sans-serif;font-size:.88rem;font-weight:300;
+  padding:.75rem 1rem;background:rgba(255,255,255,.04);
+  border:1px solid rgba(201,168,224,.13);border-radius:12px;
+  color:var(--white);transition:all .25s;width:100%;
+}
+input::placeholder,textarea::placeholder{color:rgba(201,168,224,.22);font-style:italic}
+input:focus,textarea:focus,select:focus{outline:none;border-color:rgba(212,168,67,.4);background:rgba(212,168,67,.04);box-shadow:0 0 0 3px rgba(212,168,67,.07)}
+input[type=date]::-webkit-calendar-picker-indicator{filter:invert(.4)}
+select option{background:#1a0d22}
+textarea{resize:vertical;min-height:85px;line-height:1.6}
+
+/* ── STATUS PILLS ── */
+.pill-group{display:flex;flex-wrap:wrap;gap:.45rem}
+.s-pill{display:none}
+.s-pill-label{font-size:.67rem;padding:.38rem .95rem;border-radius:50px;cursor:pointer;border:1px solid rgba(255,255,255,.09);color:rgba(255,255,255,.33);transition:all .22s;user-select:none}
+.s-pill:checked+.s-pill-label{background:rgba(212,168,67,.14);color:var(--gold-light);border-color:rgba(212,168,67,.4)}
+.s-pill-label:hover{border-color:rgba(212,168,67,.25);color:rgba(255,255,255,.6)}
+
+/* Colored pill variants */
+.s-pill:checked+.s-pill-label.green-v{background:rgba(122,204,160,.14);color:var(--green);border-color:rgba(122,204,160,.4)}
+.s-pill:checked+.s-pill-label.red-v{background:rgba(224,96,112,.14);color:var(--red);border-color:rgba(224,96,112,.4)}
+.s-pill:checked+.s-pill-label.amber-v{background:rgba(224,176,96,.14);color:var(--amber);border-color:rgba(224,176,96,.4)}
+
+/* ── SCORE SLIDERS ── */
+.scores-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem 2.5rem}
+.sgroup{display:flex;flex-direction:column;gap:.4rem}
+.srow{display:flex;align-items:center;justify-content:space-between}
+.slabel{font-size:.68rem;color:rgba(201,168,224,.7);font-weight:300}
+.sval-wrap{display:flex;align-items:baseline;gap:.15rem}
+.sval{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600;color:var(--accent-light);min-width:1.5ch;text-align:right;transition:color .2s}
+.sval-max{font-size:.58rem;color:var(--muted)}
+input[type=range]{-webkit-appearance:none;width:100%;height:3px;border:none;border-radius:2px;padding:0;background:linear-gradient(to right,var(--accent) 0%,var(--accent) var(--pct,44%),rgba(255,255,255,.09) var(--pct,44%),rgba(255,255,255,.09) 100%);cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:radial-gradient(circle,var(--accent-light),var(--accent));border:2px solid rgba(0,0,0,.4);box-shadow:0 0 9px var(--accent-glow);transition:transform .15s}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
+
+/* ── DEAL-BREAKERS ── */
+.db-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.db-tog{display:none}
+.db-label{display:flex;align-items:center;gap:.6rem;font-size:.72rem;padding:.6rem .9rem;border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.36);transition:all .22s;user-select:none;background:rgba(255,255,255,.02)}
+.db-label .db-icon{font-size:.95rem;flex-shrink:0}
+.db-tog:checked+.db-label{background:rgba(224,96,112,.12);color:#e06070;border-color:rgba(224,96,112,.35)}
+.db-label:hover{border-color:rgba(255,255,255,.14);color:rgba(255,255,255,.58)}
+
+/* ── FLAG CHIPS ── */
+.flags-wrap{display:flex;flex-direction:column;gap:1.2rem}
+.flag-sec-title{font-size:.57rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:.5rem;margin-bottom:.55rem}
+.flag-grid{display:flex;flex-wrap:wrap;gap:.38rem}
+.ftog{display:none}
+.ftog-label{font-size:.67rem;padding:.28rem .82rem;border-radius:50px;cursor:pointer;border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.31);transition:all .2s;user-select:none;font-weight:300}
+.ftog.rf+.ftog-label:hover,.ftog.rf:checked+.ftog-label{background:rgba(224,96,112,.13);color:#e06070;border-color:rgba(224,96,112,.36)}
+.ftog.gf+.ftog-label:hover,.ftog.gf:checked+.ftog-label{background:rgba(122,204,160,.1);color:#7acca0;border-color:rgba(122,204,160,.3)}
+
+/* ── VIBE GRID ── */
+.vibe-grid{display:flex;gap:.5rem;flex-wrap:wrap}
+.vibe-tog{display:none}
+.vibe-label{display:flex;flex-direction:column;align-items:center;gap:.25rem;padding:.65rem .8rem;border-radius:12px;cursor:pointer;border:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.33);transition:all .25s;user-select:none;background:rgba(255,255,255,.02);font-size:.58rem;letter-spacing:.8px;text-transform:uppercase;min-width:66px;text-align:center}
+.vibe-label .ve{font-size:1.3rem;display:block}
+.vibe-tog:checked+.vibe-label{background:rgba(212,168,67,.11);color:var(--gold-light);border-color:rgba(212,168,67,.32);box-shadow:0 0 12px rgba(212,168,67,.1)}
+.vibe-label:hover{border-color:rgba(255,255,255,.18);color:rgba(255,255,255,.65)}
+
+/* ── APPEARANCE SECTION ── */
+.style-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.45rem}
+.style-tog{display:none}
+.style-label{display:flex;flex-direction:column;align-items:center;gap:.3rem;padding:.7rem .5rem;border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.33);transition:all .22s;user-select:none;background:rgba(255,255,255,.02);font-size:.58rem;letter-spacing:.5px;text-align:center}
+.style-label .se{font-size:1.2rem}
+.style-tog:checked+.style-label{background:rgba(201,168,224,.1);color:var(--lilac);border-color:rgba(201,168,224,.3)}
+.style-label:hover{border-color:rgba(255,255,255,.15);color:rgba(255,255,255,.6)}
+
+.ick-grid{display:flex;flex-wrap:wrap;gap:.38rem;margin-top:.5rem}
+.ick-tog{display:none}
+.ick-label{font-size:.65rem;padding:.26rem .78rem;border-radius:50px;cursor:pointer;border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.3);transition:all .2s;user-select:none}
+.ick-tog:checked+.ick-label{background:rgba(224,96,112,.1);color:#e8a0b0;border-color:rgba(224,96,112,.3)}
+.ick-label:hover{border-color:rgba(255,255,255,.18);color:rgba(255,255,255,.6)}
+
+/* ── HYGIENE RATING CARDS ── */
+.hygiene-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.hyg-tog{display:none}
+.hyg-label{display:flex;align-items:center;gap:.7rem;padding:.7rem 1rem;border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.36);transition:all .22s;user-select:none;background:rgba(255,255,255,.02);font-size:.72rem}
+.hyg-label .hyg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;transition:all .22s;background:rgba(255,255,255,.2)}
+.hyg-tog:checked+.hyg-label.ok{background:rgba(122,204,160,.1);color:#7acca0;border-color:rgba(122,204,160,.3)}
+.hyg-tog:checked+.hyg-label.ok .hyg-dot{background:var(--green)}
+.hyg-tog:checked+.hyg-label.mid{background:rgba(224,176,96,.1);color:var(--amber);border-color:rgba(224,176,96,.3)}
+.hyg-tog:checked+.hyg-label.mid .hyg-dot{background:var(--amber)}
+.hyg-tog:checked+.hyg-label.bad{background:rgba(224,96,112,.1);color:#e06070;border-color:rgba(224,96,112,.3)}
+.hyg-tog:checked+.hyg-label.bad .hyg-dot{background:var(--red)}
+.hyg-label:hover{border-color:rgba(255,255,255,.15);color:rgba(255,255,255,.6)}
+
+/* ── AGE PREFERENCE ── */
+.age-pref-wrap{background:rgba(0,0,0,.2);border:1px solid var(--glass-b);border-radius:14px;padding:1.2rem 1.4rem}
+.age-range-row{display:flex;align-items:center;gap:1rem;margin-bottom:1rem}
+.age-input-grp{display:flex;flex-direction:column;gap:.3rem;flex:1}
+.age-label-sm{font-size:.56rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.age-display{display:flex;align-items:center;justify-content:center;gap:.5rem;padding:.8rem;background:rgba(212,168,67,.07);border-radius:10px;border:1px solid rgba(212,168,67,.15)}
+.age-display-text{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--gold-light)}
+.age-sep{font-size:.7rem;color:var(--muted)}
+.age-pref-pills{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.8rem}
+
+/* ── HEIGHT SECTION ── */
+.height-wrap{background:rgba(0,0,0,.2);border:1px solid var(--glass-b);border-radius:14px;padding:1.2rem 1.4rem}
+.height-visual{display:flex;align-items:flex-end;justify-content:center;gap:2.5rem;margin:1rem 0 .8rem}
+.height-figure{display:flex;flex-direction:column;align-items:center;gap:.4rem}
+.height-bar-wrap{display:flex;align-items:flex-end;gap:.3rem}
+.height-bar{border-radius:4px 4px 0 0;transition:height .4s cubic-bezier(.23,1,.32,1)}
+.height-bar.her{width:18px;background:linear-gradient(to top,rgba(232,160,184,.6),rgba(240,200,216,.8));height:100px}
+.height-bar.him{width:18px;background:linear-gradient(to top,rgba(212,168,67,.5),rgba(240,204,122,.7));transition:height .4s}
+.height-label{font-size:.6rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+.height-val{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--gold-light)}
+.height-diff-badge{font-size:.65rem;padding:.25rem .7rem;border-radius:50px;margin-top:.3rem}
+.height-diff-badge.taller{background:rgba(122,204,160,.12);color:var(--green);border:1px solid rgba(122,204,160,.25)}
+.height-diff-badge.same{background:rgba(224,176,96,.12);color:var(--amber);border:1px solid rgba(224,176,96,.25)}
+.height-diff-badge.shorter{background:rgba(224,96,112,.12);color:var(--red);border:1px solid rgba(224,96,112,.25)}
+.height-row{display:flex;align-items:center;gap:1rem;margin-bottom:.8rem}
+.height-input-grp{flex:1}
+.height-score-note{font-size:.68rem;color:var(--muted);font-style:italic;text-align:center}
+
+/* ── DISTANCE ── */
+.distance-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem}
+.dist-tog{display:none}
+.dist-label{display:flex;flex-direction:column;align-items:center;gap:.35rem;padding:.85rem .5rem;border-radius:12px;cursor:pointer;border:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.33);transition:all .22s;user-select:none;background:rgba(255,255,255,.02);text-align:center}
+.dist-label .dist-icon{font-size:1.4rem}
+.dist-label .dist-name{font-size:.62rem;letter-spacing:.8px;text-transform:uppercase}
+.dist-label .dist-note{font-size:.56rem;color:rgba(255,255,255,.22);font-style:italic}
+.dist-tog:checked+.dist-label{border-color:rgba(112,184,212,.4);background:rgba(112,184,212,.08);color:rgba(168,216,240,.9)}
+.dist-tog:checked+.dist-label .dist-note{color:rgba(168,216,240,.6)}
+.dist-label:hover{border-color:rgba(255,255,255,.15);color:rgba(255,255,255,.6)}
+.dist-impact{font-size:.7rem;font-style:italic;color:var(--muted);text-align:center;margin-top:.6rem;min-height:1.1rem;transition:all .3s}
+
+/* ── RELIGION ── */
+.religion-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.45rem}
+.rel-tog{display:none}
+.rel-label{display:flex;flex-direction:column;align-items:center;gap:.3rem;padding:.7rem .4rem;border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.33);transition:all .22s;user-select:none;background:rgba(255,255,255,.02);font-size:.58rem;letter-spacing:.5px;text-align:center}
+.rel-label .re{font-size:1.1rem}
+.rel-tog:checked+.rel-label{background:rgba(160,112,212,.12);color:rgba(200,160,240,.9);border-color:rgba(160,112,212,.35)}
+.rel-label:hover{border-color:rgba(255,255,255,.15);color:rgba(255,255,255,.6)}
+.rel-match-row{margin-top:.8rem;display:flex;flex-direction:column;gap:.5rem}
+.rel-match-label{font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.rel-imp-pills{display:flex;gap:.4rem;flex-wrap:wrap}
+.rimp-tog{display:none}
+.rimp-label{font-size:.65rem;padding:.3rem .85rem;border-radius:50px;cursor:pointer;border:1px solid rgba(255,255,255,.09);color:rgba(255,255,255,.33);transition:all .22s;user-select:none}
+.rimp-tog:checked+.rimp-label{background:rgba(160,112,212,.12);color:rgba(200,160,240,.9);border-color:rgba(160,112,212,.3)}
+
+/* ── EDUCATION ── */
+.edu-levels{display:grid;grid-template-columns:repeat(4,1fr);gap:.45rem;margin-bottom:.3rem}
+.edu-tog{display:none}
+.edu-label{display:flex;flex-direction:column;align-items:center;gap:.3rem;padding:.75rem .4rem;border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.33);transition:all .22s;user-select:none;background:rgba(255,255,255,.02);font-size:.58rem;letter-spacing:.5px;text-align:center}
+.edu-label .ee{font-size:1.1rem}
+.edu-tog:checked+.edu-label{background:rgba(122,204,160,.1);color:#7acca0;border-color:rgba(122,204,160,.3)}
+.edu-label:hover{border-color:rgba(255,255,255,.15);color:rgba(255,255,255,.6)}
+.edu-match-note{font-size:.7rem;font-style:italic;color:var(--muted);text-align:center;margin-top:.5rem;min-height:1.1rem;transition:color .3s}
+.field-grid{display:flex;flex-wrap:wrap;gap:.38rem}
+.field-tog{display:none}
+.field-label{font-size:.65rem;padding:.26rem .75rem;border-radius:50px;cursor:pointer;border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.3);transition:all .2s;user-select:none}
+.field-tog:checked+.field-label{background:rgba(201,168,224,.1);color:var(--lilac);border-color:rgba(201,168,224,.28)}
+.field-label:hover{border-color:rgba(255,255,255,.18);color:rgba(255,255,255,.6)}
+.ambition-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.amb-tog{display:none}
+.amb-label{display:flex;align-items:center;gap:.65rem;padding:.65rem 1rem;border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.35);transition:all .22s;user-select:none;background:rgba(255,255,255,.02);font-size:.7rem}
+.amb-label .amb-icon{font-size:1rem;flex-shrink:0}
+.amb-tog:checked+.amb-label{background:rgba(212,168,67,.1);color:var(--gold-light);border-color:rgba(212,168,67,.3)}
+.amb-label:hover{border-color:rgba(255,255,255,.15);color:rgba(255,255,255,.6)}
+
+/* ── COMM STYLE ── */
+.comm-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.comm-tog{display:none}
+.comm-label{display:flex;align-items:center;gap:.65rem;padding:.65rem 1rem;border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.36);transition:all .22s;user-select:none;background:rgba(255,255,255,.02);font-size:.7rem}
+.comm-label .comm-icon{font-size:1rem;flex-shrink:0}
+.comm-tog:checked+.comm-label{background:rgba(122,204,160,.1);color:#7acca0;border-color:rgba(122,204,160,.28)}
+.comm-label:hover{border-color:rgba(255,255,255,.15);color:rgba(255,255,255,.6)}
+
+/* ── VERDICT BOX ── */
+.verdict-box{border-radius:20px;padding:1.8rem 2rem;border:1px solid rgba(255,255,255,.07);background:linear-gradient(135deg,rgba(0,0,0,.35),rgba(30,17,37,.6));text-align:center;margin-top:1.5rem;position:relative;overflow:hidden;transition:all .4s}
+.verdict-box::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,var(--vb-glow,rgba(212,168,67,.05)) 0%,transparent 70%);transition:all .4s}
+.vb-label{font-size:.54rem;letter-spacing:4px;text-transform:uppercase;color:var(--muted);margin-bottom:.6rem;position:relative}
+.vb-score{font-family:'Cormorant Garamond',serif;font-size:4.5rem;font-weight:300;line-height:1;margin-bottom:.2rem;position:relative;transition:color .4s}
+.vb-verdict{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-style:italic;position:relative;transition:color .4s;margin-bottom:.25rem}
+.vb-reason{font-size:.74rem;color:var(--muted);font-style:italic;position:relative;line-height:1.5}
+.vb-breakdown{display:flex;justify-content:center;flex-wrap:wrap;gap:1.2rem;margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid rgba(255,255,255,.06);position:relative}
+.vb-mini{text-align:center}
+.vb-mini-val{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:300}
+.vb-mini-lbl{font-size:.5rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+
+/* ── CHAR COUNTER ── */
+.feel-wrap{position:relative}
+.feel-wrap textarea{padding-right:3rem}
+.feel-counter{position:absolute;bottom:.6rem;right:.8rem;font-size:.58rem;color:var(--muted);pointer-events:none}
+
+/* ── SUGGESTION CHIPS ── */
+.sug-row{display:flex;align-items:center;gap:.5rem;margin-top:.5rem}
+.sug-lbl{font-size:.58rem;color:var(--muted);white-space:nowrap;letter-spacing:.5px}
+.sug-chips{display:flex;flex-wrap:wrap;gap:.3rem}
+.sug-chip{font-size:.62rem;padding:.2rem .62rem;border-radius:50px;border:1px solid rgba(201,168,224,.14);color:rgba(201,168,224,.4);cursor:pointer;transition:all .2s}
+.sug-chip:hover{border-color:rgba(201,168,224,.38);color:var(--lilac)}
+
+/* ── DIVIDER ── */
+.divider{height:1px;background:linear-gradient(to right,transparent,rgba(212,168,67,.12),transparent);margin:2rem 0}
+
+/* ── FORM ACTIONS ── */
+.form-actions{display:flex;align-items:center;justify-content:space-between;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--glass-b);gap:1rem;flex-wrap:wrap}
+.action-note{font-size:.68rem;color:var(--muted);font-style:italic}
+.btn-group{display:flex;gap:.7rem}
+.btn-secondary{padding:.7rem 1.4rem;background:transparent;border:1px solid var(--glass-b);color:var(--muted);border-radius:50px;font-family:'Jost',sans-serif;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.btn-secondary:hover{border-color:rgba(255,255,255,.2);color:var(--white)}
+.btn-primary{padding:.72rem 2rem;background:linear-gradient(135deg,var(--gold),#b8903a);border:none;border-radius:50px;color:var(--night);font-family:'Jost',sans-serif;font-weight:600;font-size:.75rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s;box-shadow:0 4px 20px rgba(212,168,67,.3);display:flex;align-items:center;gap:.5rem}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(212,168,67,.5)}
+
+/* ── SUBSECTION LABEL ── */
+.sub-label{font-size:.6rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:.55rem;margin-top:1rem;display:flex;align-items:center;gap:.5rem}
+.sub-label::after{content:'';flex:1;height:1px;background:var(--glass-b)}
+
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-thumb{background:rgba(201,168,224,.15);border-radius:3px}
+@media(max-width:600px){
+  .fgrid,.fgrid-3,.scores-grid,.db-grid,.hygiene-grid,.distance-cards,.comm-grid,.religion-grid,.style-grid{grid-template-columns:1fr}
+  .form-actions{flex-direction:column;align-items:stretch}
+  .btn-group{justify-content:flex-end}
+  .age-range-row{flex-direction:column}
+  .height-row{flex-direction:column}
+}
+/* ══ MODAL SCROLL OVERRIDE ══ */
+.modal-scroll .page-wrap{padding:1.5rem 0 2rem;position:static;z-index:auto;max-width:100%}
+.modal-scroll .progress-bar-wrap{display:none}
+.modal-scroll .divider{margin:1.5rem 0}
+.modal-scroll .form-actions{margin-top:0;border:none;padding:0}
+</style>
+</head>
+<body>
+<div class="noise"></div>
+<div class="stars" id="stars"></div>
+
+<!-- LOADING -->
+<div class="page active" id="loadingPage">
+  <div class="loading-logo">The Roster</div>
+  <div class="loading-dots"><div class="loading-dot"></div><div class="loading-dot"></div><div class="loading-dot"></div></div>
+  <div class="loading-msg" id="loadingMsg">connecting...</div>
+</div>
+
+<!-- AUTH -->
+<div class="page" id="authPage">
+  <div class="auth-wrap">
+    <div class="auth-logo">
+      <span class="auth-logo-title">The Roster</span>
+      <span class="auth-logo-sub">Man Assessment Headquarters</span>
+      <span class="auth-tagline">Because clarity is self-care, darling.</span>
+    </div>
+    <div class="auth-card">
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchTab('login')">Sign In</button>
+        <button class="auth-tab" onclick="switchTab('signup')">Create Account</button>
+      </div>
+      <div class="auth-form active" id="loginForm">
+        <div class="fg"><label class="fl">Username</label><input type="text" id="liUser" placeholder="Your username" autocomplete="username"></div>
+        <div class="fg"><label class="fl">Password</label><input type="password" id="liPass" placeholder="Your password"></div>
+        <div class="auth-err" id="liErr"></div>
+        <button class="btn-auth" id="liBtn" onclick="doLogin()"><span class="spinner" id="liSpin"></span><span id="liTxt">✦ Enter the Roster</span></button>
+      </div>
+      <div class="auth-form" id="signupForm">
+        <div class="fg"><label class="fl">Your Name</label><input type="text" id="suName" placeholder="What should we call you?"></div>
+        <div class="fg"><label class="fl">Username</label><input type="text" id="suUser" placeholder="Pick a username"></div>
+        <div class="fg"><label class="fl">Password</label><input type="password" id="suPass" placeholder="Choose a password"></div>
+        <div class="fg"><label class="fl">Pick Your Avatar</label><div class="avatar-grid" id="avatarGrid"></div></div>
+        <div class="fg"><label class="fl">Your Signature Color</label><div class="theme-grid" id="themeGrid"></div></div>
+        <div class="auth-err" id="suErr"></div>
+        <button class="btn-auth" id="suBtn" onclick="doSignup()"><span class="spinner" id="suSpin"></span><span id="suTxt">✦ Join the Roster</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="page" id="appPage">
+  <header>
+    <div class="h-left">
+      <div class="h-logo">The Roster</div>
+      <div class="h-divider"></div>
+      <div class="user-chip" onclick="openProfileModal()">
+        <div class="user-av" id="hAvatar">🌹</div>
+        <span class="user-name" id="hName">—</span>
+      </div>
+      <div class="sync-status"><div class="sync-dot" id="syncDot"></div><span id="syncMsg">—</span></div>
+    </div>
+    <div class="h-right">
+      <button class="btn-add" onclick="openAdd()"><span>✦</span> New Assessment</button>
+      <button class="btn-logout" onclick="doLogout()">Sign Out</button>
+    </div>
+  </header>
+  <main>
+    <div id="setupBanner" style="display:none" class="setup-banner">
+      <div class="setup-icon">⚙️</div>
+      <div class="setup-text">
+        <strong>Connect to Google Sheets</strong>
+        <p>Paste your Apps Script Web App URL below to enable cloud sync. All user data will flow to your spreadsheet.</p>
+        <div class="setup-input-row">
+          <input class="setup-input" id="apiUrlInput" placeholder="https://script.google.com/macros/s/YOUR_ID/exec">
+          <button class="btn-setup" onclick="saveApiUrl()">Connect</button>
+        </div>
+      </div>
+    </div>
+    <div class="welcome-banner">
+      <div class="wb-avatar" id="wbAvatar">🌹</div>
+      <div class="wb-text"><h2>Welcome back, <span id="wbName">—</span> ✦</h2><p id="wbQuote">Your roster awaits.</p></div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-gem st"><div class="stat-line"></div><span class="stat-icon">👑</span><div class="stat-num" id="sTotal">0</div><div class="stat-label">On the Roster</div></div>
+      <div class="stat-gem sg"><div class="stat-line"></div><span class="stat-icon">💚</span><div class="stat-num" id="sGreen">0</div><div class="stat-label">Green Light</div></div>
+      <div class="stat-gem sc"><div class="stat-line"></div><span class="stat-icon">⚠️</span><div class="stat-num" id="sCaution">0</div><div class="stat-label">Caution</div></div>
+      <div class="stat-gem sd"><div class="stat-line"></div><span class="stat-icon">🚫</span><div class="stat-num" id="sDrop">0</div><div class="stat-label">Drop Him</div></div>
+    </div>
+    <div class="section-row">
+      <h2 class="section-title">Your <span>Assessments</span></h2>
+      <div class="filters">
+        <button class="f-btn active" onclick="doFilter('all',this)">All</button>
+        <button class="f-btn" onclick="doFilter('proceed',this)">✓ Green</button>
+        <button class="f-btn" onclick="doFilter('caution',this)">⚠ Caution</button>
+        <button class="f-btn" onclick="doFilter('drop',this)">✗ Drop</button>
+        <button class="f-btn" onclick="doFilter('pending',this)">Pending</button>
+      </div>
+    </div>
+    <div class="cards-grid" id="grid"></div>
+  </main>
+</div>
+
+<!-- ADD/EDIT MODAL -->
+<div class="overlay" id="addModal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title" id="mTitle">New Assessment</div><button class="modal-close" onclick="closeAll()">✕</button></div>
+    <div class="modal-scroll" id="addScroll">
+<div class="page-wrap">
+<!-- ══════════════════════════════════════════════
+     01 — WHO IS HE
+══════════════════════════════════════════════ -->
+<div class="sec" id="sec01">
+  <div class="sec-head">
+    <div class="sec-badge"><span class="sec-num">01</span><span class="sec-icon">👤</span></div>
+    <span class="sec-title">Who is he</span>
+  </div>
+  <div class="fgrid">
+    <div class="fgroup"><label class="flabel">Name / Alias <span class="req">*</span></label><input type="text" id="fName" placeholder="What do you call him?" oninput="updateProgress()"></div>
+    <div class="fgroup"><label class="flabel">Nickname <span class="hint">optional</span></label><input type="text" id="fNick" placeholder="e.g. 'Library Guy'"></div>
+    <div class="fgroup"><label class="flabel">His Age</label><input type="number" id="fAge" placeholder="e.g. 27" min="16" max="99" oninput="updateAgeMatch()"></div>
+    <div class="fgroup"><label class="flabel">Occupation</label><input type="text" id="fJob" placeholder="What does he do?"></div>
+    <div class="fgroup">
+      <label class="flabel">How You Met</label>
+      <input type="text" id="fMet" placeholder="Tinder, IRL, mutual friend...">
+      <div class="sug-row"><span class="sug-lbl">Quick:</span><div class="sug-chips">
+        <span class="sug-chip" onclick="fill('fMet',this)">Tinder</span>
+        <span class="sug-chip" onclick="fill('fMet',this)">Hinge</span>
+        <span class="sug-chip" onclick="fill('fMet',this)">Bumble</span>
+        <span class="sug-chip" onclick="fill('fMet',this)">IRL</span>
+        <span class="sug-chip" onclick="fill('fMet',this)">Mutual friend</span>
+        <span class="sug-chip" onclick="fill('fMet',this)">Work</span>
+        <span class="sug-chip" onclick="fill('fMet',this)">School</span>
+      </div></div>
+    </div>
+    <div class="fgroup"><label class="flabel">Talking Since</label><input type="date" id="fSince"></div>
+  </div>
+  <div style="margin-top:1rem">
+    <label class="flabel" style="margin-bottom:.6rem;display:block">Current Status</label>
+    <div class="pill-group">
+      <input type="radio" name="status" class="s-pill" id="st1" value="talking" checked><label class="s-pill-label" for="st1">💬 Still Talking</label>
+      <input type="radio" name="status" class="s-pill" id="st2" value="situation"><label class="s-pill-label" for="st2">🌀 Situationship</label>
+      <input type="radio" name="status" class="s-pill" id="st3" value="dating"><label class="s-pill-label" for="st3">💕 Dating</label>
+      <input type="radio" name="status" class="s-pill" id="st4" value="paused"><label class="s-pill-label" for="st4">⏸ On Hold</label>
+      <input type="radio" name="status" class="s-pill" id="st5" value="done"><label class="s-pill-label" for="st5">🚫 Done & Blocked</label>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════
+     02 — APPEARANCES & STYLE
+══════════════════════════════════════════════ -->
+<div class="sec" id="sec02">
+  <div class="sec-head">
+    <div class="sec-badge"><span class="sec-num">02</span><span class="sec-icon">👔</span></div>
+    <span class="sec-title">Appearances & Style</span>
+  </div>
+
+  <div class="sub-label">His style vibe</div>
+  <div class="style-grid">
+    <input type="radio" name="style" class="style-tog" id="sty1"><label class="style-label" for="sty1"><span class="se">🤵</span>Smart / Formal</label>
+    <input type="radio" name="style" class="style-tog" id="sty2"><label class="style-label" for="sty2"><span class="se">🧥</span>Streetwear</label>
+    <input type="radio" name="style" class="style-tog" id="sty3"><label class="style-label" for="sty3"><span class="se">🏄</span>Casual / Laid-back</label>
+    <input type="radio" name="style" class="style-tog" id="sty4"><label class="style-label" for="sty4"><span class="se">🎨</span>Artistic / Unique</label>
+    <input type="radio" name="style" class="style-tog" id="sty5"><label class="style-label" for="sty5"><span class="se">💼</span>Corporate / Clean</label>
+    <input type="radio" name="style" class="style-tog" id="sty6"><label class="style-label" for="sty6"><span class="se">🤘</span>Edgy / Alt</label>
+    <input type="radio" name="style" class="style-tog" id="sty7"><label class="style-label" for="sty7"><span class="se">🏋️</span>Athleisure</label>
+    <input type="radio" name="style" class="style-tog" id="sty8"><label class="style-label" for="sty8"><span class="se">🤷</span>No style (send help)</label>
+  </div>
+
+  <div class="sub-label" style="margin-top:1.3rem">Overall appearance score</div>
+  <div class="sgroup" style="max-width:380px">
+    <div class="srow"><span class="slabel">How he presents himself</span><div class="sval-wrap"><span class="sval" id="svApp">5</span><span class="sval-max">/10</span></div></div>
+    <input type="range" min="1" max="10" value="5" id="slApp" oninput="sv('slApp','svApp')">
+  </div>
+
+  <div class="sub-label" style="margin-top:1.3rem">Fashion icks / disasters <span style="font-size:.55rem;font-style:italic;color:rgba(201,168,224,.3)">(select any that apply)</span></div>
+  <div class="ick-grid">
+    <input type="checkbox" class="ick-tog" id="ick1"><label class="ick-label" for="ick1">Socks with sandals</label>
+    <input type="checkbox" class="ick-tog" id="ick2"><label class="ick-label" for="ick2">Ed Hardy vibes</label>
+    <input type="checkbox" class="ick-tog" id="ick3"><label class="ick-label" for="ick3">Cargo shorts only</label>
+    <input type="checkbox" class="ick-tog" id="ick4"><label class="ick-label" for="ick4">Graphic tees 24/7</label>
+    <input type="checkbox" class="ick-tog" id="ick5"><label class="ick-label" for="ick5">No grooming effort</label>
+    <input type="checkbox" class="ick-tog" id="ick6"><label class="ick-label" for="ick6">Saggy pants</label>
+    <input type="checkbox" class="ick-tog" id="ick7"><label class="ick-label" for="ick7">Overpowering cologne</label>
+    <input type="checkbox" class="ick-tog" id="ick8"><label class="ick-label" for="ick8">Crocs (in public)</label>
+    <input type="checkbox" class="ick-tog" id="ick9"><label class="ick-label" for="ick9">Same outfit every day</label>
+    <input type="checkbox" class="ick-tog" id="ick10"><label class="ick-label" for="ick10">Mismatched everything</label>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════
+     03 — SELF-HYGIENE & MANNERS
+══════════════════════════════════════════════ -->
+<div class="sec" id="sec03">
+  <div class="sec-head">
+    <div class="sec-badge"><span class="sec-num">03</span><span class="sec-icon">🧼</span></div>
+    <span class="sec-title">Self-Hygiene, Manners & Attitude</span>
+  </div>
+
+  <div class="sub-label">Cleanliness & grooming</div>
+  <div class="hygiene-grid">
+    <input type="radio" name="hygiene" class="hyg-tog" id="hy1"><label class="hyg-label ok" for="hy1"><span class="hyg-dot"></span>Immaculate — always fresh</label>
+    <input type="radio" name="hygiene" class="hyg-tog" id="hy2"><label class="hyg-label ok" for="hy2"><span class="hyg-dot"></span>Good — consistently clean</label>
+    <input type="radio" name="hygiene" class="hyg-tog" id="hy3"><label class="hyg-label mid" for="hy3"><span class="hyg-dot"></span>Decent — sometimes misses</label>
+    <input type="radio" name="hygiene" class="hyg-tog" id="hy4"><label class="hyg-label bad" for="hy4"><span class="hyg-dot"></span>Concerning — noticeable</label>
+  </div>
+
+  <div class="sub-label" style="margin-top:1.1rem">Eating habits & table manners</div>
+  <div class="hygiene-grid">
+    <input type="radio" name="eating" class="hyg-tog" id="eh1"><label class="hyg-label ok" for="eh1"><span class="hyg-dot"></span>Great manners, mindful eater</label>
+    <input type="radio" name="eating" class="hyg-tog" id="eh2"><label class="hyg-label ok" for="eh2"><span class="hyg-dot"></span>Normal, no issues</label>
+    <input type="radio" name="eating" class="hyg-tog" id="eh3"><label class="hyg-label mid" for="eh3"><span class="hyg-dot"></span>Some habits I notice</label>
+    <input type="radio" name="eating" class="hyg-tog" id="eh4"><label class="hyg-label bad" for="eh4"><span class="hyg-dot"></span>Actual ick, every meal</label>
+  </div>
+
+  <div class="sub-label" style="margin-top:1.1rem">Attitude & general respect</div>
+  <div class="fgrid">
+    <div class="sgroup">
+      <div class="srow"><span class="slabel">Respect for others (strangers, staff)</span><div class="sval-wrap"><span class="sval" id="svResp">5</span><span class="sval-max">/10</span></div></div>
+      <input type="range" min="1" max="10" value="5" id="slResp" oninput="sv('slResp','svResp')">
+    </div>
+    <div class="sgroup">
+      <div class="srow"><span class="slabel">General attitude & positivity</span><div class="sval-wrap"><span class="sval" id="svAtt">5</span><span class="sval-max">/10</span></div></div>
+      <input type="range" min="1" max="10" value="5" id="slAtt" oninput="sv('slAtt','svAtt')">
+    </div>
+  </div>
+
+  <div class="sub-label" style="margin-top:.8rem">Manners check <span style="font-size:.55rem;font-style:italic;color:rgba(201,168,224,.3)">(good ones he has)</span></div>
+  <div class="flag-grid">
+    <input type="checkbox" class="ftog gf" id="mn1"><label class="ftog-label" for="mn1">Says please & thank you</label>
+    <input type="checkbox" class="ftog gf" id="mn2"><label class="ftog-label" for="mn2">Holds doors</label>
+    <input type="checkbox" class="ftog gf" id="mn3"><label class="ftog-label" for="mn3">Kind to service staff</label>
+    <input type="checkbox" class="ftog gf" id="mn4"><label class="ftog-label" for="mn4">Punctual</label>
+    <input type="checkbox" class="ftog gf" id="mn5"><label class="ftog-label" for="mn5">Puts phone down</label>
+    <input type="checkbox" class="ftog gf" id="mn6"><label class="ftog-label" for="mn6">Doesn't interrupt</label>
+    <input type="checkbox" class="ftog rf" id="mn7"><label class="ftog-label" for="mn7">Rude to strangers</label>
+    <input type="checkbox" class="ftog rf" id="mn8"><label class="ftog-label" for="mn8">Always late</label>
+    <input type="checkbox" class="ftog rf" id="mn9"><label class="ftog-label" for="mn9">Phone-obsessed</label>
+    <input type="checkbox" class="ftog rf" id="mn10"><label class="ftog-label" for="mn10">Chews loudly</label>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════
+     04 — AGE PREFERENCE
+══════════════════════════════════════════════ -->
+<div class="sec" id="sec04">
+  <div class="sec-head">
+    <div class="sec-badge"><span class="sec-num">04</span><span class="sec-icon">🎂</span></div>
+    <span class="sec-title">Age Preference</span>
+  </div>
+  <p style="font-size:.75rem;color:var(--muted);margin-bottom:1rem;font-style:italic">Set your acceptable age range. His age will be checked against it.</p>
+
+  <div class="age-pref-wrap">
+    <div class="age-range-row">
+      <div class="age-input-grp">
+        <span class="age-label-sm">My Age</span>
+        <input type="number" id="myAge" placeholder="Your age" min="16" max="99" oninput="updateAgeMatch()" style="text-align:center;font-family:'Cormorant Garamond',serif;font-size:1.2rem">
+      </div>
+      <div style="padding-top:1.2rem;color:var(--muted);font-size:.8rem">→</div>
+      <div class="age-input-grp">
+        <span class="age-label-sm">Min Age (him)</span>
+        <input type="number" id="ageMin" placeholder="e.g. 24" min="16" max="99" oninput="updateAgeMatch()" style="text-align:center;font-family:'Cormorant Garamond',serif;font-size:1.2rem">
+      </div>
+      <div style="padding-top:1.2rem;color:var(--muted);font-size:.8rem">to</div>
+      <div class="age-input-grp">
+        <span class="age-label-sm">Max Age (him)</span>
+        <input type="number" id="ageMax" placeholder="e.g. 35" min="16" max="99" oninput="updateAgeMatch()" style="text-align:center;font-family:'Cormorant Garamond',serif;font-size:1.2rem">
+      </div>
+    </div>
+
+    <div class="age-display" id="ageDisplay">
+      <span class="age-display-text" id="ageDisplayText" style="color:var(--muted)">Enter ages above to see match</span>
+    </div>
+
+    <div class="sub-label" style="margin-top:.9rem">Preference type</div>
+    <div class="age-pref-pills">
+      <input type="radio" name="agePref" class="s-pill" id="ap1" value="older"><label class="s-pill-label" for="ap1">📈 Prefer Older</label>
+      <input type="radio" name="agePref" class="s-pill" id="ap2" value="same"><label class="s-pill-label" for="ap2">↔️ Same Age ±2</label>
+      <input type="radio" name="agePref" class="s-pill" id="ap3" value="younger"><label class="s-pill-label" for="ap3">📉 Prefer Younger</label>
+      <input type="radio" name="agePref" class="s-pill" id="ap4" value="any"><label class="s-pill-label" for="ap4">🤷 Age is just a number</label>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════
+     05 — DISTANCE
+══════════════════════════════════════════════ -->
+<div class="sec" id="sec05">
+  <div class="sec-head">
+    <div class="sec-badge"><span class="sec-num">05</span><span class="sec-icon">📍</span></div>
+    <span class="sec-title">Distance & Location</span>
+  </div>
+  <p style="font-size:.75rem;color:var(--muted);margin-bottom:1rem;font-style:italic">Distance is potential heartbreak data. Be real with yourself.</p>
+
+  <div class="distance-cards">
+    <input type="radio" name="distance" class="dist-tog" id="d1" onchange="updateDistImpact(1)">
+    <label class="dist-label" for="d1"><span class="dist-icon">🏠</span><span class="dist-name">Same City</span><span class="dist-note">Same area / walkable</span></label>
+
+    <input type="radio" name="distance" class="dist-tog" id="d2" onchange="updateDistImpact(2)">
+    <label class="dist-label" for="d2"><span class="dist-icon">🚗</span><span class="dist-name">Same Region</span><span class="dist-note">1–3 hours drive</span></label>
+
+    <input type="radio" name="distance" class="dist-tog" id="d3" onchange="updateDistImpact(3)">
+    <label class="dist-label" for="d3"><span class="dist-icon">✈️</span><span class="dist-name">Different City</span><span class="dist-note">Flight required</span></label>
+
+    <input type="radio" name="distance" class="dist-tog" id="d4" onchange="updateDistImpact(4)">
+    <label class="dist-label" for="d4"><span class="dist-icon">🌏</span><span class="dist-name">Different Country</span><span class="dist-note">Passport situation</span></label>
+
+    <input type="radio" name="distance" class="dist-tog" id="d5" onchange="updateDistImpact(5)">
+    <label class="dist-label" for="d5"><span class="dist-icon">🌐</span><span class="dist-name">Different Time Zone</span><span class="dist-note">3+ hours difference</span></label>
+
+    <input type="radio" name="distance" class="dist-tog" id="d6" onchange="updateDistImpact(6)">
+    <label class="dist-label" for="d6"><span class="dist-icon">🚀</span><span class="dist-name">Online Only</span><span class="dist-note">Never met IRL</span></label>
+  </div>
+
+  <div class="dist-impact" id="distImpact"></div>
+
+  <div class="sub-label" style="margin-top:.9rem">Are you open to long distance?</div>
+  <div class="pill-group">
+    <input type="radio" name="ldrOpen" class="s-pill" id="ldr1"><label class="s-pill-label green-v" for="ldr1">✓ Yes, if it's worth it</label>
+    <input type="radio" name="ldrOpen" class="s-pill" id="ldr2"><label class="s-pill-label amber-v" for="ldr2">⚖ Maybe, with a plan</label>
+    <input type="radio" name="ldrOpen" class="s-pill" id="ldr3"><label class="s-pill-label red-v" for="ldr3">✗ Hard no</label>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════
+     06 — COMMUNICATION STYLE
+══════════════════════════════════════════════ -->
+<div class="sec" id="sec06">
+  <div class="sec-head">
+    <div class="sec-badge"><span class="sec-num">06</span><span class="sec-icon">💬</span></div>
+    <span class="sec-title">Communication Style</span>
+  </div>
+
+  <div class="fgrid" style="margin-bottom:1.1rem">
+    <div class="sgroup">
+      <div class="srow"><span class="slabel">Listening skills</span><div class="sval-wrap"><span class="sval" id="svListen">5</span><span class="sval-max">/10</span></div></div>
+      <input type="range" min="1" max="10" value="5" id="slListen" oninput="sv('slListen','svListen')">
+    </div>
+    <div class="sgroup">
+      <div class="srow"><span class="slabel">Conversation quality</span><div class="sval-wrap"><span class="sval" id="svConvo">5</span><span class="sval-max">/10</span></div></div>
+      <input type="range" min="1" max="10" value="5" id="slConvo" oninput="sv('slConvo','svConvo')">
+    </div>
+    <div class="sgroup">
+      <div class="srow"><span class="slabel">Body language / presence</span><div class="sval-wrap"><span class="sval" id="svBody">5</span><span class="sval-max">/10</span></div></div>
+      <input type="range" min="1" max="10" value="5" id="slBody" oninput="sv('slBody','svBody')">
+    </div>
+    <div class="sgroup">
+      <div class="srow"><span class="slabel">Response time & effort</span><div class="sval-wrap"><span class="sval" id="svReply">5</span><span class="sval-max">/10</span></div></div>
+      <input type="range" min="1" max="10" value="5" id="slReply" oninput="sv('slReply','svReply')">
+    </div>
+  </div>
+
+  <div class="sub-label">His communication style</div>
+  <div class="comm-grid">
+    <input type="checkbox" class="comm-tog" id="cs1"><label class="comm-label" for="cs1"><span class="comm-icon">🗣️</span>Opens up easily</label>
+    <input type="checkbox" class="comm-tog" id="cs2"><label class="comm-label" for="cs2"><span class="comm-icon">👂</span>Actually listens, doesn't just wait to talk</label>
+    <input type="checkbox" class="comm-tog" id="cs3"><label class="comm-label" for="cs3"><span class="comm-icon">🧠</span>Thoughtful responses</label>
+    <input type="checkbox" class="comm-tog" id="cs4"><label class="comm-label" for="cs4"><span class="comm-icon">😄</span>Good sense of humour</label>
+    <input type="checkbox" class="comm-tog" id="cs5"><label class="comm-label" for="cs5"><span class="comm-icon">📵</span>Gives full attention (no phone)</label>
+    <input type="checkbox" class="comm-tog" id="cs6"><label class="comm-label" for="cs6"><span class="comm-icon">💌</span>Communicates feelings</label>
+    <input type="checkbox" class="comm-tog" id="cs7"><label class="comm-label" for="cs7"><span class="comm-icon">🔇</span>Goes quiet when upset</label>
+    <input type="checkbox" class="comm-tog" id="cs8"><label class="comm-label" for="cs8"><span class="comm-icon">🔁</span>Circles back after conflict</label>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════
+     07 — RELIGION / FAITH
+══════════════════════════════════════════════ -->
+<div class="sec" id="sec07">
+  <div class="sec-head">
+    <div class="sec-badge"><span class="sec-num">07</span><span class="sec-icon">🕊️</span></div>
+    <span class="sec-title">Religion & Faith</span>
+  </div>
+  <p style="font-size:.75rem;color:var(--muted);margin-bottom:1rem;font-style:italic">Faith compatibility matters. No judgment — just clarity.</p>
+
+  <div class="sub-label">His religion / faith background</div>
+  <div class="religion-grid">
+    <input type="radio" name="hisRel" class="rel-tog" id="rel1"><label class="rel-label" for="rel1"><span class="re">✝️</span>Christian</label>
+    <input type="radio" name="hisRel" class="rel-tog" id="rel2"><label class="rel-label" for="rel2"><span class="re">☪️</span>Muslim</label>
+    <input type="radio" name="hisRel" class="rel-tog" id="rel3"><label class="rel-label" for="rel3"><span class="re">✡️</span>Jewish</label>
+    <input type="radio" name="hisRel" class="rel-tog" id="rel4"><label class="rel-label" for="rel4"><span class="re">🕉️</span>Hindu</label>
+    <input type="radio" name="hisRel" class="rel-tog" id="rel5"><label class="rel-label" for="rel5"><span class="re">☸️</span>Buddhist</label>
+    <input type="radio" name="hisRel" class="rel-tog" id="rel6"><label class="rel-label" for="rel6"><span class="re">🌿</span>Spiritual</label>
+    <input type="radio" name="hisRel" class="rel-tog" id="rel7"><label class="rel-label" for="rel7"><span class="re">🚫</span>Atheist / None</label>
+    <input type="radio" name="hisRel" class="rel-tog" id="rel8"><label class="rel-label" for="rel8"><span class="re">❓</span>Not sure / mixed</label>
+  </div>
+
+  <div class="rel-match-row">
+    <span class="rel-match-label">My religion</span>
+    <div class="rel-imp-pills">
+      <input type="radio" name="myRel" class="rimp-tog" id="mr1"><label class="rimp-label" for="mr1">✝️ Christian</label>
+      <input type="radio" name="myRel" class="rimp-tog" id="mr2"><label class="rimp-label" for="mr2">☪️ Muslim</label>
+      <input type="radio" name="myRel" class="rimp-tog" id="mr3"><label class="rimp-label" for="mr3">✡️ Jewish</label>
+      <input type="radio" name="myRel" class="rimp-tog" id="mr4"><label class="rimp-label" for="mr4">🕉️ Hindu</label>
+      <input type="radio" name="myRel" class="rimp-tog" id="mr5"><label class="rimp-label" for="mr5">☸️ Buddhist</label>
+      <input type="radio" name="myRel" class="rimp-tog" id="mr6"><label class="rimp-label" for="mr6">🌿 Spiritual</label>
+      <input type="radio" name="myRel" class="rimp-tog" id="mr7"><label class="rimp-label" for="mr7">🚫 None</label>
+    </div>
+  </div>
+  <div class="rel-match-row">
+    <span class="rel-match-label">How important is faith match?</span>
+    <div class="rel-imp-pills">
+      <input type="radio" name="relImp" class="rimp-tog" id="ri1"><label class="rimp-label" for="ri1">🔴 Dealbreaker if different</label>
+      <input type="radio" name="relImp" class="rimp-tog" id="ri2"><label class="rimp-label" for="ri2">🟡 Important but flexible</label>
+      <input type="radio" name="relImp" class="rimp-tog" id="ri3"><label class="rimp-label" for="ri3">🟢 Open to all faiths</label>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════
+     08 — HEIGHT
+══════════════════════════════════════════════ -->
+<div class="sec" id="sec08">
+  <div class="sec-head">
+    <div class="sec-badge"><span class="sec-num">08</span><span class="sec-icon">📏</span></div>
+    <span class="sec-title">Height</span>
+  </div>
+  <p style="font-size:.75rem;color:var(--muted);margin-bottom:1rem;font-style:italic">No judgment here. Preference is preference. 💅</p>
+
+  <div class="height-wrap">
+    <div class="height-visual">
+      <div class="height-figure">
+        <div class="height-bar-wrap">
+          <div class="height-bar her" id="herBar" style="height:100px"></div>
+        </div>
+        <span class="height-val" id="herValDisp">—</span>
+        <span class="height-label">You</span>
+      </div>
+      <div class="height-figure">
+        <div class="height-bar-wrap">
+          <div class="height-bar him" id="himBar" style="height:100px"></div>
+        </div>
+        <div id="heightDiffBadge"></div>
+        <span class="height-val" id="himValDisp">—</span>
+        <span class="height-label">Him</span>
+      </div>
+    </div>
+
+    <div class="height-row">
+      <div class="height-input-grp fgroup" style="flex:1">
+        <label class="flabel">My Height (cm)</label>
+        <input type="number" id="myHeight" placeholder="e.g. 162" min="140" max="220" oninput="updateHeightViz()">
+      </div>
+      <div class="height-input-grp fgroup" style="flex:1">
+        <label class="flabel">His Height (cm)</label>
+        <input type="number" id="hisHeight" placeholder="e.g. 178" min="140" max="220" oninput="updateHeightViz()">
+      </div>
+      <div class="height-input-grp fgroup" style="flex:1">
+        <label class="flabel">Min Height I Need</label>
+        <input type="number" id="minHeight" placeholder="e.g. 170" min="140" max="220" oninput="updateHeightViz()">
+      </div>
+    </div>
+
+    <div class="height-score-note" id="heightNote" style="color:var(--muted)">Enter heights to see the comparison</div>
+  </div>
+
+  <div class="sub-label" style="margin-top:1rem">How much does height matter to you?</div>
+  <div class="pill-group">
+    <input type="radio" name="heightImp" class="s-pill" id="hi1"><label class="s-pill-label red-v" for="hi1">🔴 Hard requirement</label>
+    <input type="radio" name="heightImp" class="s-pill" id="hi2"><label class="s-pill-label amber-v" for="hi2">🟡 Preferred but not a dealbreaker</label>
+    <input type="radio" name="heightImp" class="s-pill" id="hi3"><label class="s-pill-label green-v" for="hi3">🟢 Doesn't matter at all</label>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════
+     09 — EDUCATION & CAREER AMBITION
+══════════════════════════════════════════════ -->
+<div class="sec" id="sec09">
+  <div class="sec-head">
+    <div class="sec-badge"><span class="sec-num">09</span><span class="sec-icon">🎓</span></div>
+    <span class="sec-title">Education & Career Ambition</span>
+  </div>
+  <p style="font-size:.75rem;color:var(--muted);margin-bottom:1.2rem;font-style:italic">Because a man with a plan hits different.</p>
+
+  <div class="sub-label">His education level</div>
+  <div class="edu-levels">
+    <input type="radio" name="hisEdu" class="edu-tog" id="he1"><label class="edu-label" for="he1"><span class="ee">🏫</span>High School</label>
+    <input type="radio" name="hisEdu" class="edu-tog" id="he2"><label class="edu-label" for="he2"><span class="ee">📜</span>Diploma / Vocational</label>
+    <input type="radio" name="hisEdu" class="edu-tog" id="he3"><label class="edu-label" for="he3"><span class="ee">🎓</span>Bachelor's</label>
+    <input type="radio" name="hisEdu" class="edu-tog" id="he4"><label class="edu-label" for="he4"><span class="ee">🏅</span>Master's</label>
+    <input type="radio" name="hisEdu" class="edu-tog" id="he5"><label class="edu-label" for="he5"><span class="ee">🔬</span>PhD / Doctorate</label>
+    <input type="radio" name="hisEdu" class="edu-tog" id="he6"><label class="edu-label" for="he6"><span class="ee">💻</span>Self-taught / Bootcamp</label>
+    <input type="radio" name="hisEdu" class="edu-tog" id="he7"><label class="edu-label" for="he7"><span class="ee">🌐</span>Trade / Skilled</label>
+    <input type="radio" name="hisEdu" class="edu-tog" id="he8"><label class="edu-label" for="he8"><span class="ee">❓</span>Not sure yet</label>
+  </div>
+
+  <div class="sub-label" style="margin-top:1.1rem">My minimum education preference</div>
+  <div class="edu-levels" id="myEduPref">
+    <input type="radio" name="myEdu" class="edu-tog" id="me1" onchange="updateEduMatch()"><label class="edu-label" for="me1"><span class="ee">🏫</span>Any level fine</label>
+    <input type="radio" name="myEdu" class="edu-tog" id="me2" onchange="updateEduMatch()"><label class="edu-label" for="me2"><span class="ee">📜</span>Diploma min.</label>
+    <input type="radio" name="myEdu" class="edu-tog" id="me3" onchange="updateEduMatch()"><label class="edu-label" for="me3"><span class="ee">🎓</span>Degree min.</label>
+    <input type="radio" name="myEdu" class="edu-tog" id="me4" onchange="updateEduMatch()"><label class="edu-label" for="me4"><span class="ee">🏅</span>Postgrad min.</label>
+  </div>
+  <div class="edu-match-note" id="eduMatchNote">Select his level and your preference to see match</div>
+
+  <div class="sub-label" style="margin-top:1.1rem">His field of study / industry <span style="font-size:.55rem;font-style:italic;color:rgba(201,168,224,.3)">(select all that apply)</span></div>
+  <div class="field-grid">
+    <input type="checkbox" class="field-tog" id="fd1"><label class="field-label" for="fd1">Tech / Engineering</label>
+    <input type="checkbox" class="field-tog" id="fd2"><label class="field-label" for="fd2">Business / Finance</label>
+    <input type="checkbox" class="field-tog" id="fd3"><label class="field-label" for="fd3">Medicine / Health</label>
+    <input type="checkbox" class="field-tog" id="fd4"><label class="field-label" for="fd4">Law</label>
+    <input type="checkbox" class="field-tog" id="fd5"><label class="field-label" for="fd5">Arts / Design</label>
+    <input type="checkbox" class="field-tog" id="fd6"><label class="field-label" for="fd6">Education</label>
+    <input type="checkbox" class="field-tog" id="fd7"><label class="field-label" for="fd7">Science / Research</label>
+    <input type="checkbox" class="field-tog" id="fd8"><label class="field-label" for="fd8">Social Sciences</label>
+    <input type="checkbox" class="field-tog" id="fd9"><label class="field-label" for="fd9">Trades / Skilled</label>
+    <input type="checkbox" class="field-tog" id="fd10"><label class="field-label" for="fd10">Entrepreneur</label>
+    <input type="checkbox" class="field-tog" id="fd11"><label class="field-label" for="fd11">Media / Content</label>
+    <input type="checkbox" class="field-tog" id="fd12"><label class="field-label" for="fd12">Still figuring it out</label>
+  </div>
+
+  <div class="sub-label" style="margin-top:1.3rem">Career ambition & drive</div>
+  <div class="ambition-grid">
+    <input type="radio" name="ambition" class="amb-tog" id="am1"><label class="amb-label" for="am1"><span class="amb-icon">🚀</span>Highly ambitious — always levelling up</label>
+    <input type="radio" name="ambition" class="amb-tog" id="am2"><label class="amb-label" for="am2"><span class="amb-icon">📈</span>Career-focused — clear goals, working toward them</label>
+    <input type="radio" name="ambition" class="amb-tog" id="am3"><label class="amb-label" for="am3"><span class="amb-icon">⚖️</span>Balanced — works to live, not lives to work</label>
+    <input type="radio" name="ambition" class="amb-tog" id="am4"><label class="amb-label" for="am4"><span class="amb-icon">😴</span>Coasting — no real direction right now</label>
+    <input type="radio" name="ambition" class="amb-tog" id="am5"><label class="amb-label" for="am5"><span class="amb-icon">🌀</span>Lost — no plan, no effort</label>
+    <input type="radio" name="ambition" class="amb-tog" id="am6"><label class="amb-label" for="am6"><span class="amb-icon">💼</span>Established — already successful in his field</label>
+  </div>
+
+  <div class="fgrid" style="margin-top:1.1rem">
+    <div class="sgroup">
+      <div class="srow"><span class="slabel">Ambition & drive score</span><div class="sval-wrap"><span class="sval" id="svAmb">5</span><span class="sval-max">/10</span></div></div>
+      <input type="range" min="1" max="10" value="5" id="slAmb" oninput="sv('slAmb','svAmb')">
+    </div>
+    <div class="sgroup">
+      <div class="srow"><span class="slabel">Financial stability / maturity</span><div class="sval-wrap"><span class="sval" id="svFin">5</span><span class="sval-max">/10</span></div></div>
+      <input type="range" min="1" max="10" value="5" id="slFin" oninput="sv('slFin','svFin')">
+    </div>
+  </div>
+
+  <div class="sub-label" style="margin-top:.9rem">How much does education level matter to you?</div>
+  <div class="pill-group">
+    <input type="radio" name="eduImp" class="s-pill" id="ei1"><label class="s-pill-label red-v" for="ei1">🔴 Dealbreaker if below my standard</label>
+    <input type="radio" name="eduImp" class="s-pill" id="ei2"><label class="s-pill-label amber-v" for="ei2">🟡 Preferred, but ambition matters more</label>
+    <input type="radio" name="eduImp" class="s-pill" id="ei3"><label class="s-pill-label green-v" for="ei3">🟢 Doesn't matter — results speak louder</label>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════
+     10 — CORE RATINGS (renumbered)
+══════════════════════════════════════════════ -->
+<div class="sec" id="sec10">
+  <div class="sec-head">
+    <div class="sec-badge"><span class="sec-num">10</span><span class="sec-icon">📊</span></div>
+    <span class="sec-title">Core Ratings — 1 to 10</span>
+  </div>
+  <div class="scores-grid">
+    <div class="sgroup"><div class="srow"><span class="slabel">Consistency & Effort</span><div class="sval-wrap"><span class="sval" id="sv1">5</span><span class="sval-max">/10</span></div></div><input type="range" min="1" max="10" value="5" id="sl1" oninput="sv('sl1','sv1')"></div>
+    <div class="sgroup"><div class="srow"><span class="slabel">Emotional Intelligence</span><div class="sval-wrap"><span class="sval" id="sv2">5</span><span class="sval-max">/10</span></div></div><input type="range" min="1" max="10" value="5" id="sl2" oninput="sv('sl2','sv2')"></div>
+    <div class="sgroup"><div class="srow"><span class="slabel">Respect & Treatment</span><div class="sval-wrap"><span class="sval" id="sv3">5</span><span class="sval-max">/10</span></div></div><input type="range" min="1" max="10" value="5" id="sl3" oninput="sv('sl3','sv3')"></div>
+    <div class="sgroup"><div class="srow"><span class="slabel">Values & Goals Alignment</span><div class="sval-wrap"><span class="sval" id="sv4">5</span><span class="sval-max">/10</span></div></div><input type="range" min="1" max="10" value="5" id="sl4" oninput="sv('sl4','sv4')"></div>
+    <div class="sgroup"><div class="srow"><span class="slabel">Physical Attraction</span><div class="sval-wrap"><span class="sval" id="sv5">5</span><span class="sval-max">/10</span></div></div><input type="range" min="1" max="10" value="5" id="sl5" oninput="sv('sl5','sv5')"></div>
+    <div class="sgroup"><div class="srow"><span class="slabel">Ambition & Drive</span><div class="sval-wrap"><span class="sval" id="sv6">5</span><span class="sval-max">/10</span></div></div><input type="range" min="1" max="10" value="5" id="sl6" oninput="sv('sl6','sv6')"></div>
+    <div class="sgroup"><div class="srow"><span class="slabel">Gut Feeling / The Vibes</span><div class="sval-wrap"><span class="sval" id="sv7">5</span><span class="sval-max">/10</span></div></div><input type="range" min="1" max="10" value="5" id="sl7" oninput="sv('sl7','sv7')"></div>
+    <div class="sgroup"><div class="srow"><span class="slabel">Overall Compatibility</span><div class="sval-wrap"><span class="sval" id="sv8">5</span><span class="sval-max">/10</span></div></div><input type="range" min="1" max="10" value="5" id="sl8" oninput="sv('sl8','sv8')"></div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════
+     10 — FLAGS & DEALBREAKERS
+══════════════════════════════════════════════ -->
+<div class="sec" id="sec11">
+  <div class="sec-head">
+    <div class="sec-badge"><span class="sec-num">11</span><span class="sec-icon">⚡</span></div>
+    <span class="sec-title">Flags & Dealbreakers</span>
+  </div>
+
+  <div class="sub-label">Instant dealbreakers — any one = drop him</div>
+  <div class="db-grid" style="margin-bottom:1.2rem">
+    <input type="checkbox" class="db-tog" id="db1"><label class="db-label" for="db1"><span class="db-icon">🧠</span>Gaslighting</label>
+    <input type="checkbox" class="db-tog" id="db2"><label class="db-label" for="db2"><span class="db-icon">👊</span>Disrespectful / Mean</label>
+    <input type="checkbox" class="db-tog" id="db3"><label class="db-label" for="db3"><span class="db-icon">💍</span>Taken / Not Single</label>
+    <input type="checkbox" class="db-tog" id="db4"><label class="db-label" for="db4"><span class="db-icon">🤥</span>Compulsive liar</label>
+    <input type="checkbox" class="db-tog" id="db5"><label class="db-label" for="db5"><span class="db-icon">📵</span>Refuses to communicate</label>
+    <input type="checkbox" class="db-tog" id="db6"><label class="db-label" for="db6"><span class="db-icon">💸</span>Financially irresponsible</label>
+  </div>
+
+  <div class="flags-wrap">
+    <div>
+      <div class="flag-sec-title">🚩 Red Flags</div>
+      <div class="flag-grid">
+        <input type="checkbox" class="ftog rf" id="r1"><label class="ftog-label" for="r1">Love bombing</label>
+        <input type="checkbox" class="ftog rf" id="r2"><label class="ftog-label" for="r2">Inconsistent</label>
+        <input type="checkbox" class="ftog rf" id="r3"><label class="ftog-label" for="r3">Avoidant attachment</label>
+        <input type="checkbox" class="ftog rf" id="r4"><label class="ftog-label" for="r4">Breadcrumbing</label>
+        <input type="checkbox" class="ftog rf" id="r5"><label class="ftog-label" for="r5">No accountability</label>
+        <input type="checkbox" class="ftog rf" id="r6"><label class="ftog-label" for="r6">Future faking</label>
+        <input type="checkbox" class="ftog rf" id="r7"><label class="ftog-label" for="r7">Hot & cold</label>
+        <input type="checkbox" class="ftog rf" id="r8"><label class="ftog-label" for="r8">Secretive</label>
+        <input type="checkbox" class="ftog rf" id="r9"><label class="ftog-label" for="r9">Talks about ex too much</label>
+        <input type="checkbox" class="ftog rf" id="r10"><label class="ftog-label" for="r10">Dismisses feelings</label>
+        <input type="checkbox" class="ftog rf" id="r11"><label class="ftog-label" for="r11">Pushes boundaries</label>
+        <input type="checkbox" class="ftog rf" id="r12"><label class="ftog-label" for="r12">Talks down to you</label>
+      </div>
+    </div>
+    <div>
+      <div class="flag-sec-title">💚 Green Flags</div>
+      <div class="flag-grid">
+        <input type="checkbox" class="ftog gf" id="g1"><label class="ftog-label" for="g1">Consistent</label>
+        <input type="checkbox" class="ftog gf" id="g2"><label class="ftog-label" for="g2">Plans ahead</label>
+        <input type="checkbox" class="ftog gf" id="g3"><label class="ftog-label" for="g3">Emotionally available</label>
+        <input type="checkbox" class="ftog gf" id="g4"><label class="ftog-label" for="g4">Respects boundaries</label>
+        <input type="checkbox" class="ftog gf" id="g5"><label class="ftog-label" for="g5">Makes real effort</label>
+        <input type="checkbox" class="ftog gf" id="g6"><label class="ftog-label" for="g6">Takes accountability</label>
+        <input type="checkbox" class="ftog gf" id="g7"><label class="ftog-label" for="g7">Supportive of your goals</label>
+        <input type="checkbox" class="ftog gf" id="g8"><label class="ftog-label" for="g8">Makes you feel safe</label>
+        <input type="checkbox" class="ftog gf" id="g9"><label class="ftog-label" for="g9">Has his life together</label>
+        <input type="checkbox" class="ftog gf" id="g10"><label class="ftog-label" for="g10">Remembers the details</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════════
+     11 — EMOTIONAL VIBE + THE TEA
+══════════════════════════════════════════════ -->
+<div class="sec" id="sec12">
+  <div class="sec-head">
+    <div class="sec-badge"><span class="sec-num">12</span><span class="sec-icon">☕</span></div>
+    <span class="sec-title">Vibe Check & The Tea</span>
+  </div>
+
+  <div class="sub-label">How do you feel most when with / talking to him?</div>
+  <div class="vibe-grid" style="margin-bottom:1.4rem">
+    <input type="checkbox" class="vibe-tog" id="vb1"><label class="vibe-label" for="vb1"><span class="ve">😊</span>Happy</label>
+    <input type="checkbox" class="vibe-tog" id="vb2"><label class="vibe-label" for="vb2"><span class="ve">😰</span>Anxious</label>
+    <input type="checkbox" class="vibe-tog" id="vb3"><label class="vibe-label" for="vb3"><span class="ve">😌</span>At ease</label>
+    <input type="checkbox" class="vibe-tog" id="vb4"><label class="vibe-label" for="vb4"><span class="ve">😕</span>Confused</label>
+    <input type="checkbox" class="vibe-tog" id="vb5"><label class="vibe-label" for="vb5"><span class="ve">🥰</span>Loved</label>
+    <input type="checkbox" class="vibe-tog" id="vb6"><label class="vibe-label" for="vb6"><span class="ve">😤</span>Frustrated</label>
+    <input type="checkbox" class="vibe-tog" id="vb7"><label class="vibe-label" for="vb7"><span class="ve">🔥</span>Excited</label>
+    <input type="checkbox" class="vibe-tog" id="vb8"><label class="vibe-label" for="vb8"><span class="ve">😞</span>Drained</label>
+    <input type="checkbox" class="vibe-tog" id="vb9"><label class="vibe-label" for="vb9"><span class="ve">💪</span>Inspired</label>
+    <input type="checkbox" class="vibe-tog" id="vb10"><label class="vibe-label" for="vb10"><span class="ve">🤔</span>Unsure</label>
+  </div>
+
+  <div class="fgrid">
+    <div class="fgroup full"><label class="flabel">What's actually going on?</label>
+      <div class="feel-wrap"><textarea id="fSit" placeholder="Give the situation context. What happened? What are you confused about?" oninput="countChars('fSit','cSit',300)"></textarea><span class="feel-counter"><span id="cSit">0</span>/300</span></div>
+    </div>
+    <div class="fgroup full"><label class="flabel">What's your gut saying?</label>
+      <div class="feel-wrap"><textarea id="fGut" placeholder="Not your head — your gut. What do you feel deep down?" oninput="countChars('fGut','cGut',200)"></textarea><span class="feel-counter"><span id="cGut">0</span>/200</span></div>
+    </div>
+    <div class="fgroup full"><label class="flabel">What do you want from him?</label>
+      <div class="feel-wrap"><textarea id="fWant" placeholder="Be real with yourself. What are you actually hoping for here?" oninput="countChars('fWant','cWant',200)" style="min-height:70px"></textarea><span class="feel-counter"><span id="cWant">0</span>/200</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     LIVE VERDICT
+══════════════════════════════════════════════ -->
+<div class="verdict-box" id="verdictBox">
+  <div class="vb-label">Live Verdict</div>
+  <div class="vb-score" id="vbScore" style="color:rgba(255,255,255,.2)">—</div>
+  <div class="vb-verdict" id="vbVerdict" style="color:rgba(255,255,255,.25)">Fill in the form to see your verdict</div>
+  <div class="vb-reason" id="vbReason">Move the sliders and toggle flags to see your real-time assessment.</div>
+  <div class="vb-breakdown">
+    <div class="vb-mini"><div class="vb-mini-val" id="vbRed" style="color:var(--red)">0</div><div class="vb-mini-lbl">Red Flags</div></div>
+    <div class="vb-mini"><div class="vb-mini-val" id="vbGreen" style="color:var(--green)">0</div><div class="vb-mini-lbl">Green Flags</div></div>
+    <div class="vb-mini"><div class="vb-mini-val" id="vbDB" style="color:var(--amber)">0</div><div class="vb-mini-lbl">Dealbreakers</div></div>
+    <div class="vb-mini"><div class="vb-mini-val" id="vbAge" style="color:var(--lilac)">—</div><div class="vb-mini-lbl">Age Match</div></div>
+    <div class="vb-mini"><div class="vb-mini-val" id="vbFaith" style="color:var(--lilac)">—</div><div class="vb-mini-lbl">Faith</div></div>
+    <div class="vb-mini"><div class="vb-mini-val" id="vbDist" style="color:var(--lilac)">—</div><div class="vb-mini-lbl">Distance</div></div>
+    <div class="vb-mini"><div class="vb-mini-val" id="vbEdu" style="color:var(--lilac)">—</div><div class="vb-mini-lbl">Education</div></div>
+  </div>
+</div>
+
+<!-- ACTIONS -->
+<div class="form-actions">
+  <span class="action-note">Only name is required. Everything else is yours to fill.</span>
+  <div class="btn-group">
+    <button class="btn-secondary" onclick="resetForm()">Clear Form</button>
+    <button class="btn-primary" onclick="fakeSubmit()">✦ Save Assessment</button>
+  </div>
+</div>
+
+</div><!-- end page-wrap -->
+<!-- FORM ACTIONS wired to app -->
+<div class="form-actions">
+  <span class="action-note">Only name is required.</span>
+  <div class="btn-group">
+    <button class="btn-cancel" onclick="closeAll()">Cancel</button>
+    <button class="btn-primary" onclick="saveIt()">✦ Save to Roster</button>
+  </div>
+</div>
+</div>
+</div>
+</div>
+<!-- DETAIL<!-- DETAIL MODAL -->
+<div class="overlay" id="detailModal">
+  <div class="modal"><div class="modal-header"><div class="modal-title" id="dTitle">Details</div><button class="modal-close" onclick="closeAll()">✕</button></div><div class="modal-scroll" id="dBody"></div></div>
+</div>
+
+<!-- PROFILE MODAL -->
+<div class="overlay" id="profileModal">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-header"><div class="modal-title">My Profile</div><button class="modal-close" onclick="closeAll()">✕</button></div>
+    <div class="modal-scroll">
+      <div style="text-align:center;padding:1.5rem 0 2rem">
+        <div id="pAvBig" style="width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin:0 auto 1rem;border:2px solid var(--accent);box-shadow:0 0 30px var(--accent-glow);background:rgba(0,0,0,.3)">🌹</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-style:italic;color:var(--petal)" id="pName">—</div>
+        <div style="font-size:.7rem;color:var(--muted);margin-top:.2rem">@<span id="pUser">—</span></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem;margin-bottom:2rem">
+        <div class="d-box"><div class="d-box-val" id="pTotal" style="color:var(--accent-light)">0</div><div class="d-box-lbl">Total</div></div>
+        <div class="d-box"><div class="d-box-val" id="pGreen" style="color:var(--green)">0</div><div class="d-box-lbl">Green</div></div>
+        <div class="d-box"><div class="d-box-val" id="pDrop" style="color:var(--red)">0</div><div class="d-box-lbl">Dropped</div></div>
+      </div>
+      <div class="fsec"><div class="fsec-head"><span class="fsec-title">Change Avatar</span><div class="fsec-line"></div></div><div class="avatar-grid" id="pAvatarGrid"></div></div>
+      <div class="fsec"><div class="fsec-head"><span class="fsec-title">Change Color</span><div class="fsec-line"></div></div><div class="theme-grid" id="pThemeGrid"></div></div>
+      <div class="mfooter"><button class="btn-cancel" onclick="closeAll()">Close</button><button class="btn-save" onclick="saveProfile()">Save Changes</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────
+// Paste your Apps Script URL here after setup, OR use the in-app banner
+let API_URL = localStorage.getItem('rosterApiUrl') || '';
+
+// ── STARS ──
+(()=>{const c=document.getElementById('stars');for(let i=0;i<80;i++){const s=document.createElement('div');s.className='star';const sz=Math.random()*1.8+.4;s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--lo:${(Math.random()*.15+.05).toFixed(2)};--hi:${(Math.random()*.5+.3).toFixed(2)};--d:${(Math.random()*5+2).toFixed(1)}s;animation-delay:${(Math.random()*5).toFixed(1)}s`;c.appendChild(s)}})();
+
+// ── THEME ──
+const THEMES=[
+  {accent:'#d4a843',light:'#f0cc7a',glow:'rgba(212,168,67,.25)'},
+  {accent:'#e08090',light:'#f5b8c8',glow:'rgba(224,128,144,.25)'},
+  {accent:'#a070d4',light:'#c8a0f0',glow:'rgba(160,112,212,.25)'},
+  {accent:'#70b8d4',light:'#a8d8f0',glow:'rgba(112,184,212,.25)'},
+  {accent:'#7acca0',light:'#a8e8c8',glow:'rgba(122,204,160,.25)'},
+  {accent:'#e07860',light:'#f0a898',glow:'rgba(224,120,96,.25)'},
+];
+const AVATARS=['🌹','✨','💌','🦋','🔮','🌙','⚡','🎭','🌸','👑','💎','🍓'];
+const MAN_EMOJIS=['💫','🌊','🍀','🎯','🌿','🦅','🔥','🎸','🌺','🗝️','🐺','🦁'];
+
+function applyTheme(i){const t=THEMES[i]||THEMES[0];document.documentElement.style.setProperty('--accent',t.accent);document.documentElement.style.setProperty('--accent-light',t.light);document.documentElement.style.setProperty('--accent-glow',t.glow)}
+
+// ── API ──────────────────────────────────────────────────────
+async function api(payload){
+  if(!API_URL) throw new Error('NO_URL');
+  const res = await fetch(API_URL, {
+    method:'POST', body:JSON.stringify(payload),
+    headers:{'Content-Type':'text/plain'} // text/plain avoids CORS preflight
+  });
+  return res.json();
+}
+
+function setSyncStatus(state, msg){
+  const dot=document.getElementById('syncDot'), txt=document.getElementById('syncMsg');
+  dot.className='sync-dot '+state; txt.textContent=msg;
+}
+
+// ── STATE ──
+let currentUser=null, editId=null, activeFilter='all';
+let localRoster=[];
+let selectedAvatar=AVATARS[0], selectedTheme=0;
+let pSelAvatar=null, pSelTheme=null;
+
+// ── PICKERS ──
+function buildPicker(gridId,items,type,selVal,cb){
+  document.getElementById(gridId).innerHTML=items.map((item,i)=>{
+    if(type==='av'){const sel=item===selVal;return`<div class="av-opt${sel?' selected':''}" onclick="(${cb.toString()})(this,'${item}')">${item}</div>`}
+    const sel=i===selVal;return`<div class="th-opt${sel?' selected':''}" style="background:${item.accent};box-shadow:0 0 10px ${item.glow}" onclick="(${cb.toString()})(this,${i})"></div>`
+  }).join('');
+}
+function pickAv(el,v){document.querySelectorAll('#avatarGrid .av-opt').forEach(e=>e.classList.remove('selected'));el.classList.add('selected');selectedAvatar=v}
+function pickTh(el,v){document.querySelectorAll('#themeGrid .th-opt').forEach(e=>e.classList.remove('selected'));el.classList.add('selected');selectedTheme=v}
+function pickPAv(el,v){document.querySelectorAll('#pAvatarGrid .av-opt').forEach(e=>e.classList.remove('selected'));el.classList.add('selected');pSelAvatar=v}
+function pickPTh(el,v){document.querySelectorAll('#pThemeGrid .th-opt').forEach(e=>e.classList.remove('selected'));el.classList.add('selected');pSelTheme=v}
+
+// ── AUTH TABS ──
+function switchTab(tab){
+  document.querySelectorAll('.auth-tab').forEach((t,i)=>t.classList.toggle('active',i===(tab==='login'?0:1)));
+  document.getElementById('loginForm').classList.toggle('active',tab==='login');
+  document.getElementById('signupForm').classList.toggle('active',tab==='signup');
+  if(tab==='signup'){buildPicker('avatarGrid',AVATARS,'av',selectedAvatar,(el,v)=>pickAv(el,v));buildPicker('themeGrid',THEMES,'th',selectedTheme,(el,v)=>pickTh(el,v))}
+}
+
+function setLoading(btnId,spinId,txtId,loading){
+  const btn=document.getElementById(btnId),sp=document.getElementById(spinId),tx=document.getElementById(txtId);
+  btn.disabled=loading;sp.style.display=loading?'block':'none';tx.style.opacity=loading?.4:1;
+}
+
+// ── LOGIN ──
+async function doLogin(){
+  const user=document.getElementById('liUser').value.trim().toLowerCase();
+  const pass=document.getElementById('liPass').value;
+  const err=document.getElementById('liErr');
+  if(!user||!pass){err.textContent='Please fill in both fields.';return}
+  setLoading('liBtn','liSpin','liTxt',true);
+  try{
+    const r=await api({action:'login',username:user,password:pass});
+    if(!r.success){err.textContent=r.error||'Login failed.';setLoading('liBtn','liSpin','liTxt',false);return}
+    err.textContent='';
+    saveSession(user,pass);
+    await loadUser(r.user);
+  }catch(e){
+    err.textContent=e.message==='NO_URL'?'No API connected. Contact the admin.':'Connection error. Try again.';
+    setLoading('liBtn','liSpin','liTxt',false);
+  }
+}
+
+// ── SIGNUP ──
+async function doSignup(){
+  const name=document.getElementById('suName').value.trim();
+  const user=document.getElementById('suUser').value.trim().toLowerCase().replace(/\s/g,'');
+  const pass=document.getElementById('suPass').value;
+  const err=document.getElementById('suErr');
+  if(!name||!user||!pass){err.textContent='Please fill in all fields.';return}
+  if(pass.length<4){err.textContent='Password must be at least 4 characters.';return}
+  setLoading('suBtn','suSpin','suTxt',true);
+  try{
+    const r=await api({action:'signup',username:user,name,password:pass,avatar:selectedAvatar,theme:selectedTheme});
+    if(!r.success){err.textContent=r.error||'Signup failed.';setLoading('suBtn','suSpin','suTxt',false);return}
+    err.textContent='';
+    saveSession(user,pass);
+    await loadUser(r.user);
+  }catch(e){
+    err.textContent=e.message==='NO_URL'?'No API connected. Contact the admin.':'Connection error. Try again.';
+    setLoading('suBtn','suSpin','suTxt',false);
+  }
+}
+
+// ── SESSION ──
+function saveSession(u,p){localStorage.setItem('rSess',JSON.stringify({u,p}))}
+function clearSession(){localStorage.removeItem('rSess')}
+function getSession(){try{return JSON.parse(localStorage.getItem('rSess'))}catch{return null}}
+
+// ── LOAD USER ──
+async function loadUser(u){
+  currentUser=u;
+  applyTheme(u.theme||0);
+  document.getElementById('hAvatar').textContent=u.avatar;
+  document.getElementById('hName').textContent=u.name;
+  document.getElementById('wbAvatar').textContent=u.avatar;
+  document.getElementById('wbName').textContent=u.name;
+  const quotes=["Your roster awaits. Let's assess.","Clarity is self-care. You've got this.","Standards on. Roster open.","Let the data speak, babe.","Knowledge is power, especially in situationships."];
+  document.getElementById('wbQuote').textContent=quotes[u.username.length%quotes.length];
+  // Show setup banner if admin and no API saved
+  document.getElementById('setupBanner').style.display='none';
+  // Load roster
+  setSyncStatus('syncing','syncing...');
+  try{
+    const r=await api({action:'getRoster',username:u.username});
+    if(r.success){
+      localRoster=r.roster.map((m,i)=>({...m,emoji:m.emoji||MAN_EMOJIS[i%MAN_EMOJIS.length]}));
+      setSyncStatus('synced','synced ✓');
+    }
+  }catch(e){
+    localRoster=[];setSyncStatus('error','offline');
+  }
+  showPage('appPage');
+  render();updateStats();
+}
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ── LOGOUT ──
+function doLogout(){clearSession();currentUser=null;localRoster=[];activeFilter='all';showPage('authPage');document.getElementById('liUser').value='';document.getElementById('liPass').value='';document.getElementById('liErr').textContent='';switchTab('login')}
+
+// ── API URL SETUP ──
+function saveApiUrl(){
+  const url=document.getElementById('apiUrlInput').value.trim();
+  if(!url){toast('Please paste the URL first');return}
+  API_URL=url;localStorage.setItem('rosterApiUrl',url);
+  document.getElementById('setupBanner').style.display='none';
+  toast('Connected! Users can now sign up ✦');
+}
+
+// ── VERDICT ──
+function verdictFromForm(scores,red,green){
+  const red2=getRed(),green2=getGreen(),dbs=getDBs();
+  const rc=red2.length,gc=green2.length,avg=scores.reduce((a,b)=>a+b,0)/scores.length;
+  const age=getAgeStatus(),faith=getFaithStatus(),edu=getEduStatus(),dist=getDistStatus();
+  if(dbs>0)return{v:'drop',label:'Drop Him.',reason:'Dealbreaker present.',color:'var(--red)'};
+  if(!age.ok)return{v:'drop',label:'Age Incompatible.',reason:'Outside age range.',color:'var(--red)'};
+  if(!faith.ok)return{v:'drop',label:'Faith Mismatch.',reason:'Faith is a dealbreaker for you.',color:'var(--red)'};
+  if(!edu.ok)return{v:'drop',label:'Education Gap.',reason:'Below education minimum.',color:'var(--red)'};
+  if(!dist.ok)return{v:'drop',label:'Distance is a No.',reason:'LDR hard no.',color:'var(--red)'};
+  if(rc>=4)return{v:'drop',label:'Drop Him.',reason:`${rc} red flags.`,color:'var(--red)'};
+  if(avg>=7.5&&rc<=1&&gc>=3)return{v:'proceed',label:"He's a Green ✓",reason:'Strong across the board.',color:'var(--green)'};
+  if(avg>=6.5&&rc<=2&&gc>=2)return{v:'proceed',label:'Looking Good ✓',reason:'Above average.',color:'var(--green)'};
+  if(avg>=5.5&&rc<=3)return{v:'caution',label:'Proceed Carefully.',reason:'Eyes open.',color:'var(--amber)'};
+  if(avg<4.5||rc>=3)return{v:'drop',label:'Drop Him.',reason:'Numbers speak.',color:'var(--red)'};
+  return{v:'caution',label:"Jury's Still Out.",reason:'More data needed.',color:'var(--amber)'};
+}
+function verdict(scores,red,green){
+  const avg=scores.reduce((a,b)=>a+b,0)/scores.length,rc=red.length,gc=green.length;
+  if(red.includes('Gaslighting')||red.includes('Disrespectful'))return{v:'drop',label:'Drop Him, Immediately.',reason:'Non-negotiable dealbreakers present.',color:'var(--red)'};
+  if(rc>=4)return{v:'drop',label:'Drop Him.',reason:`${rc} red flags is too many, babe.`,color:'var(--red)'};
+  if(avg>=7.5&&rc<=1&&gc>=3)return{v:'proceed',label:'He\'s a Green ✓',reason:'Solid scores + green flags. Looking good.',color:'var(--green)'};
+  if(avg>=6.5&&rc<=2&&gc>=2)return{v:'proceed',label:'Looking Good ✓',reason:'Above average. Continue.',color:'var(--green)'};
+  if(avg>=5.5&&rc<=3)return{v:'caution',label:'Proceed Carefully.',reason:'Potential, but eyes open.',color:'var(--amber)'};
+  if(avg<4.5||rc>=3)return{v:'drop',label:'Drop Him.',reason:'The numbers don\'t lie, babe.',color:'var(--red)'};
+  return{v:'caution',label:'Jury\'s Still Out.',reason:'More time needed.',color:'var(--amber)'}
+}
+
+// ── SLIDERS ──
+function sv(sid,vid){const val=document.getElementById(sid).value;document.getElementById(vid).textContent=val;document.getElementById(sid).style.setProperty('--pct',((val-1)/9*100).toFixed(0)+'%');liveV()}
+function getScores(){return[1,2,3,4,5,6,7].map(i=>+document.getElementById('sl'+i).value)}
+function getRed(){const f=[];for(let i=1;i<=10;i++){const e=document.getElementById('r'+i);if(e&&e.checked)f.push(e.nextElementSibling.textContent)}return f}
+function getGreen(){const f=[];for(let i=1;i<=10;i++){const e=document.getElementById('g'+i);if(e&&e.checked)f.push(e.nextElementSibling.textContent)}return f}
+function liveV(){const v=verdict(getScores(),getRed(),getGreen());const avg=(getScores().reduce((a,b)=>a+b,0)/7).toFixed(1);document.getElementById('lvText').textContent=v.label+' · '+avg+'/10';document.getElementById('lvText').style.color=v.color;document.getElementById('lvReason').textContent=v.reason}
+document.addEventListener('change',e=>{if(e.target.classList.contains('ftog'))liveV()});
+function initSliders(){for(let i=1;i<=7;i++){const el=document.getElementById('sl'+i);el.style.setProperty('--pct',((el.value-1)/9*100).toFixed(0)+'%')}liveV()}
+
+// ── MODALS ──
+function openAdd(){editId=null;document.getElementById('mTitle').textContent='New Assessment';resetForm();document.getElementById('addModal').classList.add('open');initSliders()}
+function openEdit(id){
+  const m=localRoster.find(x=>x.id===id);if(!m)return;
+  editId=id;document.getElementById('mTitle').textContent='Edit · '+m.name;
+  document.getElementById('fName').value=m.name||'';document.getElementById('fNick').value=m.nick||'';document.getElementById('fAge').value=m.age||'';document.getElementById('fMet').value=m.met||'';document.getElementById('fJob').value=m.job||'';document.getElementById('fSince').value=m.since||'';document.getElementById('fStatus').value=m.status||'talking';document.getElementById('fNotes').value=m.notes||'';
+  for(let i=1;i<=7;i++){document.getElementById('sl'+i).value=m.scores?m.scores[i-1]:5;document.getElementById('sv'+i).textContent=m.scores?m.scores[i-1]:5}
+  for(let i=1;i<=10;i++){const r=document.getElementById('r'+i),g=document.getElementById('g'+i);if(r)r.checked=m.red&&m.red.includes(r.nextElementSibling.textContent);if(g)g.checked=m.green&&m.green.includes(g.nextElementSibling.textContent)}
+  document.getElementById('addModal').classList.add('open');initSliders();
+}
+function openDetail(id){
+  const m=localRoster.find(x=>x.id===id);if(!m)return;
+  document.getElementById('dTitle').textContent=m.name;
+  const v=m.verdict||{v:'pending',label:'Pending',color:'var(--lilac)',reason:''};
+  const avg=m.scores?(m.scores.reduce((a,b)=>a+b,0)/m.scores.length).toFixed(1):'—';
+  const labels=['Consistency','Communication','Emotional IQ','Respect','Alignment','Attraction','Vibes'];
+  const lc=['#d4788a','#c9a84c','#8aab96','#7c9dc9','#c97ca8','#e8836a','#9c7cc9'];
+  const sl={talking:'Still Talking',situation:'Situationship',dating:'Dating',paused:'On Hold',done:'Done & Blocked'};
+  const scH=m.scores?m.scores.map((s,i)=>`<div class="mini-row"><span class="mini-lbl">${labels[i]}</span><div class="mini-track"><div class="mini-fill" style="width:${s*10}%;background:${lc[i]}"></div></div><span class="mini-val">${s}</span></div>`).join(''):'';
+  const rf=m.red&&m.red.length?m.red.map(f=>`<span class="f-chip red">🚩 ${f}</span>`).join(''):'<span style="color:var(--muted);font-size:.75rem">None</span>';
+  const gf=m.green&&m.green.length?m.green.map(f=>`<span class="f-chip green">💚 ${f}</span>`).join(''):'<span style="color:var(--muted);font-size:.75rem">None</span>';
+  document.getElementById('dBody').innerHTML=`
+    <div class="d-hero"><div class="d-avatar">${m.emoji}</div><div><div class="d-name">${m.name}</div>${m.nick?`<div class="d-nick">"${m.nick}"</div>`:''}
+    <span class="verdict-pill v-${v.v}">${v.v==='proceed'?'✓ Green Light':v.v==='caution'?'⚠ Proceed Carefully':v.v==='drop'?'✗ Drop Him':'? Pending'}</span></div></div>
+    <div class="d-big"><div class="d-big-num" style="color:${v.color}">${avg}</div><div class="d-big-lbl">Overall Score out of 10</div><div class="d-big-reason">${v.reason}</div></div>
+    <div class="d-grid">
+      ${m.age?`<div class="d-box"><div class="d-box-val" style="color:var(--accent-light)">${m.age}</div><div class="d-box-lbl">Age</div></div>`:''}
+      ${m.met?`<div class="d-box"><div class="d-box-val" style="color:var(--lilac);font-size:1rem;padding-top:.3rem">${m.met}</div><div class="d-box-lbl">How You Met</div></div>`:''}
+      ${m.job?`<div class="d-box"><div class="d-box-val" style="color:var(--petal);font-size:.9rem;padding-top:.35rem">${m.job}</div><div class="d-box-lbl">Occupation</div></div>`:''}
+      ${m.status?`<div class="d-box"><div class="d-box-val" style="color:var(--blush);font-size:.85rem;padding-top:.35rem">${sl[m.status]||m.status}</div><div class="d-box-lbl">Status</div></div>`:''}
+    </div>
+    <div class="d-sec-lbl">Category Breakdown</div><div class="mini-scores" style="margin-bottom:1.4rem">${scH}</div>
+    <div class="d-sec-lbl">Red Flags</div><div class="card-flags" style="margin-bottom:1.1rem">${rf}</div>
+    <div class="d-sec-lbl">Green Flags</div><div class="card-flags" style="margin-bottom:1.1rem">${gf}</div>
+    ${m.notes?`<div class="d-sec-lbl">Notes</div><div class="d-notes">${m.notes}</div>`:''}
+    <div class="mfooter"><button class="btn-cancel" onclick="closeAll()">Close</button><button class="btn-save" onclick="closeAll();openEdit('${m.id}')">Edit</button></div>`;
+  document.getElementById('detailModal').classList.add('open');
+}
+function openProfileModal(){
+  if(!currentUser)return;
+  document.getElementById('pAvBig').textContent=currentUser.avatar;
+  document.getElementById('pName').textContent=currentUser.name;
+  document.getElementById('pUser').textContent=currentUser.username;
+  document.getElementById('pTotal').textContent=localRoster.length;
+  document.getElementById('pGreen').textContent=localRoster.filter(m=>m.verdict&&m.verdict.v==='proceed').length;
+  document.getElementById('pDrop').textContent=localRoster.filter(m=>m.verdict&&m.verdict.v==='drop').length;
+  pSelAvatar=currentUser.avatar;pSelTheme=currentUser.theme||0;
+  buildPicker('pAvatarGrid',AVATARS,'av',currentUser.avatar,(el,v)=>pickPAv(el,v));
+  buildPicker('pThemeGrid',THEMES,'th',currentUser.theme||0,(el,v)=>pickPTh(el,v));
+  document.getElementById('profileModal').classList.add('open');
+}
+async function saveProfile(){
+  if(pSelAvatar!==null)currentUser.avatar=pSelAvatar;
+  if(pSelTheme!==null){currentUser.theme=pSelTheme;applyTheme(pSelTheme)}
+  try{await api({action:'updateUser',username:currentUser.username,avatar:currentUser.avatar,theme:currentUser.theme})}catch(e){}
+  document.getElementById('hAvatar').textContent=currentUser.avatar;
+  document.getElementById('wbAvatar').textContent=currentUser.avatar;
+  document.getElementById('pAvBig').textContent=currentUser.avatar;
+  closeAll();toast('Profile updated ✦');
+}
+function closeAll(){document.querySelectorAll('.overlay').forEach(o=>o.classList.remove('open'))}
+function resetForm(){
+  ['fName','fNick','fMet','fJob','fNotes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('fAge').value='';document.getElementById('fSince').value='';document.getElementById('fStatus').value='talking';
+  for(let i=1;i<=7;i++){document.getElementById('sl'+i).value=5;document.getElementById('sv'+i).textContent=5}
+  for(let i=1;i<=10;i++){const r=document.getElementById('r'+i),g=document.getElementById('g'+i);if(r)r.checked=false;if(g)g.checked=false}
+}
+
+// ── SAVE ──
+async function saveIt(){
+  const name=document.getElementById('fName').value.trim();
+  if(!name){toast('He needs a name or alias 💅');return}
+  const scores=getScores(),red=getRed(),green=getGreen();
+  const v=verdictFromForm(scores,red,green);
+  const idx=localRoster.length%MAN_EMOJIS.length;
+  // Gather extra preference fields
+  const styleEl=document.querySelector('input[name="style"]:checked');
+  const hygieneEl=document.querySelector('input[name="hygiene"]:checked');
+  const distEl=document.querySelector('input[name="distance"]:checked');
+  const hisEduEl=document.querySelector('input[name="hisEdu"]:checked');
+  const ambEl=document.querySelector('input[name="ambition"]:checked');
+  const relEl=document.querySelector('input[name="hisRel"]:checked');
+  const statusEl=document.querySelector('input[name="status"]:checked');
+  const icks=[...document.querySelectorAll('.ick-tog:checked')].map(e=>e.nextElementSibling.textContent);
+  const fields=[...document.querySelectorAll('.field-tog:checked')].map(e=>e.nextElementSibling.textContent);
+  const prefs={
+    style:styleEl?styleEl.nextElementSibling.textContent:'',
+    hygiene:hygieneEl?hygieneEl.nextElementSibling.textContent.replace(/[^a-zA-Z— ]/g,'').trim():'',
+    icks,fields,
+    distance:distEl?distEl.nextElementSibling.querySelector('.dist-name')?.textContent:'',
+    hisEdu:hisEduEl?hisEduEl.nextElementSibling.textContent:'',
+    ambition:ambEl?ambEl.nextElementSibling.textContent:'',
+    hisRel:relEl?relEl.nextElementSibling.textContent:'',
+    myHeight:document.getElementById('myHeight')?.value||'',
+    hisHeight:document.getElementById('hisHeight')?.value||'',
+    minHeight:document.getElementById('minHeight')?.value||'',
+    myAge:document.getElementById('myAge')?.value||'',
+    ageMin:document.getElementById('ageMin')?.value||'',
+    ageMax:document.getElementById('ageMax')?.value||'',
+    gut:document.getElementById('fGut')?.value||'',
+    want:document.getElementById('fWant')?.value||'',
+    sit:document.getElementById('fSit')?.value||'',
+  };
+  const statusVal=statusEl?statusEl.value:'talking';
+  const noteVal=document.getElementById('fSit')?.value.trim()||'';
+  if(editId){
+    const i=localRoster.findIndex(m=>m.id===editId);
+    localRoster[i]={...localRoster[i],name,nick:document.getElementById('fNick').value.trim(),age:document.getElementById('fAge').value,met:document.getElementById('fMet').value.trim(),job:document.getElementById('fJob').value.trim(),since:document.getElementById('fSince').value,status:statusVal,notes:noteVal,scores,red,green,verdict:v,prefs,updated:Date.now()};
+  }else{
+    localRoster.push({id:Date.now()+'',name,nick:document.getElementById('fNick').value.trim(),age:document.getElementById('fAge').value,met:document.getElementById('fMet').value.trim(),job:document.getElementById('fJob').value.trim(),since:document.getElementById('fSince').value,status:statusVal,notes:noteVal,scores,red,green,verdict:v,prefs,emoji:MAN_EMOJIS[idx],created:Date.now(),updated:Date.now()});
+  }
+  closeAll();render();updateStats();
+  setSyncStatus('syncing','saving...');
+  try{
+    await api({action:'saveRoster',username:currentUser.username,roster:localRoster});
+    setSyncStatus('synced','synced ✓');
+    toast(editId?'Updated ✦':'Added to your Roster ✦');
+  }catch(e){setSyncStatus('error','sync failed');toast('Saved locally — sync failed')}
+}
+async function deleteMan(id){
+  if(!confirm('Remove him from your roster?'))return;
+  localRoster=localRoster.filter(m=>m.id!==id);
+  render();updateStats();
+  setSyncStatus('syncing','saving...');
+  try{await api({action:'saveRoster',username:currentUser.username,roster:localRoster});setSyncStatus('synced','synced ✓');toast('Gone. Onto the next 💅')}
+  catch(e){setSyncStatus('error','sync failed')}
+}
+
+// ── FILTER & RENDER ──
+function doFilter(f,btn){activeFilter=f;document.querySelectorAll('.f-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');render()}
+function render(){
+  const grid=document.getElementById('grid');
+  const list=activeFilter==='all'?localRoster:localRoster.filter(m=>m.verdict&&m.verdict.v===activeFilter);
+  if(!list.length){grid.innerHTML=`<div class="empty"><div class="empty-icon">🌙</div><div class="empty-title">${activeFilter==='all'?'Your roster is empty, darling.':'Nothing here yet.'}</div><div class="empty-sub">${activeFilter==='all'?'Add a man to begin your assessment.':'Try a different filter.'}</div></div>`;return}
+  const labels=['Consistency','Communication','Emotional IQ','Respect','Alignment','Attraction','Vibes'];
+  const lc=['#d4788a','#c9a84c','#8aab96','#7c9dc9','#c97ca8','#e8836a','#9c7cc9'];
+  const sl={talking:'Talking',situation:'Situationship',dating:'Dating',paused:'On Hold',done:'Done'};
+  grid.innerHTML=list.map((m,i)=>{
+    const v=m.verdict||{v:'pending'};const avg=m.scores?(m.scores.reduce((a,b)=>a+b,0)/m.scores.length).toFixed(1):'—';
+    const ts=m.scores?labels.slice(0,5).map((l,j)=>`<div class="mini-row"><span class="mini-lbl">${l}</span><div class="mini-track"><div class="mini-fill" style="width:${m.scores[j]*10}%;background:${lc[j]}"></div></div><span class="mini-val">${m.scores[j]}</span></div>`).join(''):'';
+    const rf=m.red&&m.red.length?m.red.slice(0,3).map(f=>`<span class="f-chip red">🚩 ${f}</span>`).join(''):'';
+    const gf=m.green&&m.green.length?m.green.slice(0,2).map(f=>`<span class="f-chip green">💚 ${f}</span>`).join(''):'';
+    return `<div class="man-card v-${v.v}" style="animation-delay:${i*.07}s">
+      <div class="card-crown"><div class="crown-score"><div class="crown-score-num">${avg}</div><div class="crown-score-lbl">/ 10</div></div>
+        <div class="avatar-ring">${m.emoji}</div>
+        <div class="crown-info"><div class="verdict-pill v-${v.v}">${v.v==='proceed'?'✓ Green':v.v==='caution'?'⚠ Caution':v.v==='drop'?'✗ Drop':'? Pending'}</div>
+        <div class="card-name">${m.name}</div>${m.nick?`<div class="card-nick">"${m.nick}"</div>`:''}</div></div>
+      <div class="card-body">
+        <div class="card-meta">${m.age?`<span class="meta-chip">👤 ${m.age}y</span>`:''}${m.met?`<span class="meta-chip">📍 ${m.met}</span>`:''}${m.status?`<span class="meta-chip">💬 ${sl[m.status]||m.status}</span>`:''}</div>
+        <div class="mini-scores">${ts}</div>
+        ${rf||gf?`<div class="card-flags">${rf}${gf}</div>`:''}
+        <div class="card-footer">
+          <button class="cf-btn" onclick="openDetail('${m.id}')">View</button>
+          <button class="cf-btn" onclick="openEdit('${m.id}')">Edit</button>
+          <button class="cf-btn danger" onclick="deleteMan('${m.id}')">Remove</button>
+        </div></div></div>`;
+  }).join('');
+}
+function updateStats(){
+  document.getElementById('sTotal').textContent=localRoster.length;
+  document.getElementById('sGreen').textContent=localRoster.filter(m=>m.verdict&&m.verdict.v==='proceed').length;
+  document.getElementById('sCaution').textContent=localRoster.filter(m=>m.verdict&&m.verdict.v==='caution').length;
+  document.getElementById('sDrop').textContent=localRoster.filter(m=>m.verdict&&m.verdict.v==='drop').length;
+}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
+
+document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)closeAll()}));
+document.getElementById('liPass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
+document.getElementById('suPass').addEventListener('keydown',e=>{if(e.key==='Enter')doSignup()});
+
+// ── ASSESSMENT FORM FUNCTIONS ──
+// ── QUICK FILL ──
+function fill(id,el){document.getElementById(id).value=el.textContent;}
+
+// ── CHAR COUNT ──
+function countChars(id,cid,max){const l=document.getElementById(id).value.length;document.getElementById(cid).textContent=l;document.getElementById(cid).style.color=l>max*.85?'var(--amber)':'';}
+
+// ── SLIDERS ──
+function sv(sid,vid){
+  const val=document.getElementById(sid).value;
+  document.getElementById(vid).textContent=val;
+  document.getElementById(sid).style.setProperty('--pct',((val-1)/9*100).toFixed(0)+'%');
+  const el=document.getElementById(vid);
+  el.style.color=val>=8?'var(--green)':val>=5?'var(--accent-light)':'var(--red)';
+  updateVerdict();
+}
+function initSliders(){
+  ['slApp','slResp','slAtt','slListen','slConvo','slBody','slReply','sl1','sl2','sl3','sl4','sl5','sl6','sl7','sl8','slAmb','slFin'].forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    el.style.setProperty('--pct','44%');
+  });
+}
+
+// ── AGE MATCH ──
+function updateAgeMatch(){
+  const his=parseInt(document.getElementById('fAge').value);
+  const min=parseInt(document.getElementById('ageMin').value);
+  const max=parseInt(document.getElementById('ageMax').value);
+  const disp=document.getElementById('ageDisplayText');
+  if(!his||!min||!max){disp.textContent='Enter ages above to see match';disp.style.color='var(--muted)';updateVerdict();return;}
+  if(his<min){disp.textContent=`⚠ He's ${min-his} year(s) below your minimum`;disp.style.color='var(--red)';}
+  else if(his>max){disp.textContent=`⚠ He's ${his-max} year(s) above your maximum`;disp.style.color='var(--amber)';}
+  else{disp.textContent=`✓ He's ${his} — within your range of ${min}–${max}`;disp.style.color='var(--green)';}
+  updateVerdict();
+}
+
+// ── HEIGHT VIZ ──
+function updateHeightViz(){
+  const her=parseInt(document.getElementById('myHeight').value)||0;
+  const him=parseInt(document.getElementById('hisHeight').value)||0;
+  const min=parseInt(document.getElementById('minHeight').value)||0;
+  document.getElementById('herValDisp').textContent=her?her+'cm':'—';
+  document.getElementById('himValDisp').textContent=him?him+'cm':'—';
+  if(her>0){const h=Math.max(60,Math.min(140,((her-140)/80)*140+40));document.getElementById('herBar').style.height=h+'px';}
+  if(him>0){const h=Math.max(60,Math.min(140,((him-140)/80)*140+40));document.getElementById('himBar').style.height=h+'px';}
+  const badge=document.getElementById('heightDiffBadge');
+  const note=document.getElementById('heightNote');
+  if(her>0&&him>0){
+    const diff=him-her;
+    if(diff>0){badge.className='height-diff-badge taller';badge.textContent=`+${diff}cm taller`;}
+    else if(diff===0){badge.className='height-diff-badge same';badge.textContent='Same height';}
+    else{badge.className='height-diff-badge shorter';badge.textContent=`${Math.abs(diff)}cm shorter`;}
+    if(min>0){
+      if(him>=min){note.textContent=`✓ ${him}cm meets your minimum of ${min}cm`;note.style.color='var(--green)';}
+      else{note.textContent=`✗ ${him}cm is ${min-him}cm below your minimum of ${min}cm`;note.style.color='var(--red)';}
+    } else {note.textContent='Set a minimum height to check compatibility';note.style.color='var(--muted)';}
+  } else {badge.className='';badge.textContent='';note.textContent='Enter heights to see the comparison';note.style.color='var(--muted)';}
+  updateVerdict();
+}
+
+// ── DISTANCE IMPACT ──
+const distImpacts=[
+  '','✓ Same city — easy to meet, no logistical drama.','⚠ Same region — manageable with effort.','⚠ Different city — visits require planning and money.','🚨 Different country — visas, flights, time zones. Think carefully.','🚨 Different time zone — sleep schedules, missed calls, loneliness. Real challenge.','❓ Online only — chemistry untested IRL. Proceed with extra caution.'
+];
+function updateDistImpact(n){document.getElementById('distImpact').textContent=distImpacts[n];updateVerdict();}
+
+// ── VERDICT ENGINE ──
+function getScores(){return['sl1','sl2','sl3','sl4','sl5','sl6','sl7','sl8'].map(id=>{const el=document.getElementById(id);return el?+el.value:5});}
+function getRed(){const f=[];for(let i=1;i<=12;i++){const e=document.getElementById('r'+i);if(e&&e.checked)f.push(e.nextElementSibling.textContent);}return f;}
+function getGreen(){const f=[];for(let i=1;i<=10;i++){const e=document.getElementById('g'+i);if(e&&e.checked)f.push(e.nextElementSibling.textContent);}return f;}
+function getDBs(){let n=0;for(let i=1;i<=6;i++){if(document.getElementById('db'+i)?.checked)n++;}return n;}
+function getVibeScore(){const pos=['vb1','vb3','vb5','vb7','vb9'],neg=['vb2','vb4','vb6','vb8','vb10'];const p=pos.filter(id=>document.getElementById(id)?.checked).length,n=neg.filter(id=>document.getElementById(id)?.checked).length;if(p===0&&n===0)return{label:'—',color:'rgba(255,255,255,.25)',ok:true};return{label:p>n?'Good 📈':n>p?'Off 📉':'Mixed ↕',color:p>n?'var(--green)':n>p?'var(--red)':'var(--amber)',ok:p>=n};}
+function getAgeStatus(){const his=parseInt(document.getElementById('fAge').value),min=parseInt(document.getElementById('ageMin').value),max=parseInt(document.getElementById('ageMax').value);if(!his||!min||!max)return{label:'—',ok:true};if(his<min||his>max)return{label:'✗ Out',ok:false};return{label:'✓ In',ok:true};}
+function getFaithStatus(){const rimp=document.querySelector('input[name="relImp"]:checked');if(!rimp)return{label:'—',ok:true};if(rimp.value||rimp.id==='ri1'){const hisRel=document.querySelector('input[name="hisRel"]:checked');const myRel=document.querySelector('input[name="myRel"]:checked');if(rimp.id==='ri1'&&hisRel&&myRel){const hisV=hisRel.id,myV=myRel.id;const map={rel1:'mr1',rel2:'mr2',rel3:'mr3',rel4:'mr4',rel5:'mr5',rel6:'mr6',rel7:'mr7'};if(map[hisV]!==myV)return{label:'✗ Diff',ok:false};return{label:'✓ Match',ok:true};}return{label:'—',ok:true};}return{label:'Open',ok:true};}
+function getDistStatus(){const d=document.querySelector('input[name="distance"]:checked');const ldr=document.querySelector('input[name="ldrOpen"]:checked');if(!d)return{label:'—',ok:true};const n=parseInt(d.id.replace('d',''));if(n>=4){if(ldr&&ldr.id==='ldr3')return{label:'✗ LDR',ok:false};if(ldr&&ldr.id==='ldr2')return{label:'⚖ LDR',ok:true};return{label:'LDR',ok:true};}return{label:'✓ Near',ok:true};}
+
+// Education level hierarchy: he1=0,he2=1,he3=2,he4=3,he5=3,he6=1,he7=1,he8=-1
+const EDU_RANK={he1:0,he2:1,he3:2,he4:3,he5:3,he6:1,he7:1,he8:-1};
+const MY_EDU_RANK={me1:0,me2:1,me3:2,me4:3};
+function getEduStatus(){
+  const his=document.querySelector('input[name="hisEdu"]:checked');
+  const mine=document.querySelector('input[name="myEdu"]:checked');
+  const imp=document.querySelector('input[name="eduImp"]:checked');
+  if(!his||!mine)return{label:'—',ok:true};
+  const hisRank=EDU_RANK[his.id]??-1;
+  const myRank=MY_EDU_RANK[mine.id]??0;
+  if(mine.id==='me1')return{label:'✓ Open',ok:true};
+  if(hisRank===-1)return{label:'?',ok:true};
+  if(hisRank<myRank){
+    if(imp&&imp.id==='ei1')return{label:'✗ Below',ok:false};
+    return{label:'⚖ Below pref',ok:true};
+  }
+  return{label:'✓ Meets',ok:true};
+}
+function updateEduMatch(){
+  const status=getEduStatus();
+  const note=document.getElementById('eduMatchNote');
+  if(status.label==='—'){note.textContent='Select his level and your preference to see match';note.style.color='var(--muted)';return;}
+  if(status.label==='✓ Open'){note.textContent='✓ You\'re open to any education level — no issue.';note.style.color='var(--green)';return;}
+  if(status.label==='✓ Meets'){note.textContent='✓ His education meets your preference.';note.style.color='var(--green)';return;}
+  if(status.label==='✗ Below'){note.textContent='✗ He falls below your minimum — flagged in verdict.';note.style.color='var(--red)';return;}
+  note.textContent='⚠ Below your preference, but not a dealbreaker for you.';note.style.color='var(--amber)';
+  updateVerdict();
+}
+
+function updateVerdict(){
+  const scores=getScores();
+  const avg=(scores.reduce((a,b)=>a+b,0)/scores.length).toFixed(1);
+  const red=getRed(),green=getGreen(),dbs=getDBs();
+  const rc=red.length,gc=green.length;
+  const vibe=getVibeScore(),age=getAgeStatus(),faith=getFaithStatus(),dist=getDistStatus(),edu=getEduStatus();
+
+  document.getElementById('vbRed').textContent=rc;
+  document.getElementById('vbGreen').textContent=gc;
+  document.getElementById('vbDB').textContent=dbs;
+  document.getElementById('vbAge').textContent=age.label;document.getElementById('vbAge').style.color=age.ok?'var(--green)':'var(--red)';
+  document.getElementById('vbFaith').textContent=faith.label;document.getElementById('vbFaith').style.color=faith.ok?'var(--green)':'var(--red)';
+  document.getElementById('vbDist').textContent=dist.label;document.getElementById('vbDist').style.color=dist.ok?'var(--green)':'var(--amber)';
+  document.getElementById('vbEdu').textContent=edu.label;document.getElementById('vbEdu').style.color=edu.ok?'var(--green)':'var(--red)';
+
+  let v,color,glow;
+  const hardFail=dbs>0||!age.ok||!faith.ok||!dist.ok;
+
+  if(dbs>0){v={label:'Drop Him.',reason:'A dealbreaker is present. Non-negotiable.'};color='var(--red)';glow='rgba(224,96,112,.1)';}
+  else if(!age.ok){v={label:'Age Incompatible.',reason:'He falls outside your age preference.'};color='var(--red)';glow='rgba(224,96,112,.08)';}
+  else if(!faith.ok){v={label:'Faith Mismatch.',reason:'Religion is a dealbreaker for you — this matters.'};color='var(--red)';glow='rgba(224,96,112,.08)';}
+  else if(!edu.ok){v={label:'Education Gap.',reason:"He doesn't meet your minimum education standard."};color='var(--red)';glow='rgba(224,96,112,.08)';}
+  else if(!dist.ok){v={label:'Distance is a No.',reason:"You said no to LDR and he's far. That's data."};color='var(--red)';glow='rgba(224,96,112,.08)';}
+  else if(rc>=4){v={label:'Drop Him.',reason:`${rc} red flags — too many. Protect your peace.`};color='var(--red)';glow='rgba(224,96,112,.1)';}
+  else if(avg>=7.5&&rc<=1&&gc>=3&&vibe.ok){v={label:"He's a Green ✓",reason:'Strong scores, good flags, good vibes. Worth continuing.'};color='var(--green)';glow='rgba(122,204,160,.1)';}
+  else if(avg>=6.5&&rc<=2&&gc>=2){v={label:'Looking Good ✓',reason:'Above average across the board. Keep going.'};color='var(--green)';glow='rgba(122,204,160,.1)';}
+  else if(avg>=5.5&&rc<=3){v={label:'Proceed Carefully.',reason:'Potential is there — but eyes open, babe.'};color='var(--amber)';glow='rgba(224,176,96,.1)';}
+  else{v={label:"Jury's Still Out.",reason:'Need more data. Keep observing.'};color='var(--amber)';glow='rgba(224,176,96,.08)';}
+
+  document.getElementById('vbScore').textContent=avg;
+  document.getElementById('vbScore').style.color=color;
+  document.getElementById('vbVerdict').textContent=v.label;
+  document.getElementById('vbVerdict').style.color=color;
+  document.getElementById('vbReason').textContent=v.reason;
+  document.getElementById('verdictBox').style.setProperty('--vb-glow',glow);
+  updateProgress();
+}
+
+// ── PROGRESS ──
+const SECTIONS=['Who is he','Appearances','Hygiene & Manners','Age Pref','Distance','Communication','Religion','Height','Education','Core Ratings','Flags','Vibe & Tea'];
+function updateProgress(){
+  let filled=0,total=0;
+  const checks=[
+    ()=>document.getElementById('fName').value.trim().length>0,
+    ()=>document.querySelector('input[name="style"]:checked')!==null,
+    ()=>document.querySelector('input[name="hygiene"]:checked')!==null,
+    ()=>document.getElementById('ageMin').value.length>0,
+    ()=>document.querySelector('input[name="distance"]:checked')!==null,
+    ()=>+document.getElementById('slListen').value!==5||+document.getElementById('slConvo').value!==5,
+    ()=>document.querySelector('input[name="hisRel"]:checked')!==null,
+    ()=>document.getElementById('hisHeight').value.length>0,
+    ()=>document.querySelector('input[name="hisEdu"]:checked')!==null,
+    ()=>[...Array(8)].some((_,i)=>+document.getElementById('sl'+(i+1)).value!==5),
+    ()=>document.querySelectorAll('.ftog:checked').length>0||document.querySelectorAll('.db-tog:checked').length>0,
+    ()=>document.getElementById('fSit').value.trim().length>0||document.querySelectorAll('.vibe-tog:checked').length>0,
+  ];
+  checks.forEach((fn,i)=>{total++;if(fn())filled++;});
+  const pct=Math.round((filled/total)*100);
+  document.getElementById('progFill').style.width=pct+'%';
+  document.getElementById('progPct').textContent=pct+'%';
+  const idx=Math.min(Math.floor((window.scrollY/(document.body.scrollHeight-window.innerHeight))*SECTIONS.length),SECTIONS.length-1);
+  document.getElementById('progSection').textContent=SECTIONS[Math.max(0,idx)]||'Assessment';
+}
+window.addEventListener('scroll',updateProgress);
+document.addEventListener('change',e=>{
+  if(e.target.matches('.ftog,.db-tog,.vibe-tog,input[type=radio],input[type=checkbox]'))updateVerdict();
+});
+
+// ── RESET ──
+function resetForm(){
+  if(!confirm('Clear everything?'))return;
+  document.querySelectorAll('input[type=text],input[type=number],input[type=date],textarea').forEach(el=>el.value='');
+  document.querySelectorAll('input[type=checkbox],input[type=radio]').forEach(el=>el.checked=false);
+  document.getElementById('st1').checked=true;
+  initSliders();
+  ['sv1','sv2','sv3','sv4','sv5','sv6','sv7','sv8','svApp','svResp','svAtt','svListen','svConvo','svBody','svReply','svAmb','svFin'].forEach(id=>{const el=document.getElementById(id);if(el){el.textContent='5';el.style.color='var(--accent-light)'}});
+  ['cSit','cGut','cWant'].forEach(id=>document.getElementById(id).textContent='0');
+  document.getElementById('ageDisplayText').textContent='Enter ages above to see match';
+  document.getElementById('ageDisplayText').style.color='var(--muted)';
+  document.getElementById('heightNote').textContent='Enter heights to see the comparison';
+  document.getElementById('distImpact').textContent='';
+  document.getElementById('eduMatchNote').textContent='Select his level and your preference to see match';
+  document.getElementById('eduMatchNote').style.color='var(--muted)';
+  updateVerdict();
+}
+
+// ── BOOT ──
+(async()=>{
+  document.getElementById('loadingMsg').textContent='connecting to sheets...';
+  const sess=getSession();
+  if(sess&&API_URL){
+    try{
+      const r=await api({action:'login',username:sess.u,password:sess.p});
+      if(r.success){await loadUser(r.user);return}
+    }catch(e){}
+  }
+  // No session or API — show auth
+  if(!API_URL){
+    showPage('authPage');
+    switchTab('login');
+    // Show setup banner for first-time admin
+    document.getElementById('setupBanner').style.display='flex';
+  } else {
+    showPage('authPage');
+    switchTab('login');
+    buildPicker('avatarGrid',AVATARS,'av',selectedAvatar,(el,v)=>pickAv(el,v));
+    buildPicker('themeGrid',THEMES,'th',selectedTheme,(el,v)=>pickTh(el,v));
+  }
+})();
+</script>
+</body>
+</html>
