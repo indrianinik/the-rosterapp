@@ -95,6 +95,30 @@ header{position:sticky;top:0;z-index:50;padding:1.2rem 3rem;display:flex;align-i
 .btn-add:hover{transform:translateY(-2px);box-shadow:0 0 35px var(--accent-glow),0 8px 20px rgba(0,0,0,.4)}
 .btn-logout{padding:.55rem 1rem;background:transparent;border:1px solid rgba(224,96,112,.25);color:rgba(224,96,112,.7);border-radius:50px;font-family:'Jost',sans-serif;font-size:.65rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .2s}
 .btn-logout:hover{background:rgba(224,96,112,.1);color:var(--red);border-color:rgba(224,96,112,.5)}
+.btn-settings{padding:.55rem .85rem;background:transparent;border:1px solid var(--glass-b);color:var(--muted);border-radius:50px;font-family:'Jost',sans-serif;font-size:.8rem;cursor:pointer;transition:all .2s;line-height:1}
+.btn-settings:hover{background:rgba(212,168,67,.08);color:var(--gold-light);border-color:rgba(212,168,67,.3)}
+/* ── SETTINGS MODAL ── */
+.settings-modal{display:none;position:fixed;inset:0;z-index:1000;align-items:center;justify-content:center;padding:1.5rem;background:rgba(0,0,0,.7);backdrop-filter:blur(8px)}
+.settings-modal.open{display:flex}
+.settings-card{background:linear-gradient(145deg,rgba(30,17,37,.98),rgba(18,10,26,.99));border:1px solid rgba(201,168,224,.15);border-radius:24px;padding:2rem 2.2rem;width:100%;max-width:520px;box-shadow:0 40px 100px rgba(0,0,0,.7);animation:cardUp .3s cubic-bezier(.23,1,.32,1)}
+.settings-title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-style:italic;color:var(--petal);margin-bottom:.3rem}
+.settings-sub{font-size:.68rem;color:var(--muted);letter-spacing:.5px;margin-bottom:1.8rem}
+.settings-section{margin-bottom:1.5rem}
+.settings-label{font-size:.58rem;letter-spacing:2.5px;text-transform:uppercase;color:rgba(201,168,224,.5);margin-bottom:.6rem;display:block}
+.settings-input-row{display:flex;gap:.6rem}
+.settings-input{flex:1;font-family:'Jost',sans-serif;font-size:.82rem;font-weight:300;padding:.75rem 1rem;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,224,.13);border-radius:12px;color:var(--white);transition:all .25s}
+.settings-input:focus{outline:none;border-color:rgba(212,168,67,.4);background:rgba(212,168,67,.04);box-shadow:0 0 0 3px rgba(212,168,67,.07)}
+.settings-input::placeholder{color:rgba(201,168,224,.22);font-style:italic}
+.settings-url-note{font-size:.65rem;color:var(--muted);font-style:italic;margin-top:.5rem;line-height:1.5}
+.settings-url-status{font-size:.68rem;margin-top:.4rem;font-weight:500}
+.settings-url-status.connected{color:var(--green)}
+.settings-url-status.empty{color:var(--amber)}
+.btn-connect{padding:.72rem 1.4rem;background:linear-gradient(135deg,var(--gold),#b8903a);border:none;border-radius:50px;color:var(--night);font-family:'Jost',sans-serif;font-weight:600;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s;white-space:nowrap}
+.btn-connect:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(212,168,67,.4)}
+.settings-divider{height:1px;background:linear-gradient(to right,transparent,rgba(212,168,67,.1),transparent);margin:1.2rem 0}
+.settings-footer{display:flex;justify-content:flex-end;gap:.7rem;margin-top:.5rem}
+.btn-settings-close{padding:.65rem 1.6rem;background:transparent;border:1px solid var(--glass-b);color:var(--muted);border-radius:50px;font-family:'Jost',sans-serif;font-size:.7rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.btn-settings-close:hover{border-color:rgba(255,255,255,.2);color:var(--white)}
 main{max-width:1380px;margin:0 auto;padding:2.5rem 3rem 5rem;position:relative;z-index:2}
 .welcome-banner{margin-bottom:2.5rem;padding:1.8rem 2.2rem;border-radius:20px;background:linear-gradient(135deg,rgba(30,17,37,.9),rgba(42,21,53,.7));border:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:1.5rem;position:relative;overflow:hidden}
 .welcome-banner::before{content:'';position:absolute;top:-30px;right:-30px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,var(--accent-glow) 0%,transparent 70%);pointer-events:none}
@@ -563,6 +587,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
       <div class="sync-status"><div class="sync-dot" id="syncDot"></div><span id="syncMsg">—</span></div>
     </div>
     <div class="h-right">
+      <button class="btn-settings" onclick="openSettings()" title="Settings">⚙</button>
       <button class="btn-add" onclick="openAdd()"><span>✦</span> New Assessment</button>
       <button class="btn-logout" onclick="doLogout()">Sign Out</button>
     </div>
@@ -1798,6 +1823,64 @@ function resetForm(){
   updateVerdict();
 }
 
+// ── SETTINGS MODAL ──
+function openSettings(){
+  const modal=document.getElementById('settingsModal');
+  const input=document.getElementById('settingsApiInput');
+  const status=document.getElementById('settingsUrlStatus');
+  const current=localStorage.getItem('rosterApiUrl')||'';
+  input.value=current;
+  if(current){
+    status.textContent='✓ URL connected: '+current.slice(0,60)+'...';
+    status.className='settings-url-status connected';
+  } else {
+    status.textContent='⚠ No URL set — the app is running in offline mode only.';
+    status.className='settings-url-status empty';
+  }
+  document.getElementById('settingsTestResult').textContent='';
+  modal.classList.add('open');
+}
+function closeSettings(){
+  document.getElementById('settingsModal').classList.remove('open');
+}
+function saveSettingsUrl(){
+  const url=document.getElementById('settingsApiInput').value.trim();
+  const status=document.getElementById('settingsUrlStatus');
+  if(!url){
+    status.textContent='⚠ Please paste your Apps Script URL first.';
+    status.className='settings-url-status empty';
+    return;
+  }
+  if(!url.startsWith('https://script.google.com/')){
+    status.textContent='✗ That doesn\'t look like a valid Apps Script URL. It should start with https://script.google.com/';
+    status.className='settings-url-status empty';
+    return;
+  }
+  API_URL=url;
+  localStorage.setItem('rosterApiUrl',url);
+  // Also update the old apiUrlInput if it exists on page
+  const old=document.getElementById('apiUrlInput');
+  if(old)old.value=url;
+  document.getElementById('setupBanner').style.display='none';
+  status.textContent='✓ Saved! URL connected.';
+  status.className='settings-url-status connected';
+  toast('API URL saved — you\'re connected 🔗');
+}
+async function testConnection(){
+  const result=document.getElementById('settingsTestResult');
+  if(!API_URL){result.textContent='⚠ No URL saved yet. Paste and save your URL first.';result.style.color='var(--amber)';return;}
+  result.textContent='Testing connection...';
+  result.style.color='var(--muted)';
+  try{
+    const r=await api({action:'ping'});
+    result.textContent='✓ Connected successfully! Google Sheets is reachable.';
+    result.style.color='var(--green)';
+  }catch(e){
+    result.textContent='✗ Could not reach the API. Check your URL and make sure your deployment is set to "Anyone" access.';
+    result.style.color='var(--red)';
+  }
+}
+
 // ── BOOT ──
 (async()=>{
   document.getElementById('loadingMsg').textContent='connecting to sheets...';
@@ -1822,5 +1905,38 @@ function resetForm(){
   }
 })();
 </script>
+<!-- SETTINGS MODAL -->
+<div class="settings-modal" id="settingsModal" onclick="if(event.target===this)closeSettings()">
+  <div class="settings-card">
+    <div class="settings-title">Settings ⚙</div>
+    <div class="settings-sub">Manage your Google Sheets connection and app preferences</div>
+
+    <div class="settings-section">
+      <span class="settings-label">Google Sheets API URL</span>
+      <div class="settings-input-row">
+        <input class="settings-input" id="settingsApiInput" placeholder="https://script.google.com/macros/s/YOUR_ID/exec">
+        <button class="btn-connect" onclick="saveSettingsUrl()">Connect</button>
+      </div>
+      <div class="settings-url-note">
+        Your Apps Script Web App URL. Get this from Google Apps Script → Deploy → Manage deployments.<br>
+        If you don't have one yet, follow the SETUP-GUIDE.md included with your download.
+      </div>
+      <div class="settings-url-status" id="settingsUrlStatus"></div>
+    </div>
+
+    <div class="settings-divider"></div>
+
+    <div class="settings-section">
+      <span class="settings-label">Connection Test</span>
+      <button class="btn-settings-close" style="font-size:.68rem" onclick="testConnection()">🔗 Test Connection</button>
+      <div id="settingsTestResult" style="font-size:.68rem;margin-top:.6rem;color:var(--muted);font-style:italic"></div>
+    </div>
+
+    <div class="settings-footer">
+      <button class="btn-settings-close" onclick="closeSettings()">Done</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
