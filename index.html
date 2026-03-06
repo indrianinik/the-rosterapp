@@ -1347,7 +1347,9 @@ function switchTab(tab){
   document.querySelectorAll('.auth-tab').forEach((t,i)=>t.classList.toggle('active',i===(tab==='login'?0:1)));
   document.getElementById('loginForm').classList.toggle('active',tab==='login');
   document.getElementById('signupForm').classList.toggle('active',tab==='signup');
-  if(tab==='signup'){buildPicker('avatarGrid',AVATARS,'av',selectedAvatar,(el,v)=>pickAv(el,v));buildPicker('themeGrid',THEMES,'th',selectedTheme,(el,v)=>pickTh(el,v))}
+  // Always rebuild pickers when switching to signup so they're never empty
+  buildPicker('avatarGrid',AVATARS,'av',selectedAvatar,(el,v)=>pickAv(el,v));
+  buildPicker('themeGrid',THEMES,'th',selectedTheme,(el,v)=>pickTh(el,v));
 }
 
 function setLoading(btnId,spinId,txtId,loading){
@@ -1944,16 +1946,22 @@ async function testConnection(){
 
 // ── BOOT ──
 (async()=>{
-  document.getElementById('loadingMsg').textContent='connecting...';
-
-  // Sync hardcoded URL into localStorage so it's never stale
+  // Sync hardcoded URL immediately
   if(HARDCODED_API_URL && HARDCODED_API_URL !== 'YOUR_APPS_SCRIPT_URL_HERE'){
     localStorage.setItem('rosterApiUrl', HARDCODED_API_URL);
     API_URL = HARDCODED_API_URL;
   }
 
-  // If there's a saved session, try auto-login with a 5s timeout
+  // Pre-build pickers right away
+  buildPicker('avatarGrid', AVATARS, 'av', selectedAvatar, (el,v)=>pickAv(el,v));
+  buildPicker('themeGrid', THEMES, 'th', selectedTheme, (el,v)=>pickTh(el,v));
+
+  // If saved session exists, try auto-login in background — show auth immediately regardless
   const sess = getSession();
+  showPage('authPage');
+  switchTab('login');
+  refreshAuthApiStrip();
+
   if(sess && API_URL){
     try{
       const r = await Promise.race([
@@ -1961,15 +1969,8 @@ async function testConnection(){
         new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')), 5000))
       ]);
       if(r && r.success){ await loadUser(r.user); return; }
-    }catch(e){ /* fall through to auth */ }
+    }catch(e){ /* no saved session or expired — stay on auth */ }
   }
-
-  // Always end up on the auth page — never stay stuck on loading
-  showPage('authPage');
-  switchTab('login');
-  buildPicker('avatarGrid', AVATARS, 'av', selectedAvatar, (el,v)=>pickAv(el,v));
-  buildPicker('themeGrid', THEMES, 'th', selectedTheme, (el,v)=>pickTh(el,v));
-  refreshAuthApiStrip();
 })();
 </script>
 <!-- SETTINGS MODAL -->
