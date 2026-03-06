@@ -273,23 +273,35 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.25)}
 ::-webkit-scrollbar{width:5px}
 ::-webkit-scrollbar-thumb{background:rgba(201,168,224,.15);border-radius:3px}
 @media(max-width:768px){
-  header{padding:.8rem 1rem;flex-wrap:wrap;gap:.5rem}
-  .h-left{gap:.6rem;flex:1;min-width:0}
-  .h-logo{font-size:1.1rem}
-  .h-right{gap:.5rem}
-  .btn-add{font-size:.6rem;padding:.5rem .9rem;letter-spacing:1px}
-  .btn-logout{font-size:.6rem;padding:.5rem .8rem}
+  /* Header - keep everything on one line, no wrapping */
+  header{padding:.7rem 1rem;gap:.5rem;flex-wrap:nowrap}
+  .h-left{gap:.5rem;flex:1;min-width:0;overflow:hidden}
+  .h-logo{font-size:1.1rem;letter-spacing:2px;white-space:nowrap}
+  .h-divider{display:none}
+  .sync-status{display:none}
+  .h-right{gap:.4rem;flex-shrink:0}
+  .btn-add{font-size:.55rem;padding:.45rem .75rem;letter-spacing:.8px;gap:.25rem}
+  .btn-logout{font-size:.55rem;padding:.4rem .65rem;letter-spacing:.8px}
+  /* Main content */
   main{padding:1rem}
-  .welcome-banner{flex-direction:column;text-align:center;padding:1.5rem 1rem}
-  .wb-avatar{font-size:2.5rem;margin-bottom:.5rem}
-  .stats-row{grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1.5rem}
-  .cards-grid{grid-template-columns:1fr;gap:1.2rem}
-  .section-row{flex-direction:column;align-items:flex-start;gap:.8rem}
-  .filters{width:100%;overflow-x:auto;padding-bottom:.3rem;display:flex;flex-wrap:nowrap}
+  .welcome-banner{flex-direction:column;text-align:center;padding:1.2rem 1rem;gap:.6rem}
+  .wb-avatar{font-size:2rem}
+  /* Stats 2x2 grid */
+  .stats-row{grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:1.5rem}
+  .stat-num{font-size:2.2rem}
+  .stat-gem{padding:1.1rem 1rem}
+  /* Section */
+  .section-row{flex-direction:column;align-items:flex-start;gap:.8rem;margin-bottom:1.2rem}
+  /* Filters - scrollable strip */
+  .filters{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:14px;width:100%;box-sizing:border-box;flex-wrap:nowrap;scrollbar-width:none}
+  .filters::-webkit-scrollbar{display:none}
+  .f-btn{font-size:.57rem;padding:.38rem .65rem;white-space:nowrap;flex-shrink:0}
+  /* Cards - single column */
+  .cards-grid{grid-template-columns:1fr;gap:1rem}
+  .card-footer{gap:.4rem;padding-top:.7rem}
+  .cf-btn{font-size:.6rem;padding:.6rem .3rem}
+  /* Form */
   .fgrid{grid-template-columns:1fr}
-  .man-card{width:100%}
-  .card-footer{gap:.4rem}
-  .cf-btn{font-size:.58rem;padding:.6rem .2rem}
 }
 
 /* ══ ASSESSMENT FORM ══ */
@@ -1421,10 +1433,6 @@ function getSession(){try{return JSON.parse(localStorage.getItem('rSess'))}catch
 
 // ── LOAD USER ──
 async function loadUser(u){
-  // Hide auth page immediately
-  const authPage=document.getElementById('authPage');
-  authPage.classList.remove('active');
-  authPage.style.display='none';
   currentUser=u;
   applyTheme(u.theme||0);
   document.getElementById('hAvatar').textContent=u.avatar;
@@ -1451,18 +1459,19 @@ async function loadUser(u){
 }
 
 function showPage(id){
-  document.querySelectorAll('.page').forEach(p=>{
-    if(p.id==='loadingPage') return;
-    p.classList.remove('active');
+  // Must use inline styles to override ID-level CSS (e.g. #authPage{display:flex})
+  ['authPage','appPage'].forEach(pid=>{
+    const el=document.getElementById(pid);
+    if(el) el.style.display = (pid===id) ? '' : 'none';
   });
-  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const target=document.getElementById(id);
+  if(target){ target.style.display=''; target.classList.add('active'); }
 }
 
 // ── LOGOUT ──
 function doLogout(){
   clearSession();currentUser=null;localRoster=[];activeFilter='all';
-  const authPage=document.getElementById('authPage');
-  authPage.style.display='';
   showPage('authPage');
   document.getElementById('liUser').value='';
   document.getElementById('liPass').value='';
