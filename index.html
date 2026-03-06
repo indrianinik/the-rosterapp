@@ -1431,10 +1431,13 @@ async function loadUser(u){
 
 function showPage(id){
   document.querySelectorAll('.page').forEach(p=>{
-    if(p.id==='loadingPage') return; // never show loading page
+    if(p.id==='loadingPage') return;
     p.classList.remove('active');
+    p.style.display='none';
   });
-  document.getElementById(id).classList.add('active');
+  const target=document.getElementById(id);
+  target.style.display='';
+  target.classList.add('active');
 }
 
 // ── LOGOUT ──
