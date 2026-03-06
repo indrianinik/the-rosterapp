@@ -1284,7 +1284,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
 // Paste your Apps Script URL here after setup, OR use the in-app banner
 // ── CONFIG ──────────────────────────────────────────────────
 // ✦ YOUR API URL IS SET BELOW — users connect automatically
-const HARDCODED_API_URL = 'https://script.google.com/macros/s/AKfycbwjO1FsLru9YaMCyPAL5HvnLD3nI_eBnutWnDqDViIG1_99elETnAVArpgOrWZ2GsboDA/exec'; // 🔴 Replace this once, deploy, done.
+const HARDCODED_API_URL = 'https://script.google.com/macros/s/AKfycbwjO1FsLru9YaMCyPAL5HvnLD3nI_eBnutWnDqDViIG1_99elETnAVArpgOrWZ2GsboDA/exec';
 let API_URL = HARDCODED_API_URL || localStorage.getItem('rosterApiUrl') || '';
 
 // ── STARS ──
@@ -1364,7 +1364,7 @@ async function doLogin(){
     saveSession(user,pass);
     await loadUser(r.user);
   }catch(e){
-    err.textContent=e.message==='NO_URL'?'No API connected. Contact the admin.':'Connection error. Try again.';
+    err.textContent=e.message==='NO_URL'?'No API connected. Contact the admin.':e.message==='timeout'?'Connection timed out. Check your internet and try again.':'Could not reach server. Make sure the deployment access is set to "Anyone".';
     setLoading('liBtn','liSpin','liTxt',false);
   }
 }
@@ -1385,7 +1385,7 @@ async function doSignup(){
     saveSession(user,pass);
     await loadUser(r.user);
   }catch(e){
-    err.textContent=e.message==='NO_URL'?'No API connected. Contact the admin.':'Connection error. Try again.';
+    err.textContent=e.message==='NO_URL'?'No API connected. Contact the admin.':e.message==='timeout'?'Connection timed out. Try again.':'Could not reach server. Make sure the deployment access is set to "Anyone".';
     setLoading('suBtn','suSpin','suTxt',false);
   }
 }
@@ -1940,24 +1940,36 @@ async function testConnection(){
 // ── BOOT ──
 (async()=>{
   document.getElementById('loadingMsg').textContent='connecting to sheets...';
-  const sess=getSession();
-  if(sess&&API_URL){
-    try{
-      const r=await api({action:'login',username:sess.u,password:sess.p});
-      if(r.success){await loadUser(r.user);return}
-    }catch(e){}
+
+  // Always sync the hardcoded URL into localStorage so it's never stale
+  if(HARDCODED_API_URL && HARDCODED_API_URL !== 'YOUR_APPS_SCRIPT_URL_HERE'){
+    localStorage.setItem('rosterApiUrl', HARDCODED_API_URL);
+    API_URL = HARDCODED_API_URL;
   }
-  // No session or API — show auth
+
+  const sess=getSession();
+  if(sess && API_URL){
+    try{
+      // Race the login against a 6-second timeout so we never get stuck
+      const loginPromise = api({action:'login',username:sess.u,password:sess.p});
+      const timeout = new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),6000));
+      const r = await Promise.race([loginPromise, timeout]);
+      if(r.success){await loadUser(r.user);return}
+    }catch(e){
+      // Session expired or API unreachable — fall through to auth
+    }
+  }
+
+  // Always land on auth page — never stay stuck on loading
+  showPage('authPage');
+  switchTab('login');
+  buildPicker('avatarGrid',AVATARS,'av',selectedAvatar,(el,v)=>pickAv(el,v));
+  buildPicker('themeGrid',THEMES,'th',selectedTheme,(el,v)=>pickTh(el,v));
+  refreshAuthApiStrip();
   if(!API_URL){
-    showPage('authPage');
-    switchTab('login');
     document.getElementById('setupBanner').style.display='flex';
-    refreshAuthApiStrip();
-  } else {
-    showPage('authPage');
-    switchTab('login');
-    buildPicker('avatarGrid',AVATARS,'av',selectedAvatar,(el,v)=>pickAv(el,v));
-    buildPicker('themeGrid',THEMES,'th',selectedTheme,(el,v)=>pickTh(el,v));
+  }
+
     refreshAuthApiStrip();
   }
 })();
