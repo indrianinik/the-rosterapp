@@ -184,9 +184,9 @@ main{max-width:1380px;margin:0 auto;padding:2.5rem 3rem 5rem;position:relative;z
 .f-chip{font-size:.6rem;padding:.18rem .55rem;border-radius:50px}
 .f-chip.red{background:rgba(224,96,112,.12);color:#e06070;border:1px solid rgba(224,96,112,.2)}.f-chip.green{background:rgba(122,204,160,.1);color:#7acca0;border:1px solid rgba(122,204,160,.2)}
 .card-footer{display:flex;gap:.5rem;padding-top:.9rem;border-top:1px solid rgba(255,255,255,.05)}
-.cf-btn{flex:1;padding:.5rem .4rem;font-family:'Jost',sans-serif;font-size:.6rem;letter-spacing:1.5px;text-transform:uppercase;border-radius:8px;cursor:pointer;border:1px solid var(--glass-b);background:transparent;color:var(--muted);transition:all .2s}
-.cf-btn:hover{background:rgba(255,255,255,.06);color:var(--petal)}
-.cf-btn.danger:hover{background:rgba(224,96,112,.1);color:var(--red);border-color:rgba(224,96,112,.3)}
+.cf-btn{flex:1;padding:.65rem .4rem;font-family:'Jost',sans-serif;font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;border-radius:8px;cursor:pointer;border:1px solid var(--glass-b);background:rgba(255,255,255,.03);color:var(--muted);transition:all .2s;position:relative;z-index:10}
+.cf-btn:hover,.cf-btn:active{background:rgba(255,255,255,.09);color:var(--petal);border-color:rgba(255,255,255,.2)}
+.cf-btn.danger:hover,.cf-btn.danger:active{background:rgba(224,96,112,.1);color:var(--red);border-color:rgba(224,96,112,.3)}
 .empty{grid-column:1/-1;text-align:center;padding:5rem 2rem}
 .empty-icon{font-size:2.8rem;margin-bottom:1rem;opacity:.5}
 .empty-title{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-style:italic;color:var(--blush);margin-bottom:.4rem}
@@ -1651,7 +1651,7 @@ function render(){
     const rf=m.red&&m.red.length?m.red.slice(0,3).map(f=>`<span class="f-chip red">🚩 ${f}</span>`).join(''):'';
     const gf=m.green&&m.green.length?m.green.slice(0,2).map(f=>`<span class="f-chip green">💚 ${f}</span>`).join(''):'';
     return `<div class="man-card v-${v.v}" style="animation-delay:${i*.07}s">
-      <div class="card-crown"><div class="crown-score"><div class="crown-score-num">${avg}</div><div class="crown-score-lbl">/ 10</div></div>
+      <div class="card-crown" onclick="openDetail('${m.id}')" style="cursor:pointer"><div class="crown-score"><div class="crown-score-num">${avg}</div><div class="crown-score-lbl">/ 10</div></div>
         <div class="avatar-ring">${m.emoji}</div>
         <div class="crown-info"><div class="verdict-pill v-${v.v}">${v.v==='proceed'?'✓ Green':v.v==='caution'?'⚠ Caution':v.v==='drop'?'✗ Drop':'? Pending'}</div>
         <div class="card-name">${m.name}</div>${m.nick?`<div class="card-nick">"${m.nick}"</div>`:''}</div></div>
@@ -1660,9 +1660,9 @@ function render(){
         <div class="mini-scores">${ts}</div>
         ${rf||gf?`<div class="card-flags">${rf}${gf}</div>`:''}
         <div class="card-footer">
-          <button class="cf-btn" onclick="openDetail('${m.id}')">View</button>
-          <button class="cf-btn" onclick="openEdit('${m.id}')">Edit</button>
-          <button class="cf-btn danger" onclick="deleteMan('${m.id}')">Remove</button>
+          <button class="cf-btn" onclick="event.stopPropagation();openDetail('${m.id}')">View</button>
+          <button class="cf-btn" onclick="event.stopPropagation();openEdit('${m.id}')">Edit</button>
+          <button class="cf-btn danger" onclick="event.stopPropagation();deleteMan('${m.id}')">Remove</button>
         </div></div></div>`;
   }).join('');
 }
