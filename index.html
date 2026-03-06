@@ -1686,17 +1686,16 @@ function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t
 
 // ── CARD BUTTON DELEGATION ──
 document.addEventListener('click',function(e){
-  const btn=e.target.closest('[data-action]');
+  const btn=e.target.closest('button[data-action]');
   if(!btn) return;
-  const card=btn.closest('[data-id]');
+  const card=btn.closest('div[data-id]');
   if(!card) return;
-  e.stopPropagation();
-  const id=card.dataset.id;
-  const action=btn.dataset.action;
-  if(action==='view') openDetail(id);
-  else if(action==='edit') openEdit(id);
-  else if(action==='remove') deleteMan(id);
-});
+  const id=card.getAttribute('data-id');
+  const action=btn.getAttribute('data-action');
+  if(action==='view'){ openDetail(id); return; }
+  if(action==='edit'){ openEdit(id); return; }
+  if(action==='remove'){ deleteMan(id); return; }
+},true); // use capture phase so nothing can block it
 
 document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{
   if(e.target!==o) return;
