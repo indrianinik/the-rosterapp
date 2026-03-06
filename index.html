@@ -598,7 +598,6 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
       <div class="sync-status"><div class="sync-dot" id="syncDot"></div><span id="syncMsg">—</span></div>
     </div>
     <div class="h-right">
-      <button class="btn-settings" onclick="openSettings()" title="Settings">⚙</button>
       <button class="btn-add" onclick="openAdd()"><span>✦</span> New Assessment</button>
       <button class="btn-logout" onclick="doLogout()">Sign Out</button>
     </div>
@@ -1502,7 +1501,7 @@ function silentReset(){
   const di=document.getElementById('distImpact');if(di)di.textContent='';
   const emn=document.getElementById('eduMatchNote');if(emn){emn.textContent='Select his level and your preference to see match';emn.style.color='var(--muted)'}
 }
-function openAdd(){editId=null;document.getElementById('mTitle').textContent='New Assessment';silentReset();document.getElementById('addModal').classList.add('open');initSliders();updateVerdict();}
+function openAdd(){editId=null;document.getElementById('mTitle').textContent='New Assessment';silentReset();document.getElementById('addModal').classList.add('open');initSliders();try{updateVerdict();}catch(e){}}
 function openEdit(id){
   const m=localRoster.find(x=>x.id===id);if(!m)return;
   editId=id;document.getElementById('mTitle').textContent='Edit · '+m.name;
