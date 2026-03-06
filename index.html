@@ -1944,39 +1944,32 @@ async function testConnection(){
 
 // ── BOOT ──
 (async()=>{
-  document.getElementById('loadingMsg').textContent='connecting to sheets...';
+  document.getElementById('loadingMsg').textContent='connecting...';
 
-  // Always sync the hardcoded URL into localStorage so it's never stale
+  // Sync hardcoded URL into localStorage so it's never stale
   if(HARDCODED_API_URL && HARDCODED_API_URL !== 'YOUR_APPS_SCRIPT_URL_HERE'){
     localStorage.setItem('rosterApiUrl', HARDCODED_API_URL);
     API_URL = HARDCODED_API_URL;
   }
 
-  const sess=getSession();
+  // If there's a saved session, try auto-login with a 5s timeout
+  const sess = getSession();
   if(sess && API_URL){
     try{
-      // Race the login against a 6-second timeout so we never get stuck
-      const loginPromise = api({action:'login',username:sess.u,password:sess.p});
-      const timeout = new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),6000));
-      const r = await Promise.race([loginPromise, timeout]);
-      if(r.success){await loadUser(r.user);return}
-    }catch(e){
-      // Session expired or API unreachable — fall through to auth
-    }
+      const r = await Promise.race([
+        api({action:'login', username:sess.u, password:sess.p}),
+        new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')), 5000))
+      ]);
+      if(r && r.success){ await loadUser(r.user); return; }
+    }catch(e){ /* fall through to auth */ }
   }
 
-  // Always land on auth page — never stay stuck on loading
+  // Always end up on the auth page — never stay stuck on loading
   showPage('authPage');
   switchTab('login');
-  buildPicker('avatarGrid',AVATARS,'av',selectedAvatar,(el,v)=>pickAv(el,v));
-  buildPicker('themeGrid',THEMES,'th',selectedTheme,(el,v)=>pickTh(el,v));
+  buildPicker('avatarGrid', AVATARS, 'av', selectedAvatar, (el,v)=>pickAv(el,v));
+  buildPicker('themeGrid', THEMES, 'th', selectedTheme, (el,v)=>pickTh(el,v));
   refreshAuthApiStrip();
-  if(!API_URL){
-    document.getElementById('setupBanner').style.display='flex';
-  }
-
-    refreshAuthApiStrip();
-  }
 })();
 </script>
 <!-- SETTINGS MODAL -->
