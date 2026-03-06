@@ -1437,6 +1437,8 @@ function showPage(id){
   const target=document.getElementById(id);
   target.style.display='';
   target.classList.add('active');
+  // Always make sure overlays are accessible regardless of page
+  document.querySelectorAll('.overlay').forEach(o=>o.style.display='');
 }
 
 // ── LOGOUT ──
@@ -1675,20 +1677,17 @@ function updateStats(){
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
 
 // ── CARD BUTTON DELEGATION ──
-document.getElementById('grid').addEventListener('click',function(e){
+document.addEventListener('click',function(e){
   const btn=e.target.closest('[data-action]');
-  const card=e.target.closest('[data-id]');
+  if(!btn) return;
+  const card=btn.closest('[data-id]');
   if(!card) return;
+  e.stopPropagation();
   const id=card.dataset.id;
-  if(btn){
-    e.stopPropagation();
-    const action=btn.dataset.action;
-    if(action==='view') openDetail(id);
-    else if(action==='edit') openEdit(id);
-    else if(action==='remove') deleteMan(id);
-  } else if(e.target.closest('.card-crown')){
-    openDetail(id);
-  }
+  const action=btn.dataset.action;
+  if(action==='view') openDetail(id);
+  else if(action==='edit') openEdit(id);
+  else if(action==='remove') deleteMan(id);
 });
   if(e.target!==o) return;
   if(o.id==='addModal'){ closeAssessment(); return; }
