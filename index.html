@@ -642,7 +642,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
 <!-- ADD/EDIT MODAL -->
 <div class="overlay" id="addModal">
   <div class="modal">
-    <div class="modal-header"><div class="modal-title" id="mTitle">New Assessment</div><button class="modal-close" onclick="closeAll()">✕</button></div>
+    <div class="modal-header"><div class="modal-title" id="mTitle">New Assessment</div><button class="modal-close" onclick="closeAssessment()">✕</button></div>
     <div class="modal-scroll" id="addScroll">
 <div class="page-wrap">
 <!-- ══════════════════════════════════════════════
@@ -1233,7 +1233,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
 <div class="form-actions">
   <span class="action-note">Only name is required. Everything else is yours to fill.</span>
   <div class="btn-group">
-    <button class="btn-secondary" onclick="resetForm()">Clear Form</button>
+    <button class="btn-secondary" onclick="clearForm()">Clear Form</button>
     <button class="btn-primary" onclick="fakeSubmit()">✦ Save Assessment</button>
   </div>
 </div>
@@ -1243,7 +1243,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
 <div class="form-actions">
   <span class="action-note">Only name is required.</span>
   <div class="btn-group">
-    <button class="btn-cancel" onclick="closeAll()">Cancel</button>
+    <button class="btn-cancel" onclick="closeAssessment()">Cancel</button>
     <button class="btn-primary" onclick="saveIt()">✦ Save to Roster</button>
   </div>
 </div>
@@ -1550,6 +1550,14 @@ async function saveProfile(){
   closeAll();toast('Profile updated ✦');
 }
 function closeAll(){document.querySelectorAll('.overlay').forEach(o=>o.classList.remove('open'))}
+function closeAssessment(){
+  const name=document.getElementById('fName')?.value.trim();
+  const anyChecked=document.querySelector('#addModal input:checked');
+  if(name||anyChecked){
+    if(!confirm('Leave the assessment? Your unsaved progress will be lost.')) return;
+  }
+  closeAll();
+}
 function resetForm(){
   ['fName','fNick','fMet','fJob','fNotes'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('fAge').value='';document.getElementById('fSince').value='';document.getElementById('fStatus').value='talking';
@@ -1655,7 +1663,11 @@ function updateStats(){
 }
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
 
-document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)closeAll()}));
+document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{
+  if(e.target!==o) return;
+  if(o.id==='addModal'){ closeAssessment(); return; }
+  closeAll();
+}));
 document.getElementById('liPass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
 document.getElementById('suPass').addEventListener('keydown',e=>{if(e.key==='Enter')doSignup()});
 
@@ -1833,7 +1845,7 @@ document.addEventListener('change',e=>{
 });
 
 // ── RESET ──
-function resetForm(){
+function clearForm(){
   if(!confirm('Clear everything?'))return;
   document.querySelectorAll('input[type=text],input[type=number],input[type=date],textarea').forEach(el=>el.value='');
   document.querySelectorAll('input[type=checkbox],input[type=radio]').forEach(el=>el.checked=false);
