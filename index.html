@@ -1403,6 +1403,10 @@ function getSession(){try{return JSON.parse(localStorage.getItem('rSess'))}catch
 
 // ── LOAD USER ──
 async function loadUser(u){
+  // Hide auth page immediately
+  const authPage=document.getElementById('authPage');
+  authPage.classList.remove('active');
+  authPage.style.display='none';
   currentUser=u;
   applyTheme(u.theme||0);
   document.getElementById('hAvatar').textContent=u.avatar;
@@ -1432,17 +1436,21 @@ function showPage(id){
   document.querySelectorAll('.page').forEach(p=>{
     if(p.id==='loadingPage') return;
     p.classList.remove('active');
-    p.style.display='none';
   });
-  const target=document.getElementById(id);
-  target.style.display='';
-  target.classList.add('active');
-  // Always make sure overlays are accessible regardless of page
-  document.querySelectorAll('.overlay').forEach(o=>o.style.display='');
+  document.getElementById(id).classList.add('active');
 }
 
 // ── LOGOUT ──
-function doLogout(){clearSession();currentUser=null;localRoster=[];activeFilter='all';showPage('authPage');document.getElementById('liUser').value='';document.getElementById('liPass').value='';document.getElementById('liErr').textContent='';switchTab('login')}
+function doLogout(){
+  clearSession();currentUser=null;localRoster=[];activeFilter='all';
+  const authPage=document.getElementById('authPage');
+  authPage.style.display='';
+  showPage('authPage');
+  document.getElementById('liUser').value='';
+  document.getElementById('liPass').value='';
+  document.getElementById('liErr').textContent='';
+  switchTab('login');
+}
 
 // ── API URL SETUP ──
 function saveApiUrl(){
