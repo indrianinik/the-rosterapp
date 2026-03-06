@@ -1697,6 +1697,8 @@ document.addEventListener('click',function(e){
   else if(action==='edit') openEdit(id);
   else if(action==='remove') deleteMan(id);
 });
+
+document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{
   if(e.target!==o) return;
   if(o.id==='addModal'){ closeAssessment(); return; }
   closeAll();
