@@ -272,7 +272,25 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.25)}
 .toast.show{transform:translateY(0);opacity:1}
 ::-webkit-scrollbar{width:5px}
 ::-webkit-scrollbar-thumb{background:rgba(201,168,224,.15);border-radius:3px}
-@media(max-width:768px){header{padding:1rem 1.2rem}main{padding:1.5rem}.stats-row{grid-template-columns:1fr 1fr}.fgrid{grid-template-columns:1fr}.welcome-banner{flex-direction:column;text-align:center}}
+@media(max-width:768px){
+  header{padding:.8rem 1rem;flex-wrap:wrap;gap:.5rem}
+  .h-left{gap:.6rem;flex:1;min-width:0}
+  .h-logo{font-size:1.1rem}
+  .h-right{gap:.5rem}
+  .btn-add{font-size:.6rem;padding:.5rem .9rem;letter-spacing:1px}
+  .btn-logout{font-size:.6rem;padding:.5rem .8rem}
+  main{padding:1rem}
+  .welcome-banner{flex-direction:column;text-align:center;padding:1.5rem 1rem}
+  .wb-avatar{font-size:2.5rem;margin-bottom:.5rem}
+  .stats-row{grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1.5rem}
+  .cards-grid{grid-template-columns:1fr;gap:1.2rem}
+  .section-row{flex-direction:column;align-items:flex-start;gap:.8rem}
+  .filters{width:100%;overflow-x:auto;padding-bottom:.3rem;display:flex;flex-wrap:nowrap}
+  .fgrid{grid-template-columns:1fr}
+  .man-card{width:100%}
+  .card-footer{gap:.4rem}
+  .cf-btn{font-size:.58rem;padding:.6rem .2rem}
+}
 
 /* ══ ASSESSMENT FORM ══ */
 .progress-bar-wrap{position:sticky;top:0;z-index:100;background:rgba(13,9,16,.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--glass-b);padding:.8rem 1.5rem}
@@ -1660,8 +1678,8 @@ function render(){
     const ts=m.scores?labels.slice(0,5).map((l,j)=>`<div class="mini-row"><span class="mini-lbl">${l}</span><div class="mini-track"><div class="mini-fill" style="width:${m.scores[j]*10}%;background:${lc[j]}"></div></div><span class="mini-val">${m.scores[j]}</span></div>`).join(''):'';
     const rf=m.red&&m.red.length?m.red.slice(0,3).map(f=>`<span class="f-chip red">🚩 ${f}</span>`).join(''):'';
     const gf=m.green&&m.green.length?m.green.slice(0,2).map(f=>`<span class="f-chip green">💚 ${f}</span>`).join(''):'';
-    return `<div class="man-card v-${v.v}" style="animation-delay:${i*.07}s" data-id="${m.id}">
-      <div class="card-crown" style="cursor:pointer"><div class="crown-score"><div class="crown-score-num">${avg}</div><div class="crown-score-lbl">/ 10</div></div>
+    return `<div class="man-card v-${v.v}" style="animation-delay:${i*.07}s">
+      <div class="card-crown" style="cursor:pointer" onclick="openDetail('${m.id}')"><div class="crown-score"><div class="crown-score-num">${avg}</div><div class="crown-score-lbl">/ 10</div></div>
         <div class="avatar-ring">${m.emoji}</div>
         <div class="crown-info"><div class="verdict-pill v-${v.v}">${v.v==='proceed'?'✓ Green':v.v==='caution'?'⚠ Caution':v.v==='drop'?'✗ Drop':'? Pending'}</div>
         <div class="card-name">${m.name}</div>${m.nick?`<div class="card-nick">"${m.nick}"</div>`:''}</div></div>
@@ -1670,9 +1688,9 @@ function render(){
         <div class="mini-scores">${ts}</div>
         ${rf||gf?`<div class="card-flags">${rf}${gf}</div>`:''}
         <div class="card-footer">
-          <button class="cf-btn" data-action="view">View</button>
-          <button class="cf-btn" data-action="edit">Edit</button>
-          <button class="cf-btn danger" data-action="remove">Remove</button>
+          <button class="cf-btn" type="button" onclick="event.stopPropagation();openDetail('${m.id}')">View</button>
+          <button class="cf-btn" type="button" onclick="event.stopPropagation();openEdit('${m.id}')">Edit</button>
+          <button class="cf-btn danger" type="button" onclick="event.stopPropagation();deleteMan('${m.id}')">Remove</button>
         </div></div></div>`;
   }).join('');
 }
@@ -1684,18 +1702,7 @@ function updateStats(){
 }
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
 
-// ── CARD BUTTON DELEGATION ──
-document.addEventListener('click',function(e){
-  const btn=e.target.closest('button[data-action]');
-  if(!btn) return;
-  const card=btn.closest('div[data-id]');
-  if(!card) return;
-  const id=card.getAttribute('data-id');
-  const action=btn.getAttribute('data-action');
-  if(action==='view'){ openDetail(id); return; }
-  if(action==='edit'){ openEdit(id); return; }
-  if(action==='remove'){ deleteMan(id); return; }
-},true); // use capture phase so nothing can block it
+// ── OVERLAY CLOSE ──
 
 document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{
   if(e.target!==o) return;
