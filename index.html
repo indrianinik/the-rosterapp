@@ -1552,116 +1552,95 @@ function openAdd(){editId=null;document.getElementById('mTitle').textContent='Ne
 function openEdit(id){
   id=String(id);
   const m=localRoster.find(x=>String(x.id)===id);
-  if(!m) return;
+  if(!m){ toast('Could not find this entry'); return; }
   editId=id;
   document.getElementById('mTitle').textContent='Edit · '+m.name;
 
-  // ── Basic text fields ──
-  const sf=(elId,val)=>{try{const el=document.getElementById(elId);if(el)el.value=val||'';}catch(e){}};
-  sf('fName',m.name); sf('fNick',m.nick); sf('fAge',m.age);
-  sf('fMet',m.met); sf('fJob',m.job); sf('fSince',m.since);
+  // Helper: set input value safely
+  const set=(elId,val)=>{const el=document.getElementById(elId);if(el&&val!==undefined&&val!==null)el.value=val;};
+  // Helper: check radio by label text match
+  const checkRadioByLabel=(selector,text)=>{
+    if(!text)return;
+    document.querySelectorAll(selector).forEach(el=>{
+      const lbl=el.nextElementSibling?.textContent?.replace(/[^\w\s&\/—\-]/g,'').trim();
+      const t=text.replace(/[^\w\s&\/—\-]/g,'').trim();
+      el.checked=(lbl===t||lbl?.includes(t)||t?.includes(lbl));
+    });
+  };
+  // Helper: check checkboxes by saved array of text values
+  const checkBoxesByLabels=(selector,arr)=>{
+    if(!arr||!arr.length)return;
+    document.querySelectorAll(selector).forEach(el=>{
+      const lbl=el.nextElementSibling?.textContent?.trim();
+      el.checked=arr.some(v=>v&&lbl&&(v.trim()===lbl||lbl.includes(v.trim())||v.trim().includes(lbl)));
+    });
+  };
 
-  // ── Status radio ──
-  try{
-    const statusMap={talking:'st1',situation:'st2',situationship:'st2',dating:'st3',paused:'st4',done:'st5'};
-    const stEl=document.getElementById(statusMap[m.status]||'st1');
-    if(stEl)stEl.checked=true;
-  }catch(e){}
+  // ── 1. Basic text fields ──
+  set('fName',m.name); set('fNick',m.nick); set('fAge',m.age);
+  set('fMet',m.met); set('fJob',m.job); set('fSince',m.since);
 
-  // ── Scores (sliders sl1-sl7) ──
-  if(m.scores){
-    for(let i=1;i<=7;i++){
-      try{
-        const sl=document.getElementById('sl'+i);
-        const sv=document.getElementById('sv'+i);
-        if(sl){sl.value=m.scores[i-1]||5;sl.style.setProperty('--pct',((( m.scores[i-1]||5)-1)/9*100).toFixed(0)+'%');}
-        if(sv)sv.textContent=m.scores[i-1]||5;
-      }catch(e){}
-    }
+  // ── 2. Status radio (st1-st5) ──
+  const statusMap={talking:'st1',situation:'st2',situationship:'st2',dating:'st3',paused:'st4',done:'st5'};
+  const stEl=document.getElementById(statusMap[m.status]||'st1');
+  if(stEl)stEl.checked=true;
+
+  // ── 3. Core scores sl1-sl8 (these ARE in Sheets) ──
+  const scores=m.scores||[];
+  for(let i=1;i<=8;i++){
+    const sl=document.getElementById('sl'+i);
+    const sv=document.getElementById('sv'+i);
+    const val=scores[i-1]||5;
+    if(sl){sl.value=val;sl.style.setProperty('--pct',((val-1)/9*100).toFixed(0)+'%');}
+    if(sv)sv.textContent=val;
   }
 
-  // ── Red/Green flags (checkboxes r1-r10, g1-g10) ──
-  for(let i=1;i<=10;i++){
-    try{const r=document.getElementById('r'+i);if(r)r.checked=!!(m.red&&m.red.some(f=>r.nextElementSibling?.textContent?.includes(f)||f?.includes(r.nextElementSibling?.textContent)));}catch(e){}
-    try{const g=document.getElementById('g'+i);if(g)g.checked=!!(m.green&&m.green.some(f=>g.nextElementSibling?.textContent?.includes(f)||f?.includes(g.nextElementSibling?.textContent)));}catch(e){}
-  }
+  // ── 4. Red flags r1-r12 (from m.red array which IS in Sheets) ──
+  checkBoxesByLabels('.ftog.rf',m.red);
 
-  // ── Prefs ──
+  // ── 5. Green flags g1-g10 (from m.green array which IS in Sheets) ──
+  checkBoxesByLabels('.ftog.gf',m.green);
+
+  // ── 6. Prefs (style, hygiene, distance etc) — from m.prefs if exists ──
   const p=m.prefs||{};
 
-  // Style radio — match by label text
-  try{
-    document.querySelectorAll('input[name="style"]').forEach(el=>{
-      el.checked=p.style&&el.nextElementSibling?.textContent?.trim()===p.style.trim();
-    });
-  }catch(e){}
-
-  // Hygiene radio
-  try{
-    document.querySelectorAll('input[name="hygiene"]').forEach(el=>{
-      const lbl=el.nextElementSibling?.textContent?.replace(/[^a-zA-Z— ]/g,'').trim();
-      el.checked=p.hygiene&&lbl===p.hygiene.trim();
-    });
-  }catch(e){}
-
-  // Distance radio
-  try{
-    document.querySelectorAll('input[name="distance"]').forEach(el=>{
-      const name=el.nextElementSibling?.querySelector('.dist-name')?.textContent?.trim();
-      el.checked=p.distance&&name===p.distance.trim();
-    });
-  }catch(e){}
-
-  // Religion radio
-  try{
-    document.querySelectorAll('input[name="hisRel"]').forEach(el=>{
-      el.checked=p.hisRel&&el.nextElementSibling?.textContent?.trim()===p.hisRel.trim();
-    });
-  }catch(e){}
-
-  // Education radio
-  try{
-    document.querySelectorAll('input[name="hisEdu"]').forEach(el=>{
-      el.checked=p.hisEdu&&el.nextElementSibling?.textContent?.trim()===p.hisEdu.trim();
-    });
-  }catch(e){}
-
-  // Ambition radio
-  try{
-    document.querySelectorAll('input[name="ambition"]').forEach(el=>{
-      el.checked=p.ambition&&el.nextElementSibling?.textContent?.trim()===p.ambition.trim();
-    });
-  }catch(e){}
-
-  // Icks checkboxes
-  try{
-    document.querySelectorAll('.ick-tog').forEach(el=>{
-      el.checked=p.icks&&p.icks.includes(el.nextElementSibling?.textContent?.trim());
-    });
-  }catch(e){}
-
-  // Fields checkboxes
-  try{
-    document.querySelectorAll('.field-tog').forEach(el=>{
-      el.checked=p.fields&&p.fields.includes(el.nextElementSibling?.textContent?.trim());
-    });
-  }catch(e){}
-
-  // Height & age numbers
-  sf('myHeight',p.myHeight); sf('hisHeight',p.hisHeight);
-  sf('minHeight',p.minHeight); sf('myAge',p.myAge);
-  sf('ageMin',p.ageMin); sf('ageMax',p.ageMax);
-
+  // Style
+  checkRadioByLabel('input[name="style"]',p.style);
+  // Icks
+  checkBoxesByLabels('.ick-tog',p.icks);
+  // Appearance slider
+  try{const sl=document.getElementById('slApp');if(sl&&p.slApp){sl.value=p.slApp;sl.style.setProperty('--pct',((p.slApp-1)/9*100).toFixed(0)+'%');document.getElementById('svApp').textContent=p.slApp;}}catch(e){}
+  // Hygiene
+  checkRadioByLabel('input[name="hygiene"]',p.hygiene);
+  // Manners slider
+  try{const sl=document.getElementById('slResp');if(sl&&p.slResp){sl.value=p.slResp;sl.style.setProperty('--pct',((p.slResp-1)/9*100).toFixed(0)+'%');document.getElementById('svResp').textContent=p.slResp;}}catch(e){}
+  // Age fields
+  set('myAge',p.myAge); set('ageMin',p.ageMin); set('ageMax',p.ageMax);
+  // Distance
+  checkRadioByLabel('input[name="distance"]',p.distance);
+  // Comm sliders
+  ['slListen','slConvo','slBody','slReply'].forEach(sid=>{
+    try{const sl=document.getElementById(sid);const sv=document.getElementById('s'+sid.slice(2));if(sl&&p[sid]){sl.value=p[sid];sl.style.setProperty('--pct',((p[sid]-1)/9*100).toFixed(0)+'%');if(sv)sv.textContent=p[sid];}}catch(e){}
+  });
+  // Religion
+  checkRadioByLabel('input[name="hisRel"]',p.hisRel);
+  // Height
+  set('myHeight',p.myHeight); set('hisHeight',p.hisHeight); set('minHeight',p.minHeight);
+  // Education
+  checkRadioByLabel('input[name="hisEdu"]',p.hisEdu);
+  // Fields / ambition
+  checkBoxesByLabels('.field-tog',p.fields);
+  checkRadioByLabel('input[name="ambition"]',p.ambition);
+  // Dealbreakers
+  checkBoxesByLabels('.db-tog',p.dealbreakers);
+  // Vibes
+  checkBoxesByLabels('.vibe-tog',p.vibes);
   // Text areas
-  sf('fGut',p.gut); sf('fWant',p.want); sf('fSit',p.sit||m.notes);
+  set('fGut',p.gut); set('fWant',p.want); set('fSit',p.sit||m.notes);
 
-  // Open modal and refresh visuals
+  // ── Open modal ──
   document.getElementById('addModal').classList.add('open');
   try{initSliders();}catch(e){}
-  try{updateVerdict();}catch(e){}
-  try{updateHeightViz();}catch(e){}
-  try{updateAgeMatch();}catch(e){}
-  try{updateEduMatch();}catch(e){}
 }
 function openDetail(id){
   id=String(id);
@@ -1764,6 +1743,14 @@ async function saveIt(){
     gut:document.getElementById('fGut')?.value||'',
     want:document.getElementById('fWant')?.value||'',
     sit:document.getElementById('fSit')?.value||'',
+    slApp:document.getElementById('slApp')?.value||5,
+    slResp:document.getElementById('slResp')?.value||5,
+    slListen:document.getElementById('slListen')?.value||5,
+    slConvo:document.getElementById('slConvo')?.value||5,
+    slBody:document.getElementById('slBody')?.value||5,
+    slReply:document.getElementById('slReply')?.value||5,
+    dealbreakers:[...document.querySelectorAll('.db-tog:checked')].map(e=>e.nextElementSibling?.textContent?.trim()),
+    vibes:[...document.querySelectorAll('.vibe-tog:checked')].map(e=>e.nextElementSibling?.textContent?.trim()),
   };
   const statusVal=statusEl?statusEl.value:'talking';
   const noteVal=document.getElementById('fSit')?.value.trim()||'';
