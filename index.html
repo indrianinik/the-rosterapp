@@ -570,6 +570,17 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
         <div class="auth-err" id="suErr"></div>
         <button class="btn-auth" id="suBtn" onclick="doSignup()"><span class="spinner" id="suSpin"></span><span id="suTxt">✦ Join the Roster</span></button>
       </div>
+
+      <!-- API SETUP STRIP — only shown if no URL is hardcoded -->
+      <div id="authApiStrip" style="display:none;margin-top:1.4rem;padding-top:1.2rem;border-top:1px solid rgba(255,255,255,.06)">
+        <div id="authApiStatus" style="font-size:.65rem;text-align:center;margin-bottom:.75rem;font-style:italic;color:rgba(201,168,224,.4)">No API connected — enter your URL below to enable sync</div>
+        <div style="display:flex;gap:.5rem">
+          <input id="authApiInput" type="text" placeholder="Paste your Apps Script URL here…" style="flex:1;font-family:'Jost',sans-serif;font-size:.75rem;font-weight:300;padding:.65rem .9rem;background:rgba(255,255,255,.04);border:1px solid rgba(201,168,224,.13);border-radius:10px;color:#fdf8ff;transition:all .25s" onfocus="this.style.borderColor='rgba(212,168,67,.4)'" onblur="this.style.borderColor='rgba(201,168,224,.13)'" onkeydown="if(event.key==='Enter')saveAuthApiUrl()">
+          <button onclick="saveAuthApiUrl()" style="padding:.65rem 1rem;background:linear-gradient(135deg,#d4a843,#b8903a);border:none;border-radius:10px;color:#0d0910;font-family:'Jost',sans-serif;font-weight:600;font-size:.68rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap;transition:all .2s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">Connect</button>
+        </div>
+        <div style="font-size:.58rem;color:rgba(201,168,224,.25);text-align:center;margin-top:.5rem;line-height:1.5">Apps Script → Deploy → Manage Deployments → copy the Web App URL</div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -1271,7 +1282,10 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
 <script>
 // ── CONFIG ──────────────────────────────────────────────────
 // Paste your Apps Script URL here after setup, OR use the in-app banner
-let API_URL = localStorage.getItem('rosterApiUrl') || '';
+// ── CONFIG ──────────────────────────────────────────────────
+// ✦ YOUR API URL IS SET BELOW — users connect automatically
+const HARDCODED_API_URL = 'https://script.google.com/macros/s/AKfycbwjO1FsLru9YaMCyPAL5HvnLD3nI_eBnutWnDqDViIG1_99elETnAVArpgOrWZ2GsboDA/exec'; // 🔴 Replace this once, deploy, done.
+let API_URL = HARDCODED_API_URL || localStorage.getItem('rosterApiUrl') || '';
 
 // ── STARS ──
 (()=>{const c=document.getElementById('stars');for(let i=0;i<80;i++){const s=document.createElement('div');s.className='star';const sz=Math.random()*1.8+.4;s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--lo:${(Math.random()*.15+.05).toFixed(2)};--hi:${(Math.random()*.5+.3).toFixed(2)};--d:${(Math.random()*5+2).toFixed(1)}s;animation-delay:${(Math.random()*5).toFixed(1)}s`;c.appendChild(s)}})();
@@ -1823,6 +1837,48 @@ function resetForm(){
   updateVerdict();
 }
 
+// ── AUTH PAGE API SETUP ──
+function saveAuthApiUrl(){
+  const input=document.getElementById('authApiInput');
+  const status=document.getElementById('authApiStatus');
+  const url=input.value.trim();
+  if(!url){status.textContent='⚠ Please paste your URL first.';status.style.color='var(--amber)';return;}
+  if(!url.startsWith('https://script.google.com/')){
+    status.textContent='✗ Doesn\'t look right — should start with https://script.google.com/';
+    status.style.color='var(--red)';return;
+  }
+  API_URL=url;
+  localStorage.setItem('rosterApiUrl',url);
+  status.textContent='✓ Connected! You can now sign in or create an account.';
+  status.style.color='var(--green)';
+  input.style.borderColor='rgba(122,204,160,.4)';
+  // clear any "No API" errors on forms
+  document.getElementById('liErr').textContent='';
+  document.getElementById('suErr').textContent='';
+}
+function refreshAuthApiStrip(){
+  const strip=document.getElementById('authApiStrip');
+  if(!strip)return;
+  // If URL is hardcoded, hide the strip entirely — users don't need to do anything
+  if(HARDCODED_API_URL && HARDCODED_API_URL !== 'YOUR_APPS_SCRIPT_URL_HERE'){
+    strip.style.display='none';
+    return;
+  }
+  // No hardcoded URL — show the strip so admin can connect
+  strip.style.display='block';
+  const status=document.getElementById('authApiStatus');
+  const input=document.getElementById('authApiInput');
+  if(API_URL){
+    status.textContent='✓ API connected — you\'re good to go!';
+    status.style.color='var(--green)';
+    input.value=API_URL;
+    input.style.borderColor='rgba(122,204,160,.3)';
+  } else {
+    status.textContent='No API connected — enter your URL below to enable sync';
+    status.style.color='rgba(201,168,224,.4)';
+  }
+}
+
 // ── SETTINGS MODAL ──
 function openSettings(){
   const modal=document.getElementById('settingsModal');
@@ -1895,13 +1951,14 @@ async function testConnection(){
   if(!API_URL){
     showPage('authPage');
     switchTab('login');
-    // Show setup banner for first-time admin
     document.getElementById('setupBanner').style.display='flex';
+    refreshAuthApiStrip();
   } else {
     showPage('authPage');
     switchTab('login');
     buildPicker('avatarGrid',AVATARS,'av',selectedAvatar,(el,v)=>pickAv(el,v));
     buildPicker('themeGrid',THEMES,'th',selectedTheme,(el,v)=>pickTh(el,v));
+    refreshAuthApiStrip();
   }
 })();
 </script>
