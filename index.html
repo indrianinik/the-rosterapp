@@ -1540,7 +1540,8 @@ function silentReset(){
 }
 function openAdd(){editId=null;document.getElementById('mTitle').textContent='New Assessment';silentReset();document.getElementById('addModal').classList.add('open');initSliders();try{updateVerdict();}catch(e){}}
 function openEdit(id){
-  const m=localRoster.find(x=>x.id===id);if(!m)return;
+  id=String(id);
+  const m=localRoster.find(x=>String(x.id)===id);if(!m)return;
   editId=id;document.getElementById('mTitle').textContent='Edit · '+m.name;
   document.getElementById('fName').value=m.name||'';document.getElementById('fNick').value=m.nick||'';document.getElementById('fAge').value=m.age||'';document.getElementById('fMet').value=m.met||'';document.getElementById('fJob').value=m.job||'';document.getElementById('fSince').value=m.since||'';document.getElementById('fStatus').value=m.status||'talking';document.getElementById('fNotes').value=m.notes||'';
   for(let i=1;i<=7;i++){document.getElementById('sl'+i).value=m.scores?m.scores[i-1]:5;document.getElementById('sv'+i).textContent=m.scores?m.scores[i-1]:5}
@@ -1548,7 +1549,8 @@ function openEdit(id){
   document.getElementById('addModal').classList.add('open');initSliders();
 }
 function openDetail(id){
-  const m=localRoster.find(x=>x.id===id);if(!m)return;
+  id=String(id);
+  const m=localRoster.find(x=>String(x.id)===id);if(!m)return;
   document.getElementById('dTitle').textContent=m.name;
   const v=m.verdict||{v:'pending',label:'Pending',color:'var(--lilac)',reason:''};
   const avg=m.scores?(m.scores.reduce((a,b)=>a+b,0)/m.scores.length).toFixed(1):'—';
@@ -1665,8 +1667,9 @@ async function saveIt(){
   }catch(e){setSyncStatus('error','sync failed');toast('Saved locally — sync failed')}
 }
 async function deleteMan(id){
+  id=String(id);
   if(!confirm('Remove him from your roster?'))return;
-  localRoster=localRoster.filter(m=>m.id!==id);
+  localRoster=localRoster.filter(m=>String(m.id)!==id);
   render();updateStats();
   setSyncStatus('syncing','saving...');
   try{await api({action:'saveRoster',username:currentUser.username,roster:localRoster});setSyncStatus('synced','synced ✓');toast('Gone. Onto the next 💅')}
@@ -1711,7 +1714,10 @@ function updateStats(){
 }
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
 
-// ── OVERLAY CLOSE ──
+// Expose card functions globally so inline onclick always finds them
+window.openDetail=openDetail;
+window.openEdit=openEdit;
+window.deleteMan=deleteMan;
 
 document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{
   if(e.target!==o) return;
