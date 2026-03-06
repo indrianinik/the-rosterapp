@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Roster ✦</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=Jost:wght@200;300;400;500;600&family=Italiana&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -1550,40 +1551,117 @@ function silentReset(){
 function openAdd(){editId=null;document.getElementById('mTitle').textContent='New Assessment';silentReset();document.getElementById('addModal').classList.add('open');initSliders();try{updateVerdict();}catch(e){}}
 function openEdit(id){
   id=String(id);
-  const m=localRoster.find(x=>String(x.id)===id);if(!m)return;
+  const m=localRoster.find(x=>String(x.id)===id);
+  if(!m) return;
   editId=id;
   document.getElementById('mTitle').textContent='Edit · '+m.name;
-  // Fill basic fields
-  try{document.getElementById('fName').value=m.name||'';}catch(e){}
-  try{document.getElementById('fNick').value=m.nick||'';}catch(e){}
-  try{document.getElementById('fAge').value=m.age||'';}catch(e){}
-  try{document.getElementById('fMet').value=m.met||'';}catch(e){}
-  try{document.getElementById('fJob').value=m.job||'';}catch(e){}
-  try{document.getElementById('fSince').value=m.since||'';}catch(e){}
-  try{document.getElementById('fNotes').value=m.notes||'';}catch(e){}
-  // Status is radio buttons st1-st5
+
+  // ── Basic text fields ──
+  const sf=(elId,val)=>{try{const el=document.getElementById(elId);if(el)el.value=val||'';}catch(e){}};
+  sf('fName',m.name); sf('fNick',m.nick); sf('fAge',m.age);
+  sf('fMet',m.met); sf('fJob',m.job); sf('fSince',m.since);
+
+  // ── Status radio ──
   try{
     const statusMap={talking:'st1',situation:'st2',situationship:'st2',dating:'st3',paused:'st4',done:'st5'};
-    const stId=statusMap[m.status]||'st1';
-    const stEl=document.getElementById(stId);
+    const stEl=document.getElementById(statusMap[m.status]||'st1');
     if(stEl)stEl.checked=true;
   }catch(e){}
-  // Fill scores
+
+  // ── Scores (sliders sl1-sl7) ──
   if(m.scores){
     for(let i=1;i<=7;i++){
-      try{document.getElementById('sl'+i).value=m.scores[i-1]||5;}catch(e){}
-      try{document.getElementById('sv'+i).textContent=m.scores[i-1]||5;}catch(e){}
+      try{
+        const sl=document.getElementById('sl'+i);
+        const sv=document.getElementById('sv'+i);
+        if(sl){sl.value=m.scores[i-1]||5;sl.style.setProperty('--pct',((( m.scores[i-1]||5)-1)/9*100).toFixed(0)+'%');}
+        if(sv)sv.textContent=m.scores[i-1]||5;
+      }catch(e){}
     }
   }
-  // Fill flags
+
+  // ── Red/Green flags (checkboxes r1-r10, g1-g10) ──
   for(let i=1;i<=10;i++){
-    try{const r=document.getElementById('r'+i);if(r)r.checked=m.red&&m.red.includes(r.nextElementSibling?.textContent);}catch(e){}
-    try{const g=document.getElementById('g'+i);if(g)g.checked=m.green&&m.green.includes(g.nextElementSibling?.textContent);}catch(e){}
+    try{const r=document.getElementById('r'+i);if(r)r.checked=!!(m.red&&m.red.some(f=>r.nextElementSibling?.textContent?.includes(f)||f?.includes(r.nextElementSibling?.textContent)));}catch(e){}
+    try{const g=document.getElementById('g'+i);if(g)g.checked=!!(m.green&&m.green.some(f=>g.nextElementSibling?.textContent?.includes(f)||f?.includes(g.nextElementSibling?.textContent)));}catch(e){}
   }
-  // Open modal
+
+  // ── Prefs ──
+  const p=m.prefs||{};
+
+  // Style radio — match by label text
+  try{
+    document.querySelectorAll('input[name="style"]').forEach(el=>{
+      el.checked=p.style&&el.nextElementSibling?.textContent?.trim()===p.style.trim();
+    });
+  }catch(e){}
+
+  // Hygiene radio
+  try{
+    document.querySelectorAll('input[name="hygiene"]').forEach(el=>{
+      const lbl=el.nextElementSibling?.textContent?.replace(/[^a-zA-Z— ]/g,'').trim();
+      el.checked=p.hygiene&&lbl===p.hygiene.trim();
+    });
+  }catch(e){}
+
+  // Distance radio
+  try{
+    document.querySelectorAll('input[name="distance"]').forEach(el=>{
+      const name=el.nextElementSibling?.querySelector('.dist-name')?.textContent?.trim();
+      el.checked=p.distance&&name===p.distance.trim();
+    });
+  }catch(e){}
+
+  // Religion radio
+  try{
+    document.querySelectorAll('input[name="hisRel"]').forEach(el=>{
+      el.checked=p.hisRel&&el.nextElementSibling?.textContent?.trim()===p.hisRel.trim();
+    });
+  }catch(e){}
+
+  // Education radio
+  try{
+    document.querySelectorAll('input[name="hisEdu"]').forEach(el=>{
+      el.checked=p.hisEdu&&el.nextElementSibling?.textContent?.trim()===p.hisEdu.trim();
+    });
+  }catch(e){}
+
+  // Ambition radio
+  try{
+    document.querySelectorAll('input[name="ambition"]').forEach(el=>{
+      el.checked=p.ambition&&el.nextElementSibling?.textContent?.trim()===p.ambition.trim();
+    });
+  }catch(e){}
+
+  // Icks checkboxes
+  try{
+    document.querySelectorAll('.ick-tog').forEach(el=>{
+      el.checked=p.icks&&p.icks.includes(el.nextElementSibling?.textContent?.trim());
+    });
+  }catch(e){}
+
+  // Fields checkboxes
+  try{
+    document.querySelectorAll('.field-tog').forEach(el=>{
+      el.checked=p.fields&&p.fields.includes(el.nextElementSibling?.textContent?.trim());
+    });
+  }catch(e){}
+
+  // Height & age numbers
+  sf('myHeight',p.myHeight); sf('hisHeight',p.hisHeight);
+  sf('minHeight',p.minHeight); sf('myAge',p.myAge);
+  sf('ageMin',p.ageMin); sf('ageMax',p.ageMax);
+
+  // Text areas
+  sf('fGut',p.gut); sf('fWant',p.want); sf('fSit',p.sit||m.notes);
+
+  // Open modal and refresh visuals
   document.getElementById('addModal').classList.add('open');
   try{initSliders();}catch(e){}
   try{updateVerdict();}catch(e){}
+  try{updateHeightViz();}catch(e){}
+  try{updateAgeMatch();}catch(e){}
+  try{updateEduMatch();}catch(e){}
 }
 function openDetail(id){
   id=String(id);
