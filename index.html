@@ -1873,6 +1873,10 @@ function updateVerdict(){
 // ── PROGRESS ──
 const SECTIONS=['Who is he','Appearances','Hygiene & Manners','Age Pref','Distance','Communication','Religion','Height','Education','Core Ratings','Flags','Vibe & Tea'];
 function updateProgress(){
+  const progFill=document.getElementById('progFill');
+  if(!progFill) return; // element doesn't exist yet
+  const modal=document.getElementById('addModal');
+  if(!modal||!modal.classList.contains('open')) return; // modal not open
   let filled=0,total=0;
   const checks=[
     ()=>document.getElementById('fName').value.trim().length>0,
@@ -1888,9 +1892,9 @@ function updateProgress(){
     ()=>document.querySelectorAll('.ftog:checked').length>0||document.querySelectorAll('.db-tog:checked').length>0,
     ()=>document.getElementById('fSit').value.trim().length>0||document.querySelectorAll('.vibe-tog:checked').length>0,
   ];
-  checks.forEach((fn,i)=>{total++;if(fn())filled++;});
+  checks.forEach((fn,i)=>{total++;try{if(fn())filled++;}catch(e){}});
   const pct=Math.round((filled/total)*100);
-  document.getElementById('progFill').style.width=pct+'%';
+  progFill.style.width=pct+'%';
   document.getElementById('progPct').textContent=pct+'%';
   const idx=Math.min(Math.floor((window.scrollY/(document.body.scrollHeight-window.innerHeight))*SECTIONS.length),SECTIONS.length-1);
   document.getElementById('progSection').textContent=SECTIONS[Math.max(0,idx)]||'Assessment';
