@@ -1542,11 +1542,33 @@ function openAdd(){editId=null;document.getElementById('mTitle').textContent='Ne
 function openEdit(id){
   id=String(id);
   const m=localRoster.find(x=>String(x.id)===id);if(!m)return;
-  editId=id;document.getElementById('mTitle').textContent='Edit · '+m.name;
-  document.getElementById('fName').value=m.name||'';document.getElementById('fNick').value=m.nick||'';document.getElementById('fAge').value=m.age||'';document.getElementById('fMet').value=m.met||'';document.getElementById('fJob').value=m.job||'';document.getElementById('fSince').value=m.since||'';document.getElementById('fStatus').value=m.status||'talking';document.getElementById('fNotes').value=m.notes||'';
-  for(let i=1;i<=7;i++){document.getElementById('sl'+i).value=m.scores?m.scores[i-1]:5;document.getElementById('sv'+i).textContent=m.scores?m.scores[i-1]:5}
-  for(let i=1;i<=10;i++){const r=document.getElementById('r'+i),g=document.getElementById('g'+i);if(r)r.checked=m.red&&m.red.includes(r.nextElementSibling.textContent);if(g)g.checked=m.green&&m.green.includes(g.nextElementSibling.textContent)}
-  document.getElementById('addModal').classList.add('open');initSliders();
+  editId=id;
+  document.getElementById('mTitle').textContent='Edit · '+m.name;
+  // Fill basic fields
+  try{document.getElementById('fName').value=m.name||'';}catch(e){}
+  try{document.getElementById('fNick').value=m.nick||'';}catch(e){}
+  try{document.getElementById('fAge').value=m.age||'';}catch(e){}
+  try{document.getElementById('fMet').value=m.met||'';}catch(e){}
+  try{document.getElementById('fJob').value=m.job||'';}catch(e){}
+  try{document.getElementById('fSince').value=m.since||'';}catch(e){}
+  try{document.getElementById('fNotes').value=m.notes||'';}catch(e){}
+  try{document.getElementById('fStatus').value=m.status||'talking';}catch(e){}
+  // Fill scores
+  if(m.scores){
+    for(let i=1;i<=7;i++){
+      try{document.getElementById('sl'+i).value=m.scores[i-1]||5;}catch(e){}
+      try{document.getElementById('sv'+i).textContent=m.scores[i-1]||5;}catch(e){}
+    }
+  }
+  // Fill flags
+  for(let i=1;i<=10;i++){
+    try{const r=document.getElementById('r'+i);if(r)r.checked=m.red&&m.red.includes(r.nextElementSibling?.textContent);}catch(e){}
+    try{const g=document.getElementById('g'+i);if(g)g.checked=m.green&&m.green.includes(g.nextElementSibling?.textContent);}catch(e){}
+  }
+  // Open modal
+  document.getElementById('addModal').classList.add('open');
+  try{initSliders();}catch(e){}
+  try{updateVerdict();}catch(e){}
 }
 function openDetail(id){
   id=String(id);
