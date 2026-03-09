@@ -59,18 +59,6 @@ body::after{content:'';position:fixed;inset:0;background-image:radial-gradient(c
 input[type=text],input[type=password]{font-family:'Jost',sans-serif;font-size:.9rem;font-weight:300;padding:.75rem 1rem;background:rgba(255,255,255,.06);border:1px solid rgba(201,168,224,.2);border-radius:10px;color:var(--white);transition:all .25s;width:100%}
 input::placeholder{color:rgba(201,168,224,.4);font-style:italic}
 input:focus{outline:none;border-color:rgba(212,168,67,.5);background:rgba(30,15,45,.95);box-shadow:0 0 0 3px rgba(212,168,67,.1)}
-/* Kill browser autofill white flash */
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill:active{
-  -webkit-box-shadow:0 0 0 999px rgba(25,12,38,.98) inset !important;
-  box-shadow:0 0 0 999px rgba(25,12,38,.98) inset !important;
-  -webkit-text-fill-color:var(--white) !important;
-  caret-color:var(--white);
-  border-color:rgba(212,168,67,.4) !important;
-  transition:background-color 99999s ease-in-out 0s;
-}
 .avatar-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:.5rem;margin-top:.2rem}
 .av-opt{width:100%;aspect-ratio:1;border-radius:50%;font-size:1.3rem;display:flex;align-items:center;justify-content:center;cursor:pointer;border:2px solid transparent;background:rgba(255,255,255,.04);transition:all .2s}
 .av-opt:hover{background:rgba(255,255,255,.08);transform:scale(1.08)}
@@ -1594,6 +1582,7 @@ async function loadUser(u){
   render();updateStats();
   // Show onboarding for every login (About Us + Privacy)
   setTimeout(showOnboard, 400);
+}
 
 function showPage(id){
   // Must use inline styles to override ID-level CSS (e.g. #authPage{display:flex})
