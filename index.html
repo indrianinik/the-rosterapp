@@ -501,8 +501,10 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
 /* ── COMM STYLE ── */
 .comm-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
 .comm-tog{display:none}
-.comm-label{display:flex;align-items:center;gap:.65rem;padding:.65rem 1rem;border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.72);transition:all .22s;user-select:none;background:rgba(255,255,255,.02);font-size:.7rem}
-.comm-label .comm-icon{font-size:1rem;flex-shrink:0}
+.comm-label{display:flex;align-items:flex-start;gap:.65rem;padding:.65rem 1rem;border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.72);transition:all .22s;user-select:none;background:rgba(255,255,255,.02);font-size:.7rem}
+.comm-label .comm-icon{font-size:1rem;flex-shrink:0;margin-top:.1rem}
+.comm-label .comm-text{display:flex;flex-direction:column;gap:.15rem}
+.comm-label .comm-desc{font-size:.6rem;color:rgba(201,168,224,.4);font-style:italic;line-height:1.3}
 .comm-tog:checked+.comm-label{background:rgba(122,204,160,.1);color:#7acca0;border-color:rgba(122,204,160,.28)}
 .comm-label:hover{border-color:rgba(255,255,255,.15);color:rgba(255,255,255,.6)}
 
@@ -818,6 +820,9 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
     <input type="checkbox" class="ftog rf" id="mn9"><label class="ftog-label" for="mn9">Phone-obsessed</label>
     <input type="checkbox" class="ftog rf" id="mn10"><label class="ftog-label" for="mn10">Chews loudly</label>
   </div>
+  <div class="fgroup" style="margin-top:.9rem">
+    <input type="text" id="fMannersNotes" placeholder="Any other manners worth noting (good or cringe)...">
+  </div>
 </div>
 
 <div class="divider"></div>
@@ -939,14 +944,14 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
 
   <div class="sub-label">His communication style</div>
   <div class="comm-grid">
-    <input type="checkbox" class="comm-tog" id="cs1"><label class="comm-label" for="cs1"><span class="comm-icon">🗣️</span>Opens up easily</label>
-    <input type="checkbox" class="comm-tog" id="cs2"><label class="comm-label" for="cs2"><span class="comm-icon">👂</span>Actually listens, doesn't just wait to talk</label>
-    <input type="checkbox" class="comm-tog" id="cs3"><label class="comm-label" for="cs3"><span class="comm-icon">🧠</span>Thoughtful responses</label>
-    <input type="checkbox" class="comm-tog" id="cs4"><label class="comm-label" for="cs4"><span class="comm-icon">😄</span>Good sense of humour</label>
-    <input type="checkbox" class="comm-tog" id="cs5"><label class="comm-label" for="cs5"><span class="comm-icon">📵</span>Gives full attention (no phone)</label>
-    <input type="checkbox" class="comm-tog" id="cs6"><label class="comm-label" for="cs6"><span class="comm-icon">💌</span>Communicates feelings</label>
-    <input type="checkbox" class="comm-tog" id="cs7"><label class="comm-label" for="cs7"><span class="comm-icon">🔇</span>Goes quiet when upset</label>
-    <input type="checkbox" class="comm-tog" id="cs8"><label class="comm-label" for="cs8"><span class="comm-icon">🔁</span>Circles back after conflict</label>
+    <input type="checkbox" class="comm-tog" id="cs1"><label class="comm-label" for="cs1"><span class="comm-icon">🗣️</span><span class="comm-text">Opens up easily<span class="comm-desc">Shares feelings unprompted. Rare species. Protect him.</span></span></label>
+    <input type="checkbox" class="comm-tog" id="cs2"><label class="comm-label" for="cs2"><span class="comm-icon">👂</span><span class="comm-text">Actually listens<span class="comm-desc">Doesn't just wait for his turn to talk. A green flag wearing a tuxedo.</span></span></label>
+    <input type="checkbox" class="comm-tog" id="cs3"><label class="comm-label" for="cs3"><span class="comm-icon">🧠</span><span class="comm-text">Thoughtful responses<span class="comm-desc">Takes a beat before answering. Not ghosting — genuinely thinking.</span></span></label>
+    <input type="checkbox" class="comm-tog" id="cs4"><label class="comm-label" for="cs4"><span class="comm-icon">😄</span><span class="comm-text">Good sense of humour<span class="comm-desc">Makes you laugh without punching down. A personality, not just a face.</span></span></label>
+    <input type="checkbox" class="comm-tog" id="cs5"><label class="comm-label" for="cs5"><span class="comm-icon">📵</span><span class="comm-text">Gives full attention<span class="comm-desc">Phone face-down. Eye contact. You have the floor. Revolutionary.</span></span></label>
+    <input type="checkbox" class="comm-tog" id="cs6"><label class="comm-label" for="cs6"><span class="comm-icon">💌</span><span class="comm-text">Communicates feelings<span class="comm-desc">Uses words like "I feel" without being prompted for 45 minutes first.</span></span></label>
+    <input type="checkbox" class="comm-tog" id="cs7"><label class="comm-label" for="cs7"><span class="comm-icon">🔇</span><span class="comm-text">Goes quiet when upset<span class="comm-desc">Shuts down instead of talking. The silent treatment's unpaid intern.</span></span></label>
+    <input type="checkbox" class="comm-tog" id="cs8"><label class="comm-label" for="cs8"><span class="comm-icon">🔁</span><span class="comm-text">Circles back after conflict<span class="comm-desc">Comes back to resolve it. Doesn't just act like it never happened.</span></span></label>
   </div>
   <div class="fgroup" style="margin-top:.9rem">
     <input type="text" id="fCommNotes" placeholder="Anything else about how he communicates...">
@@ -1113,6 +1118,9 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
     <input type="radio" name="ambition" class="amb-tog" id="am4"><label class="amb-label" for="am4"><span class="amb-icon">😴</span>Coasting — no real direction right now</label>
     <input type="radio" name="ambition" class="amb-tog" id="am5"><label class="amb-label" for="am5"><span class="amb-icon">🌀</span>Lost — no plan, no effort</label>
     <input type="radio" name="ambition" class="amb-tog" id="am6"><label class="amb-label" for="am6"><span class="amb-icon">💼</span>Established — already successful in his field</label>
+  </div>
+  <div class="fgroup" style="margin-top:.9rem">
+    <input type="text" id="fCareerNotes" placeholder="What's the full career tea? Job title, hustle level, red flags at work...">
   </div>
 
   <div class="fgrid" style="margin-top:1.1rem">
@@ -1311,7 +1319,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
 </div>
 </div>
 </div>
-<!-- DETAIL<!-- DETAIL MODAL -->
+<!-- DETAIL MODAL -->
 <div class="overlay" id="detailModal">
   <div class="modal"><div class="modal-header"><div class="modal-title" id="dTitle">Details</div><button class="modal-close" onclick="closeAll()">✕</button></div><div class="modal-scroll" id="dBody"></div></div>
 </div>
@@ -1378,7 +1386,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
             <span style="font-size:1.1rem;flex-shrink:0">📊</span>
             <div>
               <div style="font-size:.72rem;color:var(--petal);margin-bottom:.2rem;font-weight:500">Your data stays private</div>
-              <div style="font-size:.74rem;color:rgba(220,195,240,0.65)">Stored securely in your own cloud. No third-party database, no hidden storage.</div>
+              <div style="font-size:.74rem;color:rgba(220,195,240,0.65)">We don't use any third-party platform. Your data is encrypted end-to-end and stored only in your own private space.</div>
             </div>
           </div>
           <div style="display:flex;gap:.8rem;align-items:flex-start;background:rgba(255,255,255,.03);border-radius:10px;padding:.9rem 1rem">
@@ -1764,6 +1772,7 @@ function openEdit(id){
   set('fGut',p.gut); set('fWant',p.want); set('fSit',p.sit||m.notes);
   set('fIcksCustom',p.icksCustom); set('fDbCustom',p.dbCustom);
   set('fRedCustom',p.redCustom); set('fGreenCustom',p.greenCustom);
+  set('fMannersNotes',p.mannersNotes); set('fCareerNotes',p.careerNotes);
   set('fRelNotes',p.relNotes); set('fAgeNotes',p.ageNotes);
   set('fDistNotes',p.distNotes); set('fCommNotes',p.commNotes);
   set('fHeightNotes',p.heightNotes); set('fEduNotes',p.eduNotes);
@@ -1885,6 +1894,8 @@ async function saveIt(){
     dbCustom:document.getElementById('fDbCustom')?.value||'',
     redCustom:document.getElementById('fRedCustom')?.value||'',
     greenCustom:document.getElementById('fGreenCustom')?.value||'',
+    mannersNotes:document.getElementById('fMannersNotes')?.value||'',
+    careerNotes:document.getElementById('fCareerNotes')?.value||'',
     relNotes:document.getElementById('fRelNotes')?.value||'',
     distNotes:document.getElementById('fDistNotes')?.value||'',
     commNotes:document.getElementById('fCommNotes')?.value||'',
