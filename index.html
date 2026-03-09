@@ -9,18 +9,18 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --night:#0d0910;--plum:#1e1125;--deep-plum:#2a1535;
-  --lilac:#d4b8f0;--petal:#f5d8e8;--blush:#eeaac8;
-  --gold:#d4a843;--gold-light:#f5d060;
-  --white:#fdf8ff;--muted:rgba(220,195,240,0.75);
-  --glass:rgba(255,255,255,0.05);--glass-b:rgba(255,255,255,0.1);
-  --red:#f07080;--green:#8adcb0;--amber:#f0c070;
-  --accent:#d4a843;--accent-glow:rgba(212,168,67,.3);--accent-light:#f5d060;
+  --night:#100c18;--plum:#1e1530;--deep-plum:#2e1d48;
+  --lilac:#e0c8ff;--petal:#fde8f2;--blush:#f7b8d8;
+  --gold:#f0bc48;--gold-light:#ffe066;
+  --white:#fff8ff;--muted:rgba(230,210,255,0.82);
+  --glass:rgba(255,255,255,0.08);--glass-b:rgba(255,255,255,0.16);
+  --red:#ff7090;--green:#6eeab4;--amber:#ffcc60;
+  --accent:#f0bc48;--accent-glow:rgba(240,188,72,.4);--accent-light:#ffe066;
 }
 html{scroll-behavior:smooth}
 body{background:var(--night);color:var(--white);font-family:'Jost',sans-serif;font-weight:300;min-height:100vh;overflow-x:hidden}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 15% 0%,rgba(100,30,130,.35) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 85% 100%,rgba(180,80,120,.2) 0%,transparent 55%);pointer-events:none;z-index:0}
-body::after{content:'';position:fixed;inset:0;background-image:radial-gradient(circle 300px at 10% 20%,rgba(212,168,67,.06) 0%,transparent 70%),radial-gradient(circle 200px at 90% 70%,rgba(232,160,184,.08) 0%,transparent 70%);pointer-events:none;z-index:0;animation:drift 20s ease-in-out infinite alternate}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 15% 0%,rgba(120,50,180,.45) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 85% 100%,rgba(210,80,140,.28) 0%,transparent 55%);pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;inset:0;background-image:radial-gradient(circle 300px at 10% 20%,rgba(240,188,72,.1) 0%,transparent 70%),radial-gradient(circle 200px at 90% 70%,rgba(255,160,210,.12) 0%,transparent 70%);pointer-events:none;z-index:0;animation:drift 20s ease-in-out infinite alternate}
 @keyframes drift{from{transform:translate(0,0)}to{transform:translate(20px,-15px)}}
 .noise{position:fixed;inset:0;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");pointer-events:none;z-index:1}
 .stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
@@ -149,7 +149,7 @@ main{max-width:1380px;margin:0 auto;padding:2.5rem 3rem 5rem;position:relative;z
 .f-btn{font-family:'Jost',sans-serif;font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;padding:.4rem 1rem;border-radius:50px;border:none;background:transparent;color:var(--muted);cursor:pointer;transition:all .22s;font-weight:400}
 .f-btn.active,.f-btn:hover{background:var(--deep-plum);color:var(--accent-light)}
 .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:1.6rem}
-.man-card{border-radius:20px;overflow:hidden;border:1px solid var(--glass-b);background:linear-gradient(145deg,rgba(30,17,37,.9),rgba(42,21,53,.7));backdrop-filter:blur(20px);cursor:pointer;transition:all .4s cubic-bezier(.23,1,.32,1);position:relative;animation:cardIn .5s ease both}
+.man-card{border-radius:20px;overflow:hidden;border:1px solid var(--glass-b);background:linear-gradient(145deg,rgba(40,26,58,.92),rgba(58,32,75,.75));backdrop-filter:blur(20px);cursor:pointer;transition:all .4s cubic-bezier(.23,1,.32,1);position:relative;animation:cardIn .5s ease both}
 @keyframes cardIn{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:none}}
 .man-card::before{content:'';position:absolute;inset:0;border-radius:20px;background:radial-gradient(ellipse at 20% 10%,var(--cg,rgba(212,168,67,.08)) 0%,transparent 60%);opacity:0;transition:opacity .4s}
 .man-card:hover::before{opacity:1}
@@ -209,7 +209,7 @@ main{max-width:1380px;margin:0 auto;padding:2.5rem 3rem 5rem;position:relative;z
 /* ── MODAL ── */
 .overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(8,5,10,.88);backdrop-filter:blur(12px);align-items:center;justify-content:center;padding:1.5rem}
 .overlay.open{display:flex}
-.modal{background:linear-gradient(145deg,#1a0d22,#120a1a);border:1px solid rgba(201,168,224,.14);border-radius:24px;width:100%;max-width:660px;max-height:92vh;overflow:hidden;display:flex;flex-direction:column;animation:mPop .4s cubic-bezier(.23,1,.32,1);box-shadow:0 30px 80px rgba(0,0,0,.7)}
+.modal{background:linear-gradient(145deg,#221040,#180e2e);border:1px solid rgba(220,180,255,.18);border-radius:24px;width:100%;max-width:660px;max-height:92vh;overflow:hidden;display:flex;flex-direction:column;animation:mPop .4s cubic-bezier(.23,1,.32,1);box-shadow:0 30px 80px rgba(0,0,0,.6)}
 @keyframes mPop{from{opacity:0;transform:translateY(30px) scale(.95)}to{opacity:1;transform:none}}
 .modal-header{padding:1.7rem 2rem 1.3rem;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:linear-gradient(to bottom,rgba(212,168,67,.04),transparent)}
 .modal-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-style:italic;font-weight:400;color:var(--petal)}
@@ -504,7 +504,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
 .comm-label{display:flex;align-items:flex-start;gap:.65rem;padding:.65rem 1rem;border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.72);transition:all .22s;user-select:none;background:rgba(255,255,255,.02);font-size:.7rem}
 .comm-label .comm-icon{font-size:1rem;flex-shrink:0;margin-top:.1rem}
 .comm-label .comm-text{display:flex;flex-direction:column;gap:.15rem}
-.comm-label .comm-desc{font-size:.6rem;color:rgba(201,168,224,.4);font-style:italic;line-height:1.3}
+.comm-label .comm-desc{font-size:.6rem;color:rgba(220,195,255,.6);font-style:italic;line-height:1.3}
 .comm-tog:checked+.comm-label{background:rgba(122,204,160,.1);color:#7acca0;border-color:rgba(122,204,160,.28)}
 .comm-label:hover{border-color:rgba(255,255,255,.15);color:rgba(255,255,255,.6)}
 
@@ -1109,6 +1109,9 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
     <input type="checkbox" class="field-tog" id="fd11"><label class="field-label" for="fd11">Media / Content</label>
     <input type="checkbox" class="field-tog" id="fd12"><label class="field-label" for="fd12">Still figuring it out</label>
   </div>
+  <div class="fgroup" style="margin-top:.7rem">
+    <input type="text" id="fFieldNotes" placeholder="What exactly does he do? Startup guy, corporate drone, 'entrepreneur'...">
+  </div>
 
   <div class="sub-label" style="margin-top:1.3rem">Career ambition & drive</div>
   <div class="ambition-grid">
@@ -1315,6 +1318,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
     <button class="btn-cancel" onclick="closeAssessment()">Cancel</button>
     <button class="btn-primary" onclick="saveIt()">✦ Save to Roster</button>
   </div>
+</div>
 </div>
 </div>
 </div>
@@ -1773,6 +1777,7 @@ function openEdit(id){
   set('fIcksCustom',p.icksCustom); set('fDbCustom',p.dbCustom);
   set('fRedCustom',p.redCustom); set('fGreenCustom',p.greenCustom);
   set('fMannersNotes',p.mannersNotes); set('fCareerNotes',p.careerNotes);
+  set('fFieldNotes',p.fieldNotes);
   set('fRelNotes',p.relNotes); set('fAgeNotes',p.ageNotes);
   set('fDistNotes',p.distNotes); set('fCommNotes',p.commNotes);
   set('fHeightNotes',p.heightNotes); set('fEduNotes',p.eduNotes);
@@ -1896,6 +1901,7 @@ async function saveIt(){
     greenCustom:document.getElementById('fGreenCustom')?.value||'',
     mannersNotes:document.getElementById('fMannersNotes')?.value||'',
     careerNotes:document.getElementById('fCareerNotes')?.value||'',
+    fieldNotes:document.getElementById('fFieldNotes')?.value||'',
     relNotes:document.getElementById('fRelNotes')?.value||'',
     distNotes:document.getElementById('fDistNotes')?.value||'',
     commNotes:document.getElementById('fCommNotes')?.value||'',
