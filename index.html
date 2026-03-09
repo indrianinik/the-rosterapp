@@ -1619,24 +1619,6 @@ function verdict(scores,red,green){
   return{v:'caution',label:'Jury\'s Still Out.',reason:'More time needed.',color:'var(--amber)'}
 }
 
-// ── SLIDERS ──
-function sv(sid,vid){const val=document.getElementById(sid).value;document.getElementById(vid).textContent=val;document.getElementById(sid).style.setProperty('--pct',((val-1)/9*100).toFixed(0)+'%');liveV()}
-function getScores(){return[1,2,3,4,5,6,7].map(i=>+document.getElementById('sl'+i).value)}
-function getRed(){const f=[];for(let i=1;i<=10;i++){const e=document.getElementById('r'+i);if(e&&e.checked)f.push(e.nextElementSibling.textContent)}return f}
-function getGreen(){const f=[];for(let i=1;i<=10;i++){const e=document.getElementById('g'+i);if(e&&e.checked)f.push(e.nextElementSibling.textContent)}return f}
-function liveV(){
-  const lvText=document.getElementById('lvText');
-  const lvReason=document.getElementById('lvReason');
-  if(!lvText||!lvReason) return;
-  const v=verdict(getScores(),getRed(),getGreen());
-  const avg=(getScores().reduce((a,b)=>a+b,0)/7).toFixed(1);
-  lvText.textContent=v.label+' · '+avg+'/10';
-  lvText.style.color=v.color;
-  lvReason.textContent=v.reason;
-}
-document.addEventListener('change',e=>{if(e.target.classList.contains('ftog'))liveV()});
-function initSliders(){for(let i=1;i<=7;i++){const el=document.getElementById('sl'+i);if(el)el.style.setProperty('--pct',((el.value-1)/9*100).toFixed(0)+'%')}try{liveV();}catch(e){}}
-
 // ── MODALS ──
 function silentReset(){
   // Silently clear the form with no confirmation — used when opening fresh
