@@ -10,12 +10,12 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
   --night:#0d0910;--plum:#1e1125;--deep-plum:#2a1535;
-  --lilac:#c9a8e0;--petal:#f0c8d8;--blush:#e8a0b8;
-  --gold:#d4a843;--gold-light:#f0cc7a;
-  --white:#fdf8ff;--muted:rgba(201,168,224,0.5);
-  --glass:rgba(255,255,255,0.04);--glass-b:rgba(255,255,255,0.08);
-  --red:#e06070;--green:#7acca0;--amber:#e0b060;
-  --accent:#d4a843;--accent-glow:rgba(212,168,67,.25);--accent-light:#f0cc7a;
+  --lilac:#d4b8f0;--petal:#f5d8e8;--blush:#eeaac8;
+  --gold:#d4a843;--gold-light:#f5d060;
+  --white:#fdf8ff;--muted:rgba(220,195,240,0.75);
+  --glass:rgba(255,255,255,0.05);--glass-b:rgba(255,255,255,0.1);
+  --red:#f07080;--green:#8adcb0;--amber:#f0c070;
+  --accent:#d4a843;--accent-glow:rgba(212,168,67,.3);--accent-light:#f5d060;
 }
 html{scroll-behavior:smooth}
 body{background:var(--night);color:var(--white);font-family:'Jost',sans-serif;font-weight:300;min-height:100vh;overflow-x:hidden}
@@ -177,7 +177,7 @@ main{max-width:1380px;margin:0 auto;padding:2.5rem 3rem 5rem;position:relative;z
 .meta-chip{font-size:.62rem;padding:.22rem .65rem;border-radius:50px;background:rgba(255,255,255,.05);border:1px solid var(--glass-b);color:rgba(201,168,224,.65)}
 .mini-scores{display:flex;flex-direction:column;gap:.45rem;margin-bottom:1.1rem}
 .mini-row{display:flex;align-items:center;gap:.6rem}
-.mini-lbl{font-size:.58rem;color:var(--muted);width:76px;flex-shrink:0}
+.mini-lbl{font-size:.65rem;color:rgba(220,195,240,0.78);width:80px;flex-shrink:0}
 .mini-track{flex:1;height:3px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden}
 .mini-fill{height:100%;border-radius:2px;transition:width 1s cubic-bezier(.23,1,.32,1)}
 .mini-val{font-size:.62rem;color:var(--muted);width:1.5ch;text-align:right}
@@ -234,7 +234,7 @@ select option{background:#1a0d22}
 textarea{resize:vertical;min-height:85px}
 .sgroup{margin-bottom:.85rem}
 .srow{display:flex;align-items:center;justify-content:space-between;margin-bottom:.35rem}
-.slabel{font-size:.68rem;color:rgba(201,168,224,.7);font-weight:300}
+.slabel{font-size:.73rem;color:rgba(220,195,240,0.88);font-weight:400}
 .sval{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--accent-light);min-width:2ch;text-align:right}
 input[type=range]{-webkit-appearance:none;width:100%;height:3px;border:none;border-radius:2px;padding:0;background:linear-gradient(to right,var(--accent) 0%,var(--accent) var(--pct,44%),rgba(255,255,255,.1) var(--pct,44%),rgba(255,255,255,.1) 100%);cursor:pointer}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:radial-gradient(circle,var(--accent-light),var(--accent));border:2px solid rgba(0,0,0,.4);box-shadow:0 0 8px var(--accent-glow);transition:transform .15s}
@@ -325,16 +325,16 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.25)}
 .sec-badge{display:flex;align-items:center;gap:.5rem;background:rgba(212,168,67,.08);border:1px solid rgba(212,168,67,.2);border-radius:50px;padding:.35rem .9rem .35rem .6rem;flex-shrink:0}
 .sec-num{font-family:'Cormorant Garamond',serif;font-size:.95rem;font-style:italic;color:rgba(212,168,67,.6);line-height:1}
 .sec-icon{font-size:.9rem}
-.sec-title{font-size:.58rem;letter-spacing:3.5px;text-transform:uppercase;color:var(--muted);font-weight:400}
+.sec-title{font-size:.65rem;letter-spacing:3px;text-transform:uppercase;color:rgba(220,195,240,0.85);font-weight:500}
 
 /* ── GRID ── */
 .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
 .fgrid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
 .fgroup{display:flex;flex-direction:column;gap:.45rem}
 .fgroup.full{grid-column:1/-1}
-.flabel{font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:rgba(201,168,224,.55);font-weight:500;display:flex;align-items:center;gap:.4rem}
+.flabel{font-size:.65rem;letter-spacing:2px;text-transform:uppercase;color:rgba(220,195,240,0.85);font-weight:500;display:flex;align-items:center;gap:.4rem}
 .flabel .req{color:var(--gold)}
-.flabel .hint{font-size:.55rem;color:rgba(201,168,224,.3);letter-spacing:1px;font-style:italic;text-transform:none;font-weight:300}
+.flabel .hint{font-size:.6rem;color:rgba(220,195,240,0.55);letter-spacing:1px;font-style:italic;text-transform:none;font-weight:300}
 
 input[type=text],input[type=number],input[type=date],textarea,select{
   font-family:'Jost',sans-serif;font-size:.88rem;font-weight:300;
@@ -342,7 +342,7 @@ input[type=text],input[type=number],input[type=date],textarea,select{
   border:1px solid rgba(201,168,224,.13);border-radius:12px;
   color:var(--white);transition:all .25s;width:100%;
 }
-input::placeholder,textarea::placeholder{color:rgba(201,168,224,.22);font-style:italic}
+input::placeholder,textarea::placeholder{color:rgba(201,168,224,.45);font-style:italic}
 input:focus,textarea:focus,select:focus{outline:none;border-color:rgba(212,168,67,.4);background:rgba(212,168,67,.04);box-shadow:0 0 0 3px rgba(212,168,67,.07)}
 input[type=date]::-webkit-calendar-picker-indicator{filter:invert(.4)}
 select option{background:#1a0d22}
@@ -351,7 +351,7 @@ textarea{resize:vertical;min-height:85px;line-height:1.6}
 /* ── STATUS PILLS ── */
 .pill-group{display:flex;flex-wrap:wrap;gap:.45rem}
 .s-pill{display:none}
-.s-pill-label{font-size:.67rem;padding:.38rem .95rem;border-radius:50px;cursor:pointer;border:1px solid rgba(255,255,255,.09);color:rgba(255,255,255,.33);transition:all .22s;user-select:none}
+.s-pill-label{font-size:.67rem;padding:.38rem .95rem;border-radius:50px;cursor:pointer;border:1px solid rgba(255,255,255,.09);color:rgba(255,255,255,.65);transition:all .22s;user-select:none}
 .s-pill:checked+.s-pill-label{background:rgba(212,168,67,.14);color:var(--gold-light);border-color:rgba(212,168,67,.4)}
 .s-pill-label:hover{border-color:rgba(212,168,67,.25);color:rgba(255,255,255,.6)}
 
@@ -364,7 +364,7 @@ textarea{resize:vertical;min-height:85px;line-height:1.6}
 .scores-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem 2.5rem}
 .sgroup{display:flex;flex-direction:column;gap:.4rem}
 .srow{display:flex;align-items:center;justify-content:space-between}
-.slabel{font-size:.68rem;color:rgba(201,168,224,.7);font-weight:300}
+.slabel{font-size:.73rem;color:rgba(220,195,240,0.88);font-weight:400}
 .sval-wrap{display:flex;align-items:baseline;gap:.15rem}
 .sval{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600;color:var(--accent-light);min-width:1.5ch;text-align:right;transition:color .2s}
 .sval-max{font-size:.58rem;color:var(--muted)}
@@ -375,7 +375,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
 /* ── DEAL-BREAKERS ── */
 .db-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
 .db-tog{display:none}
-.db-label{display:flex;align-items:center;gap:.6rem;font-size:.72rem;padding:.6rem .9rem;border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.36);transition:all .22s;user-select:none;background:rgba(255,255,255,.02)}
+.db-label{display:flex;align-items:center;gap:.6rem;font-size:.75rem;padding:.65rem .9rem;border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.7);transition:all .22s;user-select:none;background:rgba(255,255,255,.02)}
 .db-label .db-icon{font-size:.95rem;flex-shrink:0}
 .db-tog:checked+.db-label{background:rgba(224,96,112,.12);color:#e06070;border-color:rgba(224,96,112,.35)}
 .db-label:hover{border-color:rgba(255,255,255,.14);color:rgba(255,255,255,.58)}
@@ -385,14 +385,14 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
 .flag-sec-title{font-size:.57rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:.5rem;margin-bottom:.55rem}
 .flag-grid{display:flex;flex-wrap:wrap;gap:.38rem}
 .ftog{display:none}
-.ftog-label{font-size:.67rem;padding:.28rem .82rem;border-radius:50px;cursor:pointer;border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.31);transition:all .2s;user-select:none;font-weight:300}
+.ftog-label{font-size:.72rem;padding:.3rem .9rem;border-radius:50px;cursor:pointer;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.62);transition:all .2s;user-select:none;font-weight:300}
 .ftog.rf+.ftog-label:hover,.ftog.rf:checked+.ftog-label{background:rgba(224,96,112,.13);color:#e06070;border-color:rgba(224,96,112,.36)}
 .ftog.gf+.ftog-label:hover,.ftog.gf:checked+.ftog-label{background:rgba(122,204,160,.1);color:#7acca0;border-color:rgba(122,204,160,.3)}
 
 /* ── VIBE GRID ── */
 .vibe-grid{display:flex;gap:.5rem;flex-wrap:wrap}
 .vibe-tog{display:none}
-.vibe-label{display:flex;flex-direction:column;align-items:center;gap:.25rem;padding:.65rem .8rem;border-radius:12px;cursor:pointer;border:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.33);transition:all .25s;user-select:none;background:rgba(255,255,255,.02);font-size:.58rem;letter-spacing:.8px;text-transform:uppercase;min-width:66px;text-align:center}
+.vibe-label{display:flex;flex-direction:column;align-items:center;gap:.25rem;padding:.65rem .8rem;border-radius:12px;cursor:pointer;border:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.65);transition:all .25s;user-select:none;background:rgba(255,255,255,.02);font-size:.62rem;letter-spacing:.8px;text-transform:uppercase;min-width:66px;text-align:center}
 .vibe-label .ve{font-size:1.3rem;display:block}
 .vibe-tog:checked+.vibe-label{background:rgba(212,168,67,.11);color:var(--gold-light);border-color:rgba(212,168,67,.32);box-shadow:0 0 12px rgba(212,168,67,.1)}
 .vibe-label:hover{border-color:rgba(255,255,255,.18);color:rgba(255,255,255,.65)}
@@ -400,21 +400,21 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
 /* ── APPEARANCE SECTION ── */
 .style-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.45rem}
 .style-tog{display:none}
-.style-label{display:flex;flex-direction:column;align-items:center;gap:.3rem;padding:.7rem .5rem;border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.33);transition:all .22s;user-select:none;background:rgba(255,255,255,.02);font-size:.58rem;letter-spacing:.5px;text-align:center}
+.style-label{display:flex;flex-direction:column;align-items:center;gap:.3rem;padding:.7rem .5rem;border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.65);transition:all .22s;user-select:none;background:rgba(255,255,255,.02);font-size:.62rem;letter-spacing:.5px;text-align:center}
 .style-label .se{font-size:1.2rem}
 .style-tog:checked+.style-label{background:rgba(201,168,224,.1);color:var(--lilac);border-color:rgba(201,168,224,.3)}
 .style-label:hover{border-color:rgba(255,255,255,.15);color:rgba(255,255,255,.6)}
 
 .ick-grid{display:flex;flex-wrap:wrap;gap:.38rem;margin-top:.5rem}
 .ick-tog{display:none}
-.ick-label{font-size:.65rem;padding:.26rem .78rem;border-radius:50px;cursor:pointer;border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.3);transition:all .2s;user-select:none}
+.ick-label{font-size:.68rem;padding:.28rem .82rem;border-radius:50px;cursor:pointer;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.62);transition:all .2s;user-select:none}
 .ick-tog:checked+.ick-label{background:rgba(224,96,112,.1);color:#e8a0b0;border-color:rgba(224,96,112,.3)}
 .ick-label:hover{border-color:rgba(255,255,255,.18);color:rgba(255,255,255,.6)}
 
 /* ── HYGIENE RATING CARDS ── */
 .hygiene-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
 .hyg-tog{display:none}
-.hyg-label{display:flex;align-items:center;gap:.7rem;padding:.7rem 1rem;border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.36);transition:all .22s;user-select:none;background:rgba(255,255,255,.02);font-size:.72rem}
+.hyg-label{display:flex;align-items:center;gap:.7rem;padding:.7rem 1rem;border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.72);transition:all .22s;user-select:none;background:rgba(255,255,255,.02);font-size:.72rem}
 .hyg-label .hyg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;transition:all .22s;background:rgba(255,255,255,.2)}
 .hyg-tog:checked+.hyg-label.ok{background:rgba(122,204,160,.1);color:#7acca0;border-color:rgba(122,204,160,.3)}
 .hyg-tog:checked+.hyg-label.ok .hyg-dot{background:var(--green)}
@@ -455,7 +455,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
 /* ── DISTANCE ── */
 .distance-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem}
 .dist-tog{display:none}
-.dist-label{display:flex;flex-direction:column;align-items:center;gap:.35rem;padding:.85rem .5rem;border-radius:12px;cursor:pointer;border:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.33);transition:all .22s;user-select:none;background:rgba(255,255,255,.02);text-align:center}
+.dist-label{display:flex;flex-direction:column;align-items:center;gap:.35rem;padding:.85rem .5rem;border-radius:12px;cursor:pointer;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.68);transition:all .22s;user-select:none;background:rgba(255,255,255,.02);text-align:center}
 .dist-label .dist-icon{font-size:1.4rem}
 .dist-label .dist-name{font-size:.62rem;letter-spacing:.8px;text-transform:uppercase}
 .dist-label .dist-note{font-size:.56rem;color:rgba(255,255,255,.22);font-style:italic}
@@ -467,7 +467,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
 /* ── RELIGION ── */
 .religion-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.45rem}
 .rel-tog{display:none}
-.rel-label{display:flex;flex-direction:column;align-items:center;gap:.3rem;padding:.7rem .4rem;border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.33);transition:all .22s;user-select:none;background:rgba(255,255,255,.02);font-size:.58rem;letter-spacing:.5px;text-align:center}
+.rel-label{display:flex;flex-direction:column;align-items:center;gap:.3rem;padding:.7rem .4rem;border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.65);transition:all .22s;user-select:none;background:rgba(255,255,255,.02);font-size:.62rem;letter-spacing:.5px;text-align:center}
 .rel-label .re{font-size:1.1rem}
 .rel-tog:checked+.rel-label{background:rgba(160,112,212,.12);color:rgba(200,160,240,.9);border-color:rgba(160,112,212,.35)}
 .rel-label:hover{border-color:rgba(255,255,255,.15);color:rgba(255,255,255,.6)}
@@ -475,25 +475,25 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
 .rel-match-label{font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
 .rel-imp-pills{display:flex;gap:.4rem;flex-wrap:wrap}
 .rimp-tog{display:none}
-.rimp-label{font-size:.65rem;padding:.3rem .85rem;border-radius:50px;cursor:pointer;border:1px solid rgba(255,255,255,.09);color:rgba(255,255,255,.33);transition:all .22s;user-select:none}
+.rimp-label{font-size:.65rem;padding:.3rem .85rem;border-radius:50px;cursor:pointer;border:1px solid rgba(255,255,255,.09);color:rgba(255,255,255,.65);transition:all .22s;user-select:none}
 .rimp-tog:checked+.rimp-label{background:rgba(160,112,212,.12);color:rgba(200,160,240,.9);border-color:rgba(160,112,212,.3)}
 
 /* ── EDUCATION ── */
 .edu-levels{display:grid;grid-template-columns:repeat(4,1fr);gap:.45rem;margin-bottom:.3rem}
 .edu-tog{display:none}
-.edu-label{display:flex;flex-direction:column;align-items:center;gap:.3rem;padding:.75rem .4rem;border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.33);transition:all .22s;user-select:none;background:rgba(255,255,255,.02);font-size:.58rem;letter-spacing:.5px;text-align:center}
+.edu-label{display:flex;flex-direction:column;align-items:center;gap:.3rem;padding:.75rem .4rem;border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.65);transition:all .22s;user-select:none;background:rgba(255,255,255,.02);font-size:.62rem;letter-spacing:.5px;text-align:center}
 .edu-label .ee{font-size:1.1rem}
 .edu-tog:checked+.edu-label{background:rgba(122,204,160,.1);color:#7acca0;border-color:rgba(122,204,160,.3)}
 .edu-label:hover{border-color:rgba(255,255,255,.15);color:rgba(255,255,255,.6)}
 .edu-match-note{font-size:.7rem;font-style:italic;color:var(--muted);text-align:center;margin-top:.5rem;min-height:1.1rem;transition:color .3s}
 .field-grid{display:flex;flex-wrap:wrap;gap:.38rem}
 .field-tog{display:none}
-.field-label{font-size:.65rem;padding:.26rem .75rem;border-radius:50px;cursor:pointer;border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.3);transition:all .2s;user-select:none}
+.field-label{font-size:.68rem;padding:.28rem .8rem;border-radius:50px;cursor:pointer;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.65);transition:all .2s;user-select:none}
 .field-tog:checked+.field-label{background:rgba(201,168,224,.1);color:var(--lilac);border-color:rgba(201,168,224,.28)}
 .field-label:hover{border-color:rgba(255,255,255,.18);color:rgba(255,255,255,.6)}
 .ambition-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
 .amb-tog{display:none}
-.amb-label{display:flex;align-items:center;gap:.65rem;padding:.65rem 1rem;border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.35);transition:all .22s;user-select:none;background:rgba(255,255,255,.02);font-size:.7rem}
+.amb-label{display:flex;align-items:center;gap:.65rem;padding:.65rem 1rem;border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.72);transition:all .22s;user-select:none;background:rgba(255,255,255,.02);font-size:.7rem}
 .amb-label .amb-icon{font-size:1rem;flex-shrink:0}
 .amb-tog:checked+.amb-label{background:rgba(212,168,67,.1);color:var(--gold-light);border-color:rgba(212,168,67,.3)}
 .amb-label:hover{border-color:rgba(255,255,255,.15);color:rgba(255,255,255,.6)}
@@ -501,7 +501,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
 /* ── COMM STYLE ── */
 .comm-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
 .comm-tog{display:none}
-.comm-label{display:flex;align-items:center;gap:.65rem;padding:.65rem 1rem;border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.36);transition:all .22s;user-select:none;background:rgba(255,255,255,.02);font-size:.7rem}
+.comm-label{display:flex;align-items:center;gap:.65rem;padding:.65rem 1rem;border-radius:10px;cursor:pointer;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.72);transition:all .22s;user-select:none;background:rgba(255,255,255,.02);font-size:.7rem}
 .comm-label .comm-icon{font-size:1rem;flex-shrink:0}
 .comm-tog:checked+.comm-label{background:rgba(122,204,160,.1);color:#7acca0;border-color:rgba(122,204,160,.28)}
 .comm-label:hover{border-color:rgba(255,255,255,.15);color:rgba(255,255,255,.6)}
@@ -543,8 +543,10 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
 .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(212,168,67,.5)}
 
 /* ── SUBSECTION LABEL ── */
-.sub-label{font-size:.6rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:.55rem;margin-top:1rem;display:flex;align-items:center;gap:.5rem}
+.sub-label{font-size:.68rem;letter-spacing:2px;text-transform:uppercase;color:rgba(220,195,240,0.8);margin-bottom:.55rem;margin-top:1rem;display:flex;align-items:center;gap:.5rem;font-weight:500}
 .sub-label::after{content:'';flex:1;height:1px;background:var(--glass-b)}
+/* ── Section description ── */
+.sec-desc{font-size:.78rem;color:rgba(220,195,240,0.65);font-style:italic;margin-bottom:1rem;margin-top:-.5rem;line-height:1.5}
 
 ::-webkit-scrollbar{width:5px}
 ::-webkit-scrollbar-thumb{background:rgba(201,168,224,.15);border-radius:3px}
@@ -662,7 +664,6 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
         <button class="f-btn" onclick="doFilter('proceed',this)">✓ Green</button>
         <button class="f-btn" onclick="doFilter('caution',this)">⚠ Caution</button>
         <button class="f-btn" onclick="doFilter('drop',this)">✗ Drop</button>
-        <button class="f-btn" onclick="doFilter('pending',this)">Pending</button>
       </div>
     </div>
     <div class="cards-grid" id="grid"></div>
@@ -739,12 +740,13 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
   </div>
 
   <div class="sub-label" style="margin-top:1.3rem">Overall appearance score</div>
+  <p class="sec-desc">Think of 1 as "rolls out of bed in yesterday's clothes" and 10 as "always put together, effortlessly." Rate how he presents himself overall — grooming, outfit choices, posture, the whole vibe.</p>
   <div class="sgroup" style="max-width:380px">
     <div class="srow"><span class="slabel">How he presents himself</span><div class="sval-wrap"><span class="sval" id="svApp">5</span><span class="sval-max">/10</span></div></div>
     <input type="range" min="1" max="10" value="5" id="slApp" oninput="sv('slApp','svApp')">
   </div>
 
-  <div class="sub-label" style="margin-top:1.3rem">Fashion icks / disasters <span style="font-size:.55rem;font-style:italic;color:rgba(201,168,224,.3)">(select any that apply)</span></div>
+  <div class="sub-label" style="margin-top:1.3rem">Fashion icks / disasters <span style="font-size:.6rem;font-style:italic;color:rgba(220,195,240,.5)">(select any that apply)</span></div>
   <div class="ick-grid">
     <input type="checkbox" class="ick-tog" id="ick1"><label class="ick-label" for="ick1">Socks with sandals</label>
     <input type="checkbox" class="ick-tog" id="ick2"><label class="ick-label" for="ick2">Ed Hardy vibes</label>
@@ -756,6 +758,10 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
     <input type="checkbox" class="ick-tog" id="ick8"><label class="ick-label" for="ick8">Crocs (in public)</label>
     <input type="checkbox" class="ick-tog" id="ick9"><label class="ick-label" for="ick9">Same outfit every day</label>
     <input type="checkbox" class="ick-tog" id="ick10"><label class="ick-label" for="ick10">Mismatched everything</label>
+  </div>
+  <div class="fgroup" style="margin-top:.7rem">
+    <label class="flabel">Anything else? <span class="hint">your personal icks</span></label>
+    <input type="text" id="fIcksCustom" placeholder="e.g. wears crocs to dinner, hasn't updated his wardrobe since 2009...">
   </div>
 </div>
 
@@ -769,6 +775,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
     <div class="sec-badge"><span class="sec-num">03</span><span class="sec-icon">🧼</span></div>
     <span class="sec-title">Self-Hygiene, Manners & Attitude</span>
   </div>
+  <p class="sec-desc">The basics that shouldn't be negotiable. How he carries himself in public says a lot — and so does how he treats strangers when no one's watching.</p>
 
   <div class="sub-label">Cleanliness & grooming</div>
   <div class="hygiene-grid">
@@ -823,7 +830,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
     <div class="sec-badge"><span class="sec-num">04</span><span class="sec-icon">🎂</span></div>
     <span class="sec-title">Age Preference</span>
   </div>
-  <p style="font-size:.75rem;color:var(--muted);margin-bottom:1rem;font-style:italic">Set your acceptable age range. His age will be checked against it.</p>
+  <p class="sec-desc">Set your range, check if he fits. Age isn't everything — but knowing your own boundaries saves everyone time.</p>
 
   <div class="age-pref-wrap">
     <div class="age-range-row">
@@ -855,12 +862,10 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
       <input type="radio" name="agePref" class="s-pill" id="ap4" value="any"><label class="s-pill-label" for="ap4">🤷 Age is just a number</label>
     </div>
   </div>
+  <div class="fgroup" style="margin-top:.9rem">
+    <input type="text" id="fAgeNotes" placeholder="Any thoughts on the age gap? e.g. 'he's 8 years older but acts 22' or 'age difference feels natural'...">
+  </div>
 </div>
-
-<div class="divider"></div>
-
-<!-- ══════════════════════════════════════════════
-     05 — DISTANCE
 ══════════════════════════════════════════════ -->
 <div class="sec" id="sec05">
   <div class="sec-head">
@@ -952,7 +957,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
     <div class="sec-badge"><span class="sec-num">07</span><span class="sec-icon">🕊️</span></div>
     <span class="sec-title">Religion & Faith</span>
   </div>
-  <p style="font-size:.75rem;color:var(--muted);margin-bottom:1rem;font-style:italic">Faith compatibility matters. No judgment — just clarity.</p>
+  <p class="sec-desc">Faith compatibility matters more than people admit until it doesn't. No judgment here — just clarity on where you both stand.</p>
 
   <div class="sub-label">His religion / faith background</div>
   <div class="religion-grid">
@@ -985,20 +990,17 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
       <input type="radio" name="relImp" class="rimp-tog" id="ri2"><label class="rimp-label" for="ri2">🟡 Important but flexible</label>
       <input type="radio" name="relImp" class="rimp-tog" id="ri3"><label class="rimp-label" for="ri3">🟢 Open to all faiths</label>
     </div>
+  <div class="fgroup" style="margin-top:.8rem">
+    <input type="text" id="fRelNotes" placeholder="Any notes on religion / faith compatibility...">
   </div>
 </div>
-
-<div class="divider"></div>
-
-<!-- ══════════════════════════════════════════════
-     08 — HEIGHT
 ══════════════════════════════════════════════ -->
 <div class="sec" id="sec08">
   <div class="sec-head">
     <div class="sec-badge"><span class="sec-num">08</span><span class="sec-icon">📏</span></div>
     <span class="sec-title">Height</span>
   </div>
-  <p style="font-size:.75rem;color:var(--muted);margin-bottom:1rem;font-style:italic">No judgment here. Preference is preference. 💅</p>
+  <p class="sec-desc">No judgment here. Preference is preference. 💅 Enter heights in cm to see the visual comparison.</p>
 
   <div class="height-wrap">
     <div class="height-visual">
@@ -1133,6 +1135,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
     <div class="sec-badge"><span class="sec-num">10</span><span class="sec-icon">📊</span></div>
     <span class="sec-title">Core Ratings — 1 to 10</span>
   </div>
+  <p class="sec-desc">Rate him honestly across 8 areas. No rush — come back and edit anytime as you learn more. 1 = disaster, 5 = average/neutral, 10 = exceptional. Only fill what you know so far.</p>
   <div class="scores-grid">
     <div class="sgroup"><div class="srow"><span class="slabel">Consistency & Effort</span><div class="sval-wrap"><span class="sval" id="sv1">5</span><span class="sval-max">/10</span></div></div><input type="range" min="1" max="10" value="5" id="sl1" oninput="sv('sl1','sv1')"></div>
     <div class="sgroup"><div class="srow"><span class="slabel">Emotional Intelligence</span><div class="sval-wrap"><span class="sval" id="sv2">5</span><span class="sval-max">/10</span></div></div><input type="range" min="1" max="10" value="5" id="sl2" oninput="sv('sl2','sv2')"></div>
@@ -1155,15 +1158,19 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
     <div class="sec-badge"><span class="sec-num">11</span><span class="sec-icon">⚡</span></div>
     <span class="sec-title">Flags & Dealbreakers</span>
   </div>
+  <p class="sec-desc">Dealbreakers are non-negotiables — if any apply, the score doesn't matter. Red flags are warning signs worth watching. Green flags are the good stuff. Add your own below each section.</p>
 
   <div class="sub-label">Instant dealbreakers — any one = drop him</div>
-  <div class="db-grid" style="margin-bottom:1.2rem">
+  <div class="db-grid" style="margin-bottom:.7rem">
     <input type="checkbox" class="db-tog" id="db1"><label class="db-label" for="db1"><span class="db-icon">🧠</span>Gaslighting</label>
     <input type="checkbox" class="db-tog" id="db2"><label class="db-label" for="db2"><span class="db-icon">👊</span>Disrespectful / Mean</label>
     <input type="checkbox" class="db-tog" id="db3"><label class="db-label" for="db3"><span class="db-icon">💍</span>Taken / Not Single</label>
     <input type="checkbox" class="db-tog" id="db4"><label class="db-label" for="db4"><span class="db-icon">🤥</span>Compulsive liar</label>
     <input type="checkbox" class="db-tog" id="db5"><label class="db-label" for="db5"><span class="db-icon">📵</span>Refuses to communicate</label>
     <input type="checkbox" class="db-tog" id="db6"><label class="db-label" for="db6"><span class="db-icon">💸</span>Financially irresponsible</label>
+  </div>
+  <div class="fgroup" style="margin-bottom:1.2rem">
+    <input type="text" id="fDbCustom" placeholder="Your personal dealbreakers, e.g. lives with parents at 35, hates cats...">
   </div>
 
   <div class="flags-wrap">
@@ -1183,6 +1190,9 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
         <input type="checkbox" class="ftog rf" id="r11"><label class="ftog-label" for="r11">Pushes boundaries</label>
         <input type="checkbox" class="ftog rf" id="r12"><label class="ftog-label" for="r12">Talks down to you</label>
       </div>
+      <div class="fgroup" style="margin-top:.6rem">
+        <input type="text" id="fRedCustom" placeholder="Other red flags you've noticed...">
+      </div>
     </div>
     <div>
       <div class="flag-sec-title">💚 Green Flags</div>
@@ -1198,6 +1208,9 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
         <input type="checkbox" class="ftog gf" id="g9"><label class="ftog-label" for="g9">Has his life together</label>
         <input type="checkbox" class="ftog gf" id="g10"><label class="ftog-label" for="g10">Remembers the details</label>
       </div>
+      <div class="fgroup" style="margin-top:.6rem">
+        <input type="text" id="fGreenCustom" placeholder="Other green flags worth noting...">
+      </div>
     </div>
   </div>
 </div>
@@ -1212,8 +1225,8 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
     <div class="sec-badge"><span class="sec-num">12</span><span class="sec-icon">☕</span></div>
     <span class="sec-title">Vibe Check & The Tea</span>
   </div>
+  <p class="sec-desc">This is where you get to actually say it. How does he make you feel? Not what he does — how he makes you <em>feel</em>. Trust this section. Your gut has notes.</p>
 
-  <div class="sub-label">How do you feel most when with / talking to him?</div>
   <div class="vibe-grid" style="margin-bottom:1.4rem">
     <input type="checkbox" class="vibe-tog" id="vb1"><label class="vibe-label" for="vb1"><span class="ve">😊</span>Happy</label>
     <input type="checkbox" class="vibe-tog" id="vb2"><label class="vibe-label" for="vb2"><span class="ve">😰</span>Anxious</label>
@@ -1261,7 +1274,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
 
 <!-- ACTIONS -->
 <div class="form-actions">
-  <span class="action-note">Only name is required. Everything else is yours to fill.</span>
+  <span class="action-note">Only name is required — save now, fill the rest when you know more. ✦ Edit anytime.</span>
   <div class="btn-group">
     <button class="btn-secondary" onclick="clearForm()">Clear Form</button>
     <button class="btn-primary" onclick="saveIt()">✦ Save Assessment</button>
@@ -1271,7 +1284,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
 </div><!-- end page-wrap -->
 <!-- FORM ACTIONS wired to app -->
 <div class="form-actions">
-  <span class="action-note">Only name is required.</span>
+  <span class="action-note">Only name is required — edit anytime as you learn more.</span>
   <div class="btn-group">
     <button class="btn-cancel" onclick="closeAssessment()">Cancel</button>
     <button class="btn-primary" onclick="saveIt()">✦ Save to Roster</button>
@@ -1302,7 +1315,73 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
       </div>
       <div class="fsec"><div class="fsec-head"><span class="fsec-title">Change Avatar</span><div class="fsec-line"></div></div><div class="avatar-grid" id="pAvatarGrid"></div></div>
       <div class="fsec"><div class="fsec-head"><span class="fsec-title">Change Color</span><div class="fsec-line"></div></div><div class="theme-grid" id="pThemeGrid"></div></div>
-      <div class="mfooter"><button class="btn-cancel" onclick="closeAll()">Close</button><button class="btn-save" onclick="saveProfile()">Save Changes</button></div>
+      <div class="mfooter"><button class="btn-cancel" onclick="closeAll()">Close</button><button class="btn-cancel" onclick="closeAll();showOnboard()" style="border-color:rgba(212,168,67,.3);color:var(--gold-light)">✦ About & Privacy</button><button class="btn-save" onclick="saveProfile()">Save Changes</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ONBOARDING MODAL -->
+<div class="overlay" id="onboardModal" style="z-index:300;align-items:center;justify-content:center">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-scroll" style="padding:2rem 2rem 1.5rem">
+      <div style="text-align:center;margin-bottom:1.8rem">
+        <div style="font-size:2.5rem;margin-bottom:.8rem">✦</div>
+        <div style="font-family:'Italiana',serif;font-size:2rem;letter-spacing:4px;background:linear-gradient(135deg,var(--gold-light),var(--gold),var(--blush));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">The Roster</div>
+        <div style="font-size:.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-top:.4rem">Man Assessment Headquarters</div>
+      </div>
+
+      <!-- Tabs -->
+      <div style="display:flex;gap:.4rem;background:var(--glass);border:1px solid var(--glass-b);padding:.3rem;border-radius:50px;margin-bottom:1.5rem">
+        <button class="ob-tab active" id="obTab1" onclick="switchObTab(1)" style="flex:1;padding:.45rem;border-radius:50px;border:none;font-family:'Jost',sans-serif;font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .2s;background:var(--deep-plum);color:var(--accent-light)">✦ About Us</button>
+        <button class="ob-tab" id="obTab2" onclick="switchObTab(2)" style="flex:1;padding:.45rem;border-radius:50px;border:none;font-family:'Jost',sans-serif;font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .2s;background:transparent;color:var(--muted)">🔒 Privacy & Safety</button>
+      </div>
+
+      <!-- About -->
+      <div id="obPanel1">
+        <p style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-style:italic;color:var(--petal);text-align:center;margin-bottom:1.2rem;line-height:1.5">"If he's scared of the scores,<br>he's probably the reason<br>the score exists."</p>
+        <p style="font-size:.82rem;color:rgba(220,195,240,0.8);line-height:1.7;margin-bottom:1rem">The Roster exists because too many great decisions are dying in group chats. We score, we assess, we archive — so the next time someone asks <em>"but do you actually like him?"</em> you can say: <em>yes, and here's the data.</em></p>
+        <p style="font-size:.82rem;color:rgba(220,195,240,0.8);line-height:1.7;margin-bottom:1rem">This is not about being cold. It's about being <strong style="color:var(--gold-light)">clear</strong>. Your feelings are valid. Your standards are valid. And your time is absolutely non-negotiable.</p>
+        <p style="font-size:.82rem;color:rgba(220,195,240,0.8);line-height:1.7;margin-bottom:1.5rem">Use The Roster to track, reflect, and decide — so your next move comes from <strong style="color:var(--gold-light)">you</strong>, not the situationship spiral.</p>
+        <div style="background:rgba(212,168,67,.07);border:1px solid rgba(212,168,67,.15);border-radius:12px;padding:1rem 1.2rem;font-size:.78rem;color:var(--gold-light);font-style:italic;text-align:center">Because clarity is self-care, darling. ✦</div>
+      </div>
+
+      <!-- Privacy -->
+      <div id="obPanel2" style="display:none">
+        <p style="font-size:.82rem;color:rgba(220,195,240,0.8);line-height:1.7;margin-bottom:1rem"><strong style="color:var(--petal)">Your data, your business.</strong> Everything you enter in The Roster stays between you and your personal Google Sheet — we don't sell, share, or peek at your assessments.</p>
+        <div style="display:flex;flex-direction:column;gap:.8rem;margin-bottom:1.2rem">
+          <div style="display:flex;gap:.8rem;align-items:flex-start;background:rgba(255,255,255,.03);border-radius:10px;padding:.9rem 1rem">
+            <span style="font-size:1.1rem;flex-shrink:0">🔐</span>
+            <div>
+              <div style="font-size:.72rem;color:var(--petal);margin-bottom:.2rem;font-weight:500">Passwords are hashed</div>
+              <div style="font-size:.74rem;color:rgba(220,195,240,0.65)">We never store your password in plain text — it's hashed before saving.</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:.8rem;align-items:flex-start;background:rgba(255,255,255,.03);border-radius:10px;padding:.9rem 1rem">
+            <span style="font-size:1.1rem;flex-shrink:0">📊</span>
+            <div>
+              <div style="font-size:.72rem;color:var(--petal);margin-bottom:.2rem;font-weight:500">Stored in your own Google Sheet</div>
+              <div style="font-size:.74rem;color:rgba(220,195,240,0.65)">Data lives in a Google Spreadsheet. No third-party database, no hidden storage.</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:.8rem;align-items:flex-start;background:rgba(255,255,255,.03);border-radius:10px;padding:.9rem 1rem">
+            <span style="font-size:1.1rem;flex-shrink:0">🚫</span>
+            <div>
+              <div style="font-size:.72rem;color:var(--petal);margin-bottom:.2rem;font-weight:500">No ads. No tracking. No judgment.</div>
+              <div style="font-size:.74rem;color:rgba(220,195,240,0.65)">The Roster doesn't monetize your love life. Rate freely.</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:.8rem;align-items:flex-start;background:rgba(255,255,255,.03);border-radius:10px;padding:.9rem 1rem">
+            <span style="font-size:1.1rem;flex-shrink:0">⚠️</span>
+            <div>
+              <div style="font-size:.72rem;color:var(--petal);margin-bottom:.2rem;font-weight:500">Use responsibly</div>
+              <div style="font-size:.74rem;color:rgba(220,195,240,0.65)">The Roster is a personal reflection tool. Use it to clarify your own thinking — not to harm, humiliate, or gossip about anyone.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button onclick="closeOnboard()" style="width:100%;margin-top:1rem;padding:.8rem;background:linear-gradient(135deg,var(--gold),#b8903a);border:none;border-radius:50px;color:var(--night);font-family:'Jost',sans-serif;font-weight:600;font-size:.72rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer">Enter The Roster ✦</button>
+      <p style="text-align:center;font-size:.65rem;color:rgba(220,195,240,.4);margin-top:.8rem">You can view this again anytime from your profile.</p>
     </div>
   </div>
 </div>
@@ -1457,7 +1536,8 @@ async function loadUser(u){
   }
   showPage('appPage');
   render();updateStats();
-}
+  // Show onboarding for every login (About Us + Privacy)
+  setTimeout(showOnboard, 400);
 
 function showPage(id){
   // Must use inline styles to override ID-level CSS (e.g. #authPage{display:flex})
@@ -1637,6 +1717,9 @@ function openEdit(id){
   checkBoxesByLabels('.vibe-tog',p.vibes);
   // Text areas
   set('fGut',p.gut); set('fWant',p.want); set('fSit',p.sit||m.notes);
+  set('fIcksCustom',p.icksCustom); set('fDbCustom',p.dbCustom);
+  set('fRedCustom',p.redCustom); set('fGreenCustom',p.greenCustom);
+  set('fRelNotes',p.relNotes); set('fAgeNotes',p.ageNotes);
 
   // ── Open modal ──
   document.getElementById('addModal').classList.add('open');
@@ -1740,6 +1823,7 @@ async function saveIt(){
     myAge:document.getElementById('myAge')?.value||'',
     ageMin:document.getElementById('ageMin')?.value||'',
     ageMax:document.getElementById('ageMax')?.value||'',
+    ageNotes:document.getElementById('fAgeNotes')?.value||'',
     gut:document.getElementById('fGut')?.value||'',
     want:document.getElementById('fWant')?.value||'',
     sit:document.getElementById('fSit')?.value||'',
@@ -1749,6 +1833,11 @@ async function saveIt(){
     slConvo:document.getElementById('slConvo')?.value||5,
     slBody:document.getElementById('slBody')?.value||5,
     slReply:document.getElementById('slReply')?.value||5,
+    icksCustom:document.getElementById('fIcksCustom')?.value||'',
+    dbCustom:document.getElementById('fDbCustom')?.value||'',
+    redCustom:document.getElementById('fRedCustom')?.value||'',
+    greenCustom:document.getElementById('fGreenCustom')?.value||'',
+    relNotes:document.getElementById('fRelNotes')?.value||'',
     dealbreakers:[...document.querySelectorAll('.db-tog:checked')].map(e=>e.nextElementSibling?.textContent?.trim()),
     vibes:[...document.querySelectorAll('.vibe-tog:checked')].map(e=>e.nextElementSibling?.textContent?.trim()),
   };
@@ -1816,7 +1905,22 @@ function updateStats(){
 }
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000)}
 
-// Expose card functions globally so inline onclick always finds them
+// ── ONBOARDING MODAL ──
+function switchObTab(n){
+  document.getElementById('obPanel1').style.display=n===1?'':'none';
+  document.getElementById('obPanel2').style.display=n===2?'':'none';
+  document.getElementById('obTab1').style.cssText='flex:1;padding:.45rem;border-radius:50px;border:none;font-family:\'Jost\',sans-serif;font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .2s;background:'+(n===1?'var(--deep-plum)':'transparent')+';color:'+(n===1?'var(--accent-light)':'var(--muted)');
+  document.getElementById('obTab2').style.cssText='flex:1;padding:.45rem;border-radius:50px;border:none;font-family:\'Jost\',sans-serif;font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .2s;background:'+(n===2?'var(--deep-plum)':'transparent')+';color:'+(n===2?'var(--accent-light)':'var(--muted)');
+}
+function showOnboard(){
+  document.getElementById('onboardModal').classList.add('open');
+}
+function closeOnboard(){
+  document.getElementById('onboardModal').classList.remove('open');
+  try{localStorage.setItem('roster_onboarded','1');}catch(e){}
+}
+window.switchObTab=switchObTab;
+window.closeOnboard=closeOnboard;
 window.openDetail=openDetail;
 window.openEdit=openEdit;
 window.deleteMan=deleteMan;
