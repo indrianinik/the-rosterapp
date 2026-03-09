@@ -1400,6 +1400,40 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
 
 <div class="toast" id="toast"></div>
 
+
+<!-- SETTINGS MODAL -->
+<div class="settings-modal" id="settingsModal" onclick="if(event.target===this)closeSettings()">
+  <div class="settings-card">
+    <div class="settings-title">Settings ⚙</div>
+    <div class="settings-sub">Manage your Google Sheets connection and app preferences</div>
+
+    <div class="settings-section">
+      <span class="settings-label">Google Sheets API URL</span>
+      <div class="settings-input-row">
+        <input class="settings-input" id="settingsApiInput" placeholder="https://script.google.com/macros/s/YOUR_ID/exec">
+        <button class="btn-connect" onclick="saveSettingsUrl()">Connect</button>
+      </div>
+      <div class="settings-url-note">
+        Your Apps Script Web App URL. Get this from Google Apps Script → Deploy → Manage deployments.<br>
+        If you don't have one yet, follow the SETUP-GUIDE.md included with your download.
+      </div>
+      <div class="settings-url-status" id="settingsUrlStatus"></div>
+    </div>
+
+    <div class="settings-divider"></div>
+
+    <div class="settings-section">
+      <span class="settings-label">Connection Test</span>
+      <button class="btn-settings-close" style="font-size:.68rem" onclick="testConnection()">🔗 Test Connection</button>
+      <div id="settingsTestResult" style="font-size:.68rem;margin-top:.6rem;color:var(--muted);font-style:italic"></div>
+    </div>
+
+    <div class="settings-footer">
+      <button class="btn-settings-close" onclick="closeSettings()">Done</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ── CONFIG ──────────────────────────────────────────────────
 // Paste your Apps Script URL here after setup, OR use the in-app banner
@@ -2277,38 +2311,5 @@ async function testConnection(){
   }
 })();
 </script>
-<!-- SETTINGS MODAL -->
-<div class="settings-modal" id="settingsModal" onclick="if(event.target===this)closeSettings()">
-  <div class="settings-card">
-    <div class="settings-title">Settings ⚙</div>
-    <div class="settings-sub">Manage your Google Sheets connection and app preferences</div>
-
-    <div class="settings-section">
-      <span class="settings-label">Google Sheets API URL</span>
-      <div class="settings-input-row">
-        <input class="settings-input" id="settingsApiInput" placeholder="https://script.google.com/macros/s/YOUR_ID/exec">
-        <button class="btn-connect" onclick="saveSettingsUrl()">Connect</button>
-      </div>
-      <div class="settings-url-note">
-        Your Apps Script Web App URL. Get this from Google Apps Script → Deploy → Manage deployments.<br>
-        If you don't have one yet, follow the SETUP-GUIDE.md included with your download.
-      </div>
-      <div class="settings-url-status" id="settingsUrlStatus"></div>
-    </div>
-
-    <div class="settings-divider"></div>
-
-    <div class="settings-section">
-      <span class="settings-label">Connection Test</span>
-      <button class="btn-settings-close" style="font-size:.68rem" onclick="testConnection()">🔗 Test Connection</button>
-      <div id="settingsTestResult" style="font-size:.68rem;margin-top:.6rem;color:var(--muted);font-style:italic"></div>
-    </div>
-
-    <div class="settings-footer">
-      <button class="btn-settings-close" onclick="closeSettings()">Done</button>
-    </div>
-  </div>
-</div>
-
 </body>
 </html>
