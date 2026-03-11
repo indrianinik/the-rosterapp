@@ -592,9 +592,21 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
       </div>
       <div class="auth-form active" id="loginForm">
         <div class="fg"><label class="fl">Username</label><input type="text" id="liUser" placeholder="Your username" autocomplete="username"></div>
-        <div class="fg"><label class="fl">Password</label><input type="password" id="liPass" placeholder="Your password"></div>
+        <div class="fg"><label class="fl">Password</label><input type="password" id="liPass" placeholder="Your password" autocomplete="current-password"></div>
         <div class="auth-err" id="liErr"></div>
         <button class="btn-auth" id="liBtn" onclick="doLogin()"><span class="spinner" id="liSpin"></span><span id="liTxt">✦ Enter the Roster</span></button>
+        <div style="text-align:center;margin-top:.75rem"><button onclick="showForgotForm()" style="background:none;border:none;color:rgba(201,168,224,.55);font-family:'Jost',sans-serif;font-size:.78rem;font-weight:300;cursor:pointer;text-decoration:underline;text-underline-offset:3px;transition:color .2s" onmouseover="this.style.color='rgba(224,200,255,.85)'" onmouseout="this.style.color='rgba(201,168,224,.55)'">Forgot password?</button></div>
+      </div>
+
+      <!-- FORGOT PASSWORD FORM -->
+      <div class="auth-form" id="forgotForm">
+        <div style="font-size:.78rem;color:rgba(201,168,224,.6);margin-bottom:1.2rem;line-height:1.6">Enter your username and choose a new password.</div>
+        <div class="fg"><label class="fl">Username</label><input type="text" id="fpUser" placeholder="Your username" autocomplete="username"></div>
+        <div class="fg"><label class="fl">New Password</label><input type="password" id="fpPass" placeholder="New password" autocomplete="new-password"></div>
+        <div class="fg"><label class="fl">Retype Password</label><input type="password" id="fpPass2" placeholder="Retype new password" autocomplete="new-password"></div>
+        <div class="auth-err" id="fpErr"></div>
+        <button class="btn-auth" id="fpBtn" onclick="doResetPassword()"><span class="spinner" id="fpSpin"></span><span id="fpTxt">✦ Update Password</span></button>
+        <div style="text-align:center;margin-top:.75rem"><button onclick="showLoginForm()" style="background:none;border:none;color:rgba(201,168,224,.55);font-family:'Jost',sans-serif;font-size:.78rem;font-weight:300;cursor:pointer;text-decoration:underline;text-underline-offset:3px;transition:color .2s" onmouseover="this.style.color='rgba(224,200,255,.85)'" onmouseout="this.style.color='rgba(201,168,224,.55)'">Back to Sign In</button></div>
       </div>
       <div class="auth-form" id="signupForm">
         <div class="fg"><label class="fl">Your Name</label><input type="text" id="suName" placeholder="What should we call you?"></div>
@@ -1390,7 +1402,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
             <span style="font-size:1.1rem;flex-shrink:0">📊</span>
             <div>
               <div style="font-size:.72rem;color:var(--petal);margin-bottom:.2rem;font-weight:500">Your data stays private</div>
-              <div style="font-size:.74rem;color:rgba(220,195,240,0.65)">We don't use any third-party platform. Your data is encrypted end-to-end and stored only in your own private space.</div>
+              <div style="font-size:.74rem;color:rgba(220,195,240,0.65)">No third-party platforms. Your data is stored locally on your device and never shared.</div>
             </div>
           </div>
           <div style="display:flex;gap:.8rem;align-items:flex-start;background:rgba(255,255,255,.03);border-radius:10px;padding:.9rem 1rem">
@@ -1997,6 +2009,45 @@ window.openEdit=openEdit;
 window.deleteMan=deleteMan;
 window.doLogin=doLogin;
 window.doSignup=doSignup;
+
+// ── FORGOT PASSWORD ──
+function showForgotForm(){
+  document.getElementById('loginForm').classList.remove('active');
+  document.getElementById('forgotForm').classList.add('active');
+  document.getElementById('fpErr').textContent='';
+  document.getElementById('fpUser').value=document.getElementById('liUser').value||'';
+  document.getElementById('fpPass').value='';
+  document.getElementById('fpPass2').value='';
+}
+function showLoginForm(){
+  document.getElementById('forgotForm').classList.remove('active');
+  document.getElementById('loginForm').classList.add('active');
+  document.getElementById('liErr').textContent='';
+}
+async function doResetPassword(){
+  const user=document.getElementById('fpUser').value.trim().toLowerCase();
+  const pass=document.getElementById('fpPass').value;
+  const pass2=document.getElementById('fpPass2').value;
+  const err=document.getElementById('fpErr');
+  if(!user||!pass||!pass2){err.textContent='Please fill in all fields.';return}
+  if(pass.length<4){err.textContent='Password must be at least 4 characters.';return}
+  if(pass!==pass2){err.textContent='Passwords do not match.';return}
+  setLoading('fpBtn','fpSpin','fpTxt',true);
+  try{
+    const r=await api({action:'resetPassword',username:user,newPassword:pass});
+    if(!r.success){err.textContent=r.error||'Reset failed.';setLoading('fpBtn','fpSpin','fpTxt',false);return}
+    err.style.color='var(--green)';
+    err.textContent='Password updated. You can now sign in.';
+    setLoading('fpBtn','fpSpin','fpTxt',false);
+    setTimeout(()=>{err.style.color='';showLoginForm();},1800);
+  }catch(e){
+    err.textContent=e.message==='NO_URL'?'App not configured.':e.message==='timeout'?'Server timed out. Try again.':'Connection failed.';
+    setLoading('fpBtn','fpSpin','fpTxt',false);
+  }
+}
+window.showForgotForm=showForgotForm;
+window.showLoginForm=showLoginForm;
+window.doResetPassword=doResetPassword;
 window.switchTab=switchTab;
 window.saveAuthApiUrl=saveAuthApiUrl;
 window.openAdd=openAdd;
@@ -2020,8 +2071,9 @@ document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{
   if(o.id==='addModal'){ closeAssessment(); return; }
   closeAll();
 }));
-document.getElementById('liPass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
-document.getElementById('suPass').addEventListener('keydown',e=>{if(e.key==='Enter')doSignup()});
+document.getElementById('liPass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()})
+document.getElementById('suPass').addEventListener('keydown',e=>{if(e.key==='Enter')doSignup()})
+document.getElementById('fpPass2').addEventListener('keydown',e=>{if(e.key==='Enter')doResetPassword()})
 
 // ── ASSESSMENT FORM FUNCTIONS ──
 // ── QUICK FILL ──
